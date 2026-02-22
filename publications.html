@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications & Achievements — Saravana Perumal R.</title>
+    <meta name="description" content="Research publications, book chapters, and professional achievements.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 192, 232, 0.45);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            margin-bottom: 50px;
+        }
+
+        .back-btn:hover {
+            color: #e8e0ff;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .back-btn:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.8);
+            margin-bottom: 24px;
+            margin-top: 40px;
+        }
+
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(140, 100, 255, 0.2);
+        }
+
+        .pub-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: rgba(100, 60, 200, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.2);
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .pub-card.visible {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .pub-card:hover {
+            background: rgba(140, 100, 255, 0.13);
+            border-color: rgba(180, 140, 255, 0.35);
+        }
+
+        .pub-type {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .type-book {
+            background: rgba(120, 80, 255, 0.2);
+            color: rgba(180, 150, 255, 0.9);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+        }
+
+        .type-article {
+            background: rgba(60, 140, 100, 0.15);
+            color: rgba(100, 220, 160, 0.9);
+            border: 1px solid rgba(80, 180, 120, 0.3);
+        }
+
+        .pub-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .pub-meta {
+            font-size: 0.8rem;
+            color: rgba(200, 192, 232, 0.5);
+        }
+
+        .achieve-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .achieve-item {
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(80, 50, 160, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.18);
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .achieve-item.visible {
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        .achieve-item:hover {
+            background: rgba(140, 100, 255, 0.13);
+            border-color: rgba(180, 140, 255, 0.3);
+        }
+
+        .achieve-icon {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .achieve-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 4px;
+        }
+
+        .achieve-desc {
+            font-size: 0.78rem;
+            color: rgba(200, 192, 232, 0.55);
+            line-height: 1.5;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:580px) {
+            .achieve-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Back to Graph
+        </a>
+
+        <div class="page-label">Research Output</div>
+        <h1 class="page-title">Publications & Achievements</h1>
+        <p class="page-sub">Peer-reviewed research in biomedical sciences and professional milestones in AI education.
+        </p>
+
+        <div class="section-heading">📖 Book Chapters</div>
+
+        <div class="pub-card">
+            <span class="pub-type type-book">Book Chapter</span>
+            <div class="pub-title">Emerging Strategies in Bone Tissue Engineering</div>
+            <div class="pub-meta">Comprehensive review of innovative biomaterial scaffolds and regenerative approaches
+                for bone repair — contributed chapter in edited academic volume.</div>
+        </div>
+
+        <div class="pub-card">
+            <span class="pub-type type-book">Book Chapter</span>
+            <div class="pub-title">Periostin and Integrin Signaling in Tissue Remodeling</div>
+            <div class="pub-meta">In-depth examination of periostin's role in extracellular matrix dynamics and
+                integrin-mediated cell adhesion — contributed chapter in biomedical engineering compilation.</div>
+        </div>
+
+        <div class="section-heading">📄 Research Articles</div>
+
+        <div class="pub-card">
+            <span class="pub-type type-article">Research Article</span>
+            <div class="pub-title">Biosynthesized Nanosilver from Alginate: Characterization and Applications</div>
+            <div class="pub-meta">Investigation into green synthesis of silver nanoparticles using alginate, with
+                structural characterization via SEM/TEM and antimicrobial efficacy testing.</div>
+        </div>
+
+        <div class="pub-card">
+            <span class="pub-type type-article">Research Article</span>
+            <div class="pub-title">Anti-Microbial Hydrogel Development for Wound Care Applications</div>
+            <div class="pub-meta">Synthesis and evaluation of hydrogel biomaterials with antibacterial properties for
+                advanced wound dressing applications in tissue engineering contexts.</div>
+        </div>
+
+        <div class="section-heading">🏆 Professional Achievements</div>
+        <div class="achieve-grid">
+            <div class="achieve-item">
+                <div class="achieve-icon">🎤</div>
+                <div class="achieve-title">Invited AI Workshop Speaker</div>
+                <div class="achieve-desc">Delivered workshops on GenAI, YOLO, and AI for business to professional and
+                    student audiences.</div>
+            </div>
+            <div class="achieve-item">
+                <div class="achieve-icon">📚</div>
+                <div class="achieve-title">AI Curriculum Developer</div>
+                <div class="achieve-desc">Designed comprehensive ML/DL/GenAI curricula used in professional training
+                    programs.</div>
+            </div>
+            <div class="achieve-item">
+                <div class="achieve-icon">🎖</div>
+                <div class="achieve-title">UGC-NET Qualified</div>
+                <div class="achieve-desc">National eligibility for Assistant Professor and Junior Research Fellowship in
+                    Life Sciences — 2019.</div>
+            </div>
+            <div class="achieve-item">
+                <div class="achieve-icon">🔬</div>
+                <div class="achieve-title">Research Fellowship — SCTIMST</div>
+                <div class="achieve-desc">Awarded Senior Research Fellowship at a premier national biomedical research
+                    institution (Govt. of India).</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.pub-card, .achieve-item').forEach(el => obs.observe(el));
+    </script>
+    <script src="snowfall.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,374 @@
+/* ===== Obsidian Graph Portfolio — Global Styles ===== */
+
+/* Reset & Dark Canvas */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #06040f;
+    color: #c8c0e8;
+    font-family: 'Trench Thin', 'Inter', sans-serif;
+}
+
+/* ===== Graph Container ===== */
+#graph-container {
+    width: 100vw;
+    height: 100vh;
+    cursor: grab;
+}
+
+#graph-container:active {
+    cursor: grabbing;
+}
+
+/* ===== Background Particle Canvas ===== */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#graph-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== Loading Overlay ===== */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #06040f;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity 0.8s ease;
+}
+
+#loader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#loader .pulse-ring {
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(140, 100, 255, 0.5);
+    border-radius: 50%;
+    animation: pulse-ring 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+#loader .loader-text {
+    margin-top: 20px;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(160, 130, 255, 0.6);
+    animation: text-flicker 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+@keyframes text-flicker {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* ===== Node Styles — Glass Orb ===== */
+.node circle.orb-base {
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 1px;
+    cursor: pointer;
+    transition: filter 0.3s ease, stroke-width 0.3s ease;
+}
+
+.node circle.orb-base:hover {
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 1.5px;
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
+}
+
+/* Spinning specular highlight */
+.orb-shine {
+    animation: orb-spin 6s linear infinite;
+    transform-origin: 0 0;
+}
+
+@keyframes orb-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.node text {
+    fill: rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.3s;
+}
+
+/* ===== Link Styles ===== */
+.link {
+    stroke: rgba(140, 100, 255, 0.25);
+    stroke-width: 1px;
+}
+
+/* ===== Depth-based — text only, no circle fill override ===== */
+/* Root */
+.node.depth-0 text {
+    font-size: 16px;
+    font-weight: 600;
+    fill: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* Main Categories */
+.node.depth-1 text {
+    font-size: 13px;
+    font-weight: 400;
+    fill: rgba(255, 255, 255, 0.9);
+}
+
+/* Sub-items */
+.node.depth-2 text {
+    font-size: 11px;
+    fill: rgba(255, 255, 255, 0.65);
+}
+
+/* Leaf nodes */
+.node.depth-3 text {
+    font-size: 10px;
+    fill: rgba(255, 255, 255, 0.45);
+}
+
+/* ===== Root pulse glow ===== */
+@keyframes root-glow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px rgba(120, 80, 255, 0.4));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 24px rgba(160, 100, 255, 0.7));
+    }
+}
+
+.node.depth-0 circle.orb-base {
+    animation: root-glow 3s ease-in-out infinite;
+}
+
+/* ===== Info Panel ===== */
+#info-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(10, 10, 10, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(12px);
+    display: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+#info-panel h2 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+#info-panel p,
+#info-panel li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #ffffff;
+}
+
+/* ===== Footer Hint ===== */
+#instructions {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    letter-spacing: 1px;
+    pointer-events: none;
+}
+
+/* ===== Navigable node cursor ===== */
+.node.navigable circle.orb-base {
+    cursor: pointer;
+}
+
+.node.navigable circle.orb-base:hover {
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.4));
+}
+
+/* ===== Forces Control Panel ===== */
+#forces-panel {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    width: 220px;
+    background: rgba(12, 12, 12, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    backdrop-filter: blur(14px);
+    z-index: 20;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.panel-section .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.panel-section .section-header:hover {
+    color: #fff;
+}
+
+.panel-section .chevron {
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.panel-section.open .chevron {
+    transform: rotate(90deg);
+}
+
+.panel-section .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 16px;
+}
+
+.panel-section.open .section-body {
+    max-height: 400px;
+    padding: 10px 16px 16px;
+}
+
+.panel-section .section-body label {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+}
+
+.panel-section .section-body label:last-child {
+    margin-bottom: 0;
+}
+
+/* Custom Range Slider */
+.panel-section input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+    display: block;
+}
+
+.panel-section input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.panel-section input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.panel-section input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}

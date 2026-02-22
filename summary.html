@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Focus — Saravana Perumal R.</title>
+    <meta name="description" content="What Saravana Perumal R. is currently building and thinking about in AI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 192, 232, 0.45);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            margin-bottom: 50px;
+            align-self: flex-start;
+        }
+
+        .back-btn:hover {
+            color: #e8e0ff;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .back-btn:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 12px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.2s;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 60px;
+            text-align: center;
+            max-width: 520px;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.35s;
+        }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 680px;
+            margin-bottom: 60px;
+        }
+
+        .focus-card {
+            padding: 32px 28px;
+            border-radius: 20px;
+            background: rgba(100, 60, 200, 0.09);
+            border: 1px solid rgba(140, 100, 255, 0.22);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        .focus-card.visible {
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .focus-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -30%;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(120, 80, 255, 0.12), transparent 70%);
+            pointer-events: none;
+        }
+
+        .focus-card:hover {
+            background: rgba(140, 100, 255, 0.14);
+            border-color: rgba(180, 140, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(100, 60, 200, 0.2);
+        }
+
+        .focus-icon {
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .focus-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .focus-desc {
+            font-size: 0.85rem;
+            line-height: 1.75;
+            color: rgba(200, 192, 232, 0.6);
+        }
+
+        .positioning {
+            width: 100%;
+            max-width: 680px;
+            padding: 36px;
+            background: rgba(80, 40, 180, 0.12);
+            border: 1px solid rgba(140, 100, 255, 0.25);
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.8s;
+        }
+
+        .positioning-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 18px;
+        }
+
+        .positioning-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .pos-item {
+            font-size: 0.9rem;
+            color: #e8e0ff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: rgba(120, 80, 255, 0.15);
+            border: 1px solid rgba(160, 120, 255, 0.3);
+        }
+
+        .pos-item::before {
+            content: '→ ';
+            color: rgba(160, 120, 255, 0.7);
+        }
+
+        .positioning-tag {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.65);
+            line-height: 1.8;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:580px) {
+            .focus-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Back to Graph
+        </a>
+
+        <div class="page-label">Now</div>
+        <h1 class="page-title">Current Focus</h1>
+        <p class="page-sub">Where my thinking and building energy is directed right now — at the frontier of AI systems.
+        </p>
+
+        <div class="focus-grid">
+            <div class="focus-card">
+                <div class="focus-icon">🤖</div>
+                <div class="focus-title">Agentic AI Systems</div>
+                <div class="focus-desc">Designing multi-agent architectures with tool-use, planning, memory, and
+                    autonomous reasoning — moving beyond prompt-response to truly autonomous AI workflows.</div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-icon">🖼</div>
+                <div class="focus-title">Multimodal Models</div>
+                <div class="focus-desc">Exploring vision-language models and multimodal RAG systems that process images,
+                    text, and structured data together for richer, context-aware AI systems.</div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-icon">🚀</div>
+                <div class="focus-title">Production ML Pipelines</div>
+                <div class="focus-desc">Building robust, observable, and scalable ML pipelines with MLflow, Docker, and
+                    cloud deployments — bridging the gap between experimental notebooks and production systems.</div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-icon">🎓</div>
+                <div class="focus-title">AI in Education</div>
+                <div class="focus-desc">Designing next-generation AI curricula, mentoring programs, and learning
+                    frameworks that prepare professionals to build and use AI responsibly and effectively.</div>
+            </div>
+        </div>
+
+        <div class="positioning">
+            <div class="positioning-label">Final Positioning</div>
+            <div class="positioning-items">
+                <span class="pos-item">Not just a Data Scientist</span>
+                <span class="pos-item">An AI System Builder</span>
+                <span class="pos-item">A Scientific Thinker</span>
+                <span class="pos-item">An Educator shaping future AI professionals</span>
+            </div>
+            <div class="positioning-tag">
+                From the precision of a research lab to the complexity of production AI —<br>
+                engineering intelligent systems with discipline, curiosity, and purpose.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.focus-card').forEach(el => obs.observe(el));
+    </script>
+    <script src="snowfall.js"></script>
+</body>
+
+</html>

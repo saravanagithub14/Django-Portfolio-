@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience — Saravana Perumal R.</title>
+    <meta name="description"
+        content="AI & Data Science experience plus Research and Life Sciences background of Saravana Perumal R.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 192, 232, 0.45);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 10px 0;
+            transition: color 0.3s;
+            margin-bottom: 50px;
+        }
+
+        .back-btn:hover {
+            color: #e8e0ff;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .back-btn:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.8);
+            margin-bottom: 24px;
+            margin-top: 40px;
+        }
+
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(140, 100, 255, 0.2);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, rgba(140, 100, 255, 0.5), rgba(140, 100, 255, 0.05));
+        }
+
+        .job {
+            position: relative;
+            margin-bottom: 36px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .job.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .job::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #7755ee;
+            border: 2px solid #06040f;
+            box-shadow: 0 0 10px rgba(120, 80, 255, 0.6);
+        }
+
+        .job-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .job-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #e8e0ff;
+        }
+
+        .job-company {
+            font-size: 0.85rem;
+            color: rgba(160, 120, 255, 0.8);
+        }
+
+        .job-period {
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            color: rgba(200, 192, 232, 0.35);
+            text-transform: uppercase;
+            margin-left: auto;
+        }
+
+        .job-desc {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(200, 192, 232, 0.6);
+            margin-bottom: 12px;
+        }
+
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .job-tag {
+            font-size: 0.68rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(100, 60, 200, 0.1);
+            border: 1px solid rgba(140, 100, 255, 0.2);
+            color: rgba(200, 192, 232, 0.7);
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:600px) {
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .job-period {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Back to Graph
+        </a>
+
+        <div class="page-label">Career History</div>
+        <h1 class="page-title">Experience</h1>
+        <p class="page-sub">5+ years across AI engineering, scientific research, and education.</p>
+
+        <!-- AI & Data Science -->
+        <div class="section-heading">🤖 AI & Data Science</div>
+        <div class="timeline">
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Data Scientist</span>
+                    <span class="job-company">Dexpro Innovations / Edure</span>
+                    <span class="job-period">Feb 2025 – Present</span>
+                </div>
+                <p class="job-desc">Leading development of multimodal ML solutions and RAG-based Generative AI systems.
+                    Designing ML deployment workflows and mentoring junior engineers. Creating AI curriculum for
+                    professional development programs.</p>
+                <div class="job-tags">
+                    <span class="job-tag">LangChain</span><span class="job-tag">RAG</span><span
+                        class="job-tag">LLaMA3</span>
+                    <span class="job-tag">MLflow</span><span class="job-tag">AWS Bedrock</span><span
+                        class="job-tag">Mentoring</span>
+                </div>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Junior Data Scientist</span>
+                    <span class="job-company">Dexpro Innovations / Edure</span>
+                    <span class="job-period">Feb 2024 – Feb 2025</span>
+                </div>
+                <p class="job-desc">Built and validated ML models across classification, regression, and NLP domains.
+                    Conducted feature engineering and EDA pipelines. Developed and deployed AI applications using
+                    Streamlit and Flask.</p>
+                <div class="job-tags">
+                    <span class="job-tag">Python</span><span class="job-tag">Scikit-Learn</span><span
+                        class="job-tag">NLP</span>
+                    <span class="job-tag">Streamlit</span><span class="job-tag">EDA</span><span
+                        class="job-tag">Flask</span>
+                </div>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Data Science Intern</span>
+                    <span class="job-company">Edure</span>
+                    <span class="job-period">2023 – Feb 2024</span>
+                </div>
+                <p class="job-desc">Prototyped machine learning models for real-world datasets. Worked on NLP sentiment
+                    analysis and Computer Vision object detection projects. Gained hands-on experience with the full ML
+                    pipeline.</p>
+                <div class="job-tags">
+                    <span class="job-tag">ML Prototyping</span><span class="job-tag">YOLO</span>
+                    <span class="job-tag">NLP</span><span class="job-tag">Computer Vision</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research & Life Sciences -->
+        <div class="section-heading">🔬 Research & Life Sciences</div>
+        <div class="timeline">
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Senior Research Fellow</span>
+                    <span class="job-company">SCTIMST (Govt. of India)</span>
+                    <span class="job-period">2019 – 2023</span>
+                </div>
+                <p class="job-desc">Conducted advanced research in biomaterials and tissue engineering at a premier
+                    national institute. Designed and executed experimental protocols, performed statistical analysis,
+                    and contributed to peer-reviewed publications. Collaborated across interdisciplinary teams of
+                    biologists, engineers, and clinicians.</p>
+                <div class="job-tags">
+                    <span class="job-tag">Biomaterials</span><span class="job-tag">Tissue Engineering</span>
+                    <span class="job-tag">3D Bioprinting</span><span class="job-tag">Statistical Analysis</span>
+                    <span class="job-tag">Scientific Writing</span><span class="job-tag">HPLC / SEM / TEM</span>
+                </div>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Young Professional II</span>
+                    <span class="job-company">CIBA – ICAR (Govt. of India)</span>
+                    <span class="job-period">Feb 2019 – Jul 2019</span>
+                </div>
+                <p class="job-desc">Worked on aquaculture research including PCR-based diagnostics and experimental data
+                    analysis. Contributed to vaccine development workflows and laboratory experimentation.</p>
+                <div class="job-tags">
+                    <span class="job-tag">Aquaculture</span><span class="job-tag">PCR</span>
+                    <span class="job-tag">Data Analysis</span><span class="job-tag">Lab Experimentation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.job').forEach(el => obs.observe(el));
+    </script>
+    <script src="snowfall.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshops & Talks — Saravana Perumal R.</title>
+    <meta name="description" content="AI workshops conducted and seminars delivered by Saravana Perumal R.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 192, 232, 0.45);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            margin-bottom: 50px;
+        }
+
+        .back-btn:hover {
+            color: #e8e0ff;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .back-btn:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.8);
+            margin-bottom: 24px;
+            margin-top: 40px;
+        }
+
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(140, 100, 255, 0.2);
+        }
+
+        .talk-card {
+            display: flex;
+            gap: 20px;
+            padding: 26px 24px;
+            background: rgba(100, 60, 200, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.2);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .talk-card.visible {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .talk-card:hover {
+            background: rgba(140, 100, 255, 0.13);
+            border-color: rgba(180, 140, 255, 0.4);
+            transform: translateX(4px);
+        }
+
+        .talk-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .icon-workshop {
+            background: rgba(100, 60, 220, 0.2);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+        }
+
+        .icon-seminar {
+            background: rgba(60, 120, 200, 0.2);
+            border: 1px solid rgba(80, 140, 255, 0.3);
+        }
+
+        .talk-body {
+            flex: 1;
+        }
+
+        .talk-type {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .type-w {
+            background: rgba(120, 80, 255, 0.2);
+            color: rgba(180, 150, 255, 0.9);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+        }
+
+        .type-s {
+            background: rgba(60, 120, 220, 0.2);
+            color: rgba(120, 180, 255, 0.9);
+            border: 1px solid rgba(80, 140, 255, 0.3);
+        }
+
+        .talk-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 6px;
+        }
+
+        .talk-desc {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: rgba(200, 192, 232, 0.6);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:580px) {
+            .talk-card {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Back to Graph
+        </a>
+
+        <div class="page-label">Speaking & Training</div>
+        <h1 class="page-title">Workshops & Talks</h1>
+        <p class="page-sub">Hands-on AI workshops and thought leadership seminars delivered to professionals and
+            students.</p>
+
+        <div class="section-heading">🛠 Workshops Conducted</div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-workshop">⚙️</div>
+            <div class="talk-body">
+                <span class="talk-type type-w">Workshop</span>
+                <div class="talk-title">AI Workflow for Business Development</div>
+                <div class="talk-desc">A practical workshop teaching business professionals how to integrate AI tools
+                    and automation into their workflows. Covered prompt engineering, AI assistants, and building
+                    lightweight AI-powered business processes.</div>
+            </div>
+        </div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-workshop">🔮</div>
+            <div class="talk-body">
+                <span class="talk-type type-w">Workshop</span>
+                <div class="talk-title">Introduction to Generative AI</div>
+                <div class="talk-desc">Foundational workshop on Generative AI for technical and non-technical audiences.
+                    Covered LLMs, prompt engineering, RAG systems, and practical use cases for GenAI in everyday
+                    professional work.</div>
+            </div>
+        </div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-workshop">👁</div>
+            <div class="talk-body">
+                <span class="talk-type type-w">Workshop</span>
+                <div class="talk-title">YOLO & Computer Vision — Hands-On</div>
+                <div class="talk-desc">End-to-end hands-on workshop covering real-time object detection using YOLO.
+                    Participants built, trained, and evaluated their own CV models on custom datasets during the
+                    session.</div>
+            </div>
+        </div>
+
+        <div class="section-heading">🎤 Seminars & Talks</div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-seminar">🌐</div>
+            <div class="talk-body">
+                <span class="talk-type type-s">Seminar</span>
+                <div class="talk-title">AI & the Future of Jobs</div>
+                <div class="talk-desc">An evidence-based talk exploring AI's impact on employment, the skills that will
+                    matter in an AI-driven economy, and how professionals can upskill strategically to thrive alongside
+                    intelligent systems.</div>
+            </div>
+        </div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-seminar">🤝</div>
+            <div class="talk-body">
+                <span class="talk-type type-s">Seminar</span>
+                <div class="talk-title">How to Embrace AI — A Practical Guide</div>
+                <div class="talk-desc">A mindset and strategy talk for students and early-career professionals on
+                    building an AI-augmented skillset, overcoming AI anxiety, and positioning oneself for the evolving
+                    tech ecosystem.</div>
+            </div>
+        </div>
+
+        <div class="talk-card">
+            <div class="talk-icon icon-seminar">🤖</div>
+            <div class="talk-body">
+                <span class="talk-type type-s">Seminar</span>
+                <div class="talk-title">Building Agentic AI Systems</div>
+                <div class="talk-desc">Technical seminar on the architecture of agentic AI — tool-using agents, memory
+                    systems, orchestration frameworks, and real-world deployment patterns for autonomous AI workflows.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.talk-card').forEach(el => obs.observe(el));
+    </script>
+    <script src="snowfall.js"></script>
+</body>
+
+</html>

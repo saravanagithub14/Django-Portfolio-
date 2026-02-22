@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Saravana Perumal R.</title>
+    <meta name="description" content="AI, ML, Deep Learning, and Biomedical projects by Saravana Perumal R.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(200, 192, 232, 0.45);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 10px 0;
+            transition: color 0.3s;
+            margin-bottom: 50px;
+        }
+
+        .back-btn:hover {
+            color: #e8e0ff;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .back-btn:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.8);
+            margin-bottom: 24px;
+            margin-top: 40px;
+        }
+
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(140, 100, 255, 0.2);
+        }
+
+        /* Featured cards */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .feat-card {
+            padding: 28px 24px;
+            border-radius: 16px;
+            background: rgba(100, 60, 200, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.2);
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .feat-card.visible {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .feat-card:hover {
+            background: rgba(140, 100, 255, 0.13);
+            border-color: rgba(180, 140, 255, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .feat-card .fc-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .feat-card .fc-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .feat-card .fc-desc {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: rgba(200, 192, 232, 0.6);
+            margin-bottom: 14px;
+        }
+
+        .feat-card .fc-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .feat-card .fc-tag {
+            font-size: 0.65rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(120, 80, 255, 0.15);
+            border: 1px solid rgba(140, 100, 255, 0.25);
+            color: rgba(200, 192, 232, 0.75);
+        }
+
+        /* List projects */
+        .proj-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .proj-item {
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: rgba(80, 50, 160, 0.07);
+            border: 1px solid rgba(140, 100, 255, 0.15);
+            font-size: 0.85rem;
+            color: rgba(200, 192, 232, 0.75);
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .proj-item.visible {
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        .proj-item:hover {
+            background: rgba(140, 100, 255, 0.12);
+            border-color: rgba(180, 140, 255, 0.3);
+            color: #e8e0ff;
+        }
+
+        .proj-item .pi-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7755ee;
+            margin-right: 8px;
+            vertical-align: middle;
+            box-shadow: 0 0 6px rgba(120, 80, 255, 0.6);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:640px) {
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .proj-list {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width:400px) {
+            .proj-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Back to Graph
+        </a>
+
+        <div class="page-label">Portfolio</div>
+        <h1 class="page-title">Projects</h1>
+        <p class="page-sub">20+ projects spanning Generative AI, Computer Vision, ML, and Biomedical Research.</p>
+
+        <!-- Featured -->
+        <div class="section-heading">⭐ Featured AI Projects</div>
+        <div class="featured-grid">
+            <div class="feat-card">
+                <div class="fc-emoji">🧠</div>
+                <div class="fc-title">RAG Document Intelligence System</div>
+                <div class="fc-desc">A production-grade document Q&A system using LangChain, LLaMA3, and vector
+                    databases. Enables real-time retrieval-augmented generation over large document corpora.</div>
+                <div class="fc-tags"><span class="fc-tag">LangChain</span><span class="fc-tag">LLaMA3</span><span
+                        class="fc-tag">Vector DB</span><span class="fc-tag">RAG</span></div>
+            </div>
+            <div class="feat-card">
+                <div class="fc-emoji">🤖</div>
+                <div class="fc-title">Agentic AI Search Engine</div>
+                <div class="fc-desc">Tool-using autonomous AI agents that orchestrate multiple APIs to perform
+                    autonomous research, reasoning, and structured output generation.</div>
+                <div class="fc-tags"><span class="fc-tag">Agentic AI</span><span class="fc-tag">LangChain</span><span
+                        class="fc-tag">API Orchestration</span></div>
+            </div>
+            <div class="feat-card">
+                <div class="fc-emoji">🦺</div>
+                <div class="fc-title">Construction Site Safety (YOLO)</div>
+                <div class="fc-desc">Real-time PPE (Personal Protective Equipment) detection system for construction
+                    sites using YOLO object detection. Full training, evaluation, and deployment pipeline.</div>
+                <div class="fc-tags"><span class="fc-tag">YOLOv8</span><span class="fc-tag">Computer Vision</span><span
+                        class="fc-tag">Real-time</span></div>
+            </div>
+            <div class="feat-card">
+                <div class="fc-emoji">🏥</div>
+                <div class="fc-title">Brain Tumor Detection (CNN)</div>
+                <div class="fc-desc">Medical image classification system using CNNs and transfer learning to detect and
+                    classify brain tumors from MRI scans with performance benchmarking.</div>
+                <div class="fc-tags"><span class="fc-tag">CNN</span><span class="fc-tag">Transfer Learning</span><span
+                        class="fc-tag">Medical Imaging</span></div>
+            </div>
+        </div>
+
+        <!-- GenAI / LLM -->
+        <div class="section-heading">🔮 Generative AI & LLM Applications</div>
+        <div class="proj-list">
+            <div class="proj-item"><span class="pi-dot"></span>Chat with PDF (RAG)</div>
+            <div class="proj-item"><span class="pi-dot"></span>SQL Database Chat Assistant</div>
+            <div class="proj-item"><span class="pi-dot"></span>Multi-Language Code Assistant</div>
+            <div class="proj-item"><span class="pi-dot"></span>AWS Bedrock GenAI Deployment</div>
+            <div class="proj-item"><span class="pi-dot"></span>Ollama Local LLM Chatbot</div>
+            <div class="proj-item"><span class="pi-dot"></span>Text Summarization (LangChain)</div>
+        </div>
+
+        <!-- ML & NLP -->
+        <div class="section-heading">📊 Machine Learning & NLP</div>
+        <div class="proj-list">
+            <div class="proj-item"><span class="pi-dot"></span>Tweet Sentiment Analysis (SVM + TF-IDF)</div>
+            <div class="proj-item"><span class="pi-dot"></span>Classification & Regression Pipelines</div>
+            <div class="proj-item"><span class="pi-dot"></span>Feature Engineering & Model Comparison</div>
+        </div>
+
+        <!-- Biomedical -->
+        <div class="section-heading">🔬 Biomedical & Research Projects</div>
+        <div class="proj-list">
+            <div class="proj-item"><span class="pi-dot"></span>3D Bioprinting of Skin Tissue</div>
+            <div class="proj-item"><span class="pi-dot"></span>Anti-Microbial Hydrogel Development</div>
+            <div class="proj-item"><span class="pi-dot"></span>Biosynthesized Nanosilver Research</div>
+            <div class="proj-item"><span class="pi-dot"></span>siRNA Study in C. elegans</div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.feat-card, .proj-item').forEach(el => obs.observe(el));
+    </script>
+    <script src="snowfall.js"></script>
+</body>
+
+</html>
