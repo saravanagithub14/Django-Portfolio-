@@ -1,5 +1,11 @@
 /* ===== Obsidian Graph Portfolio — Global Styles ===== */
 
+/* Ensure custom font never blocks rendering */
+@font-face {
+    font-family: 'Trench Thin';
+    font-display: swap;
+}
+
 /* Reset & Dark Canvas */
 *,
 *::before,

@@ -1,6 +1,10 @@
-// ===== Snowfall Effect =====
-// Drop this script into any page for a subtle snowfall layer.
+// ===== Unified Ambient Canvas (Snowfall + Particles — single RAF loop) =====
+// On index.html (which has particle-canvas from script.js), this does nothing.
+// On all sub-pages, this replaces the old separate snowfall + particle loops.
 (function () {
+    // Don't double-up on index.html
+    if (document.getElementById('particle-canvas')) return;
+
     const canvas = document.createElement('canvas');
     canvas.id = 'snowfall-canvas';
     canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:none;';
@@ -16,42 +20,49 @@
     resize();
     window.addEventListener('resize', resize);
 
+    // Combined 40 particles (was 55 snow + 50 bg = 105 total)
+    const COUNT = 40;
     const flakes = [];
-    const COUNT = 55;
-
     for (let i = 0; i < COUNT; i++) {
+        const isSnow = i < 20;
         flakes.push({
-            x: Math.random() * W,
-            y: Math.random() * H,
-            r: Math.random() * 2 + 0.5,
-            speed: Math.random() * 0.6 + 0.2,
-            drift: (Math.random() - 0.5) * 0.4,
-            alpha: Math.random() * 0.4 + 0.1,
+            x: Math.random() * (W || window.innerWidth),
+            y: Math.random() * (H || window.innerHeight),
+            r: isSnow ? (Math.random() * 1.8 + 0.4) : (Math.random() * 0.9 + 0.3),
+            speed: isSnow ? (Math.random() * 0.5 + 0.15) : 0,
+            vx: isSnow ? (Math.random() - 0.5) * 0.25 : (Math.random() - 0.5) * 0.2,
+            vy: isSnow ? 0 : (Math.random() - 0.5) * 0.2,
+            alpha: isSnow ? (Math.random() * 0.3 + 0.07) : (Math.random() * 0.1 + 0.02),
             wobble: Math.random() * Math.PI * 2,
-            wobbleSpeed: Math.random() * 0.02 + 0.005
+            wobbleSpeed: Math.random() * 0.018 + 0.004,
+            isSnow
         });
     }
 
     function draw() {
         ctx.clearRect(0, 0, W, H);
         for (const f of flakes) {
-            f.y += f.speed;
-            f.wobble += f.wobbleSpeed;
-            f.x += f.drift + Math.sin(f.wobble) * 0.3;
-
-            if (f.y > H + 5) {
-                f.y = -5;
-                f.x = Math.random() * W;
+            if (f.isSnow) {
+                f.y += f.speed;
+                f.wobble += f.wobbleSpeed;
+                f.x += f.vx + Math.sin(f.wobble) * 0.25;
+                if (f.y > H + 5) { f.y = -5; f.x = Math.random() * W; }
+                if (f.x < -5) f.x = W + 5;
+                if (f.x > W + 5) f.x = -5;
+                ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+            } else {
+                f.x += f.vx; f.y += f.vy;
+                if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
+                if (f.y < 0) f.y = H; if (f.y > H) f.y = 0;
+                ctx.fillStyle = `rgba(160,120,255,${f.alpha})`;
             }
-            if (f.x < -5) f.x = W + 5;
-            if (f.x > W + 5) f.x = -5;
-
             ctx.beginPath();
             ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${f.alpha})`;
             ctx.fill();
         }
         requestAnimationFrame(draw);
     }
-    draw();
+
+    // Small delay so page paint isn't blocked on load
+    setTimeout(draw, 150);
 })();

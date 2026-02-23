@@ -13,7 +13,7 @@
     window.addEventListener('resize', resize);
 
     const particles = [];
-    const COUNT = 60;
+    const COUNT = 35; // Reduced from 60 — lighter on CPU
 
     for (let i = 0; i < COUNT; i++) {
         particles.push({
@@ -43,7 +43,8 @@
         }
         requestAnimationFrame(draw);
     }
-    draw();
+    // Delay particle start so D3 render gets full CPU priority on first frame
+    setTimeout(draw, 500);
 })();
 
 // ===== Graph Setup =====
@@ -169,8 +170,8 @@ function chargeFn(d) {
 }
 
 const simulation = d3.forceSimulation()
-    .velocityDecay(0.45)          // slower, damped movement
-    .alphaDecay(0.015)            // animation settles more gradually
+    .velocityDecay(0.45)
+    .alphaDecay(0.04)             // Was 0.015 — now settles ~3x faster
     .force('link', d3.forceLink().id(d => d.id).distance(linkDistFn).strength(forceParams.linkStrength))
     .force('charge', d3.forceManyBody().strength(chargeFn))
     .force('center', d3.forceCenter(width / 2, height / 2).strength(forceParams.centerStrength))
@@ -179,7 +180,8 @@ const simulation = d3.forceSimulation()
         if (d.depth === 1) return 25;
         if (d.depth === 2) return 15;
         return 10;
-    }));
+    }))
+    .stop(); // Start stopped — we'll kick it off after the loader
 
 // ===== Rendering =====
 function getRadius(depth) {
@@ -443,16 +445,24 @@ window.addEventListener('resize', () => {
 });
 
 // ===== Initial Render + Loader dismiss =====
-render();
+// Pre-warm the simulation silently (no tick callbacks yet) to pre-compute positions
+simulation.nodes(rootNode.descendants());
+simulation.force('link').links(rootNode.links());
+// Run ~30 ticks silently so nodes start in reasonable positions
+for (let i = 0; i < 30; i++) simulation.tick();
 
-// Dismiss loader after animation starts
+// Now render with pre-computed positions, then kick off live simulation
+render();
+simulation.restart();
+
+// Dismiss loader
 setTimeout(() => {
     const loader = document.getElementById('loader');
     if (loader) {
         loader.classList.add('fade-out');
         setTimeout(() => loader.remove(), 800);
     }
-}, 600);
+}, 400); // Faster dismiss — graph is already rendered
 
 // ===== Control Panel Sliders =====
 function bindSlider(id, param, applyFn) {
