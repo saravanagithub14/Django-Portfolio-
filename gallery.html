@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshops & Talks — Saravana Perumal R.</title>
+    <meta name="description" content="AI workshops conducted and seminars delivered by Saravana Perumal R.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #06040f;
+            color: #c8c0e8;
+            font-family: 'Trench Thin', 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 30px 100px;
+        }
+
+        /* Navigation */
+        .top-nav {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid rgba(140, 100, 255, 0.2);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .nav-link {
+            color: rgba(200, 192, 232, 0.6);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #e8e0ff;
+            transform: translateY(-2px);
+        }
+
+        .page-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: rgba(160, 120, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e8e0ff;
+            margin-bottom: 8px;
+        }
+
+        .page-sub {
+            font-size: 1rem;
+            color: rgba(200, 192, 232, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(160, 120, 255, 0.8);
+            margin-bottom: 24px;
+            margin-top: 40px;
+        }
+
+        .section-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(140, 100, 255, 0.2);
+        }
+
+        .talk-card {
+            display: flex;
+            gap: 20px;
+            padding: 26px 24px;
+            background: rgba(100, 60, 200, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.2);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .talk-card.visible {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .talk-card:hover {
+            background: rgba(140, 100, 255, 0.13);
+            border-color: rgba(180, 140, 255, 0.4);
+            transform: translateX(4px);
+        }
+
+        .talk-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .icon-workshop {
+            background: rgba(100, 60, 220, 0.2);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+        }
+
+        .icon-seminar {
+            background: rgba(60, 120, 200, 0.2);
+            border: 1px solid rgba(80, 140, 255, 0.3);
+        }
+
+        .talk-body {
+            flex: 1;
+        }
+
+        .talk-type {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .type-w {
+            background: rgba(120, 80, 255, 0.2);
+            color: rgba(180, 150, 255, 0.9);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+        }
+
+        .type-s {
+            background: rgba(60, 120, 220, 0.2);
+            color: rgba(120, 180, 255, 0.9);
+            border: 1px solid rgba(80, 140, 255, 0.3);
+        }
+
+        .talk-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            margin-bottom: 6px;
+        }
+
+        .talk-desc {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: rgba(200, 192, 232, 0.6);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:580px) {
+            .talk-card {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="content">
+        <nav class="top-nav">
+            <a href="graph.html" class="nav-link">Graph</a>
+            <a href="graph.html#bio-section" class="nav-link">Bio</a>
+            <a href="skills.html" class="nav-link">Skills</a>
+            <a href="experience.html" class="nav-link">Experience</a>
+            <a href="education.html" class="nav-link">Education</a>
+            <div class="dropdown">
+                <button class="dropbtn nav-link active">Portfolio ▾</button>
+                <div class="dropdown-content">
+                    <a href="projects.html" class="">Projects</a>
+                    <a href="publications.html" class="">Publications</a>
+                    <a href="workshops.html" class="">Workshops</a>
+                    <a href="gallery.html" class="active">Gallery</a>
+                </div>
+            </div>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </nav>
+
+        <div class="page-label">Media & Presentations</div>
+        <h1 class="page-title">Video Gallery</h1>
+        <p class="page-sub">Featured video content, presentations, and showcases.</p>
+
+        <div class="project-card"
+            style="margin-bottom: 40px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+            <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">AI Workflow for
+                Business Development</h2>
+            <div
+                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    src="https://www.youtube.com/embed/iCSkyJWMhrU?origin=http://example.com"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="project-card"
+            style="margin-bottom: 40px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+            <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Introduction to
+                Generative AI</h2>
+            <div
+                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    src="https://www.youtube.com/embed/a29OinkSuKk?start=2212&origin=http://example.com"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.talk-card').forEach(el => obs.observe(el));
+    </script>
+
+    <!-- Graph View at the bottom -->
+    <div style="text-align: center; margin-top: 80px; margin-bottom: 20px;">
+        <div style="font-size: 1.5rem; color: #e8e0ff; margin-bottom: 12px;">Explore the Graph</div>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            style="background: rgba(100, 60, 200, 0.2); border: 1px solid rgba(140, 100, 255, 0.3); color: rgba(200, 192, 232, 0.8); padding: 8px 24px; border-radius: 30px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.75rem; transition: all 0.3s; letter-spacing: 1.5px; text-transform: uppercase; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"
+            onmouseover="this.style.background='rgba(140, 100, 255, 0.4)'; this.style.color='#fff'; this.style.transform='translateY(-2px)';"
+            onmouseout="this.style.background='rgba(100, 60, 200, 0.2)'; this.style.color='rgba(200, 192, 232, 0.8)'; this.style.transform='translateY(0)';">↑
+            Back to Top</button>
+    </div>
+    <div id="graph-container"
+        style="height: 70vh; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;">
+    </div>
+
+    <!-- Info Panel -->
+    <div id="info-panel">
+        <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
+        <h2 id="panel-title">Title</h2>
+        <div id="panel-content">Content goes here...</div>
+    </div>
+
+    <!-- Instructions -->
+    <div id="instructions"
+        style="position: relative; text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.4);">
+        Drag to move &bull; Scroll to zoom &bull; Click nodes to explore
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+
+    <script src="snowfall.js"></script>
+</body>
+
+</html>
