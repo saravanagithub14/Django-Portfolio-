@@ -221,46 +221,82 @@
             gap: 24px;
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 16px;
+            padding-bottom: 20px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            cursor: grab;
-        }
-
-        .video-scroll-container:active {
-            cursor: grabbing;
-        }
-
-        .video-scroll-container .project-card {
-            flex: 0 0 480px;
-            min-width: 480px;
-            width: 480px;
-            margin-bottom: 0 !important;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            /* Hide scrollbar for Chrome/Safari/Firefox */
         }
 
         .video-scroll-container::-webkit-scrollbar {
-            height: 6px;
+            display: none;
         }
 
-        .video-scroll-container::-webkit-scrollbar-track {
-            background: rgba(100, 60, 200, 0.05);
-            border-radius: 10px;
+        .video-scroll-container .project-card {
+            flex: 0 0 100%;
+            min-width: 100%;
+            width: 100%;
+            margin-bottom: 0 !important;
+            scroll-snap-align: center;
+            transition: transform 0.3s ease;
         }
 
-        .video-scroll-container::-webkit-scrollbar-thumb {
-            background: rgba(140, 100, 255, 0.35);
-            border-radius: 10px;
+        /* Carousel Navigation Buttons */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            pointer-events: none;
+            padding: 0 40px;
         }
 
-        .video-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(180, 140, 255, 0.6);
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(100, 60, 200, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+            color: #e8e0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(140, 100, 255, 0.4);
+            border-color: rgba(180, 140, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
         @media (max-width: 600px) {
-            .video-scroll-container .project-card {
-                flex: 0 0 85vw;
-                min-width: 85vw;
-                width: 85vw;
+            .video-gallery-wrapper {
+                padding: 0 10px 20px;
+            }
+
+            .carousel-nav {
+                padding: 0 15px;
+            }
+
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
             }
         }
 
@@ -304,7 +340,11 @@
         <p class="page-sub">Featured video content, presentations, and showcases.</p>
 
         <div class="video-gallery-wrapper">
-            <div class="video-scroll-container">
+            <div class="carousel-nav">
+                <button class="nav-btn" id="prevBtn" title="Previous">←</button>
+                <button class="nav-btn" id="nextBtn" title="Next">→</button>
+            </div>
+            <div class="video-scroll-container" id="videoSlider">
                 <div class="project-card"
                     style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
                     <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Python
@@ -363,21 +403,98 @@
     </div>
 
     <script>
-        // Drag to scroll
-        const scroller = document.querySelector('.video-scroll-container');
-        let isDown = false, startX, scrollLeft;
-        scroller.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft; });
-        scroller.addEventListener('mouseleave', () => isDown = false);
-        scroller.addEventListener('mouseup', () => isDown = false);
-        scroller.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - scroller.offsetLeft; scroller.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+        const slider = document.getElementById('videoSlider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        nextBtn.addEventListener('click', () => {
+            const cardWidth = slider.querySelector('.project-card').offsetWidth + 24;
+            slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            const cardWidth = slider.querySelector('.project-card').offsetWidth + 24;
+            slider.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        });
+
+        // Loop functionality
+        slider.addEventListener('scroll', () => {
+            const maxScroll = slider.scrollWidth - slider.clientWidth;
+            if (slider.scrollLeft >= maxScroll - 5) {
+                // Potential for infinite scroll setup here if needed
+            }
+        });
     </script>
     <script>
         (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
         const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
-        document.querySelectorAll('.talk-card').forEach(el => obs.observe(el));
+        document.querySelectorAll('.talk-card, .section-block').forEach(el => obs.observe(el));
     </script>
 
-    <!-- Graph View at the bottom -->
+
+    <!-- Explore the Multiverse Navigation Grid -->
+    <div class="section-block" id="s-explore">
+        <div class="section-label">Explore More</div>
+        <h2 class="section-title">Enter Other Realities</h2>
+        <div class="nav-grid">
+            <a href="graph.html" class="nav-grid-btn">
+                <span class="icon">🕸️</span>
+                <span class="title">Graph</span>
+                <span class="desc">The Big Picture</span>
+            </a>
+            <a href="graph.html#bio-section" class="nav-grid-btn">
+                <span class="icon">👤</span>
+                <span class="title">Bio</span>
+                <span class="desc">The Persona</span>
+            </a>
+            <a href="skills.html" class="nav-grid-btn">
+                <span class="icon">⚔️</span>
+                <span class="title">Skills</span>
+                <span class="desc">Tech Arsenal</span>
+            </a>
+            <a href="experience.html" class="nav-grid-btn">
+                <span class="icon">📜</span>
+                <span class="title">Experience</span>
+                <span class="desc">Professional Arc</span>
+            </a>
+            <a href="projects.html" class="nav-grid-btn">
+                <span class="icon">🛠️</span>
+                <span class="title">Projects</span>
+                <span class="desc">Work Built</span>
+            </a>
+            <a href="publications.html" class="nav-grid-btn">
+                <span class="icon">📚</span>
+                <span class="title">publications</span>
+                <span class="desc">Research Lore</span>
+            </a>
+            <a href="workshops.html" class="nav-grid-btn">
+                <span class="icon">🎓</span>
+                <span class="title">Workshops</span>
+                <span class="desc">Knowledge Drops</span>
+            </a>
+            <a href="gallery.html" class="nav-grid-btn">
+                <span class="icon">🖼️</span>
+                <span class="title">Gallery</span>
+                <span class="desc">Visual Story</span>
+            </a>
+            <a href="education.html" class="nav-grid-btn">
+                <span class="icon">🏛️</span>
+                <span class="title">Education</span>
+                <span class="desc">Foundations</span>
+            </a>
+            <a href="summary.html" class="nav-grid-btn">
+                <span class="icon">🚀</span>
+                <span class="title">Focus</span>
+                <span class="desc">Current Path</span>
+            </a>
+            <a href="contact.html" class="nav-grid-btn">
+                <span class="icon">✉️</span>
+                <span class="title">Contact</span>
+                <span class="desc">Get in Touch</span>
+            </a>
+        </div>
+    </div>
+
     <div style="text-align: center; margin-top: 80px; margin-bottom: 20px;">
         <div style="font-size: 1.5rem; color: #e8e0ff; margin-bottom: 12px;">Explore the Graph</div>
         <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
