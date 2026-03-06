@@ -203,19 +203,37 @@
         }
 
         /* Video gallery scroll container */
+        .video-gallery-wrapper {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 0 30px 20px;
+            box-sizing: border-box;
+        }
+
         .video-scroll-container {
             display: flex;
             flex-direction: row;
+            flex-wrap: nowrap;
             gap: 24px;
             overflow-x: auto;
             overflow-y: hidden;
             padding-bottom: 16px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+            cursor: grab;
+        }
+
+        .video-scroll-container:active {
+            cursor: grabbing;
         }
 
         .video-scroll-container .project-card {
             flex: 0 0 480px;
+            min-width: 480px;
             width: 480px;
             margin-bottom: 0 !important;
         }
@@ -241,6 +259,7 @@
         @media (max-width: 600px) {
             .video-scroll-container .project-card {
                 flex: 0 0 85vw;
+                min-width: 85vw;
                 width: 85vw;
             }
         }
@@ -284,61 +303,74 @@
         <h1 class="page-title">Video Gallery</h1>
         <p class="page-sub">Featured video content, presentations, and showcases.</p>
 
-        <div class="video-scroll-container">
-            <div class="project-card"
-                style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
-                <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Python</h2>
-                <div
-                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                        src="https://www.youtube.com/embed/klsK_Pl-LIw?start=2306" title="Python"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
+        <div class="video-gallery-wrapper">
+            <div class="video-scroll-container">
+                <div class="project-card"
+                    style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+                    <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Python
+                    </h2>
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                            src="https://www.youtube.com/embed/klsK_Pl-LIw?start=2306" title="Python"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                    </div>
                 </div>
-            </div>
 
-            <div class="project-card"
-                style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
-                <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Data Analysis
-                </h2>
-                <div
-                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                        src="https://www.youtube.com/embed/h0T74TcvBN4?start=2" title="Data Analysis"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
+                <div class="project-card"
+                    style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+                    <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Data
+                        Analysis
+                    </h2>
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                            src="https://www.youtube.com/embed/h0T74TcvBN4?start=2" title="Data Analysis"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                    </div>
                 </div>
-            </div>
 
-            <div class="project-card"
-                style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
-                <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Machine
-                    Learning</h2>
-                <div
-                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                        src="https://www.youtube.com/embed/a29OinkSuKk?start=2212" title="Machine Learning"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
+                <div class="project-card"
+                    style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+                    <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Machine
+                        Learning</h2>
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                            src="https://www.youtube.com/embed/a29OinkSuKk?start=2212" title="Machine Learning"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                    </div>
                 </div>
-            </div>
 
-            <div class="project-card"
-                style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
-                <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Deep Learning
-                </h2>
-                <div
-                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                        src="https://www.youtube.com/embed/iCSkyJWMhrU" title="Deep Learning"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
+                <div class="project-card"
+                    style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+                    <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">Deep
+                        Learning
+                    </h2>
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                            src="https://www.youtube.com/embed/iCSkyJWMhrU" title="Deep Learning"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <script>
+        // Drag to scroll
+        const scroller = document.querySelector('.video-scroll-container');
+        let isDown = false, startX, scrollLeft;
+        scroller.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - scroller.offsetLeft; scrollLeft = scroller.scrollLeft; });
+        scroller.addEventListener('mouseleave', () => isDown = false);
+        scroller.addEventListener('mouseup', () => isDown = false);
+        scroller.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - scroller.offsetLeft; scroller.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+    </script>
     <script>
         (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .1 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
         const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
