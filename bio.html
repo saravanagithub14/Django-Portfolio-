@@ -47,7 +47,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-        }        /* Navigation */
+        }
+
+        /* Navigation */
         .top-nav {
             width: 100%;
             display: flex;
@@ -69,7 +71,8 @@
             transition: color 0.3s, transform 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: #e8e0ff;
             transform: translateY(-2px);
         }
@@ -455,6 +458,70 @@
                 align-items: center;
             }
         }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .nav-grid-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            background: rgba(100, 60, 200, 0.08);
+            border: 1px solid rgba(140, 100, 255, 0.18);
+            border-radius: 16px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+
+        .nav-grid-btn:hover {
+            background: rgba(140, 100, 255, 0.15);
+            border-color: rgba(180, 140, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(100, 60, 220, 0.2);
+        }
+
+        .nav-grid-btn .icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-grid-btn:hover .icon {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+
+        .nav-grid-btn .title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #e8e0ff;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-grid-btn .desc {
+            font-size: 0.6rem;
+            color: rgba(200, 192, 232, 0.4);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 500px) {
+            .nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -462,7 +529,7 @@
 <body>
     <canvas id="particle-bg"></canvas>
     <div class="content">
-                <nav class="top-nav">
+        <nav class="top-nav">
             <a href="graph.html" class="nav-link">Graph</a>
             <a href="graph.html#bio-section" class="nav-link active">Bio</a>
             <a href="skills.html" class="nav-link">Skills</a>
@@ -631,6 +698,64 @@
                 <span class="lang-tag">Tamil <span>Native</span></span>
                 <span class="lang-tag">Malayalam <span>Native</span></span>
                 <span class="lang-tag">Hindi <span>Basic</span></span>
+            </div>
+        </div>
+
+        <!-- Explore the Multiverse Navigation Grid -->
+        <div class="section-block" id="s-explore">
+            <div class="section-label">Explore More</div>
+            <h2 class="section-title">Enter Other Realities</h2>
+            <div class="nav-grid">
+                <a href="graph.html" class="nav-grid-btn">
+                    <span class="icon">🕸️</span>
+                    <span class="title">Graph</span>
+                    <span class="desc">The Big Picture</span>
+                </a>
+                <a href="skills.html" class="nav-grid-btn">
+                    <span class="icon">⚔️</span>
+                    <span class="title">Skills</span>
+                    <span class="desc">Tech Arsenal</span>
+                </a>
+                <a href="experience.html" class="nav-grid-btn">
+                    <span class="icon">📜</span>
+                    <span class="title">Experience</span>
+                    <span class="desc">Professional Arc</span>
+                </a>
+                <a href="projects.html" class="nav-grid-btn">
+                    <span class="icon">🛠️</span>
+                    <span class="title">Projects</span>
+                    <span class="desc">Work Built</span>
+                </a>
+                <a href="publications.html" class="nav-grid-btn">
+                    <span class="icon">📚</span>
+                    <span class="title">publications</span>
+                    <span class="desc">Research Lore</span>
+                </a>
+                <a href="workshops.html" class="nav-grid-btn">
+                    <span class="icon">🎓</span>
+                    <span class="title">Workshops</span>
+                    <span class="desc">Knowledge Drops</span>
+                </a>
+                <a href="gallery.html" class="nav-grid-btn">
+                    <span class="icon">🖼️</span>
+                    <span class="title">Gallery</span>
+                    <span class="desc">Visual Story</span>
+                </a>
+                <a href="education.html" class="nav-grid-btn">
+                    <span class="icon">🏛️</span>
+                    <span class="title">Education</span>
+                    <span class="desc">Foundations</span>
+                </a>
+                <a href="summary.html" class="nav-grid-btn">
+                    <span class="icon">🚀</span>
+                    <span class="title">Focus</span>
+                    <span class="desc">Current Path</span>
+                </a>
+                <a href="contact.html" class="nav-grid-btn">
+                    <span class="icon">✉️</span>
+                    <span class="title">Contact</span>
+                    <span class="desc">Get in Touch</span>
+                </a>
             </div>
         </div>
     </div>
