@@ -153,9 +153,9 @@ rootNode.descendants().forEach(d => {
 // Force multipliers (driven by sliders)
 let forceParams = {
     centerStrength: 0.5,
-    repelMultiplier: 0.5,
-    linkStrength: 0.9,
-    linkDistMultiplier: 0.7,
+    repelMultiplier: 0.9,
+    linkStrength: 0.8,
+    linkDistMultiplier: 0.9,
     animSpeed: 0.5
 };
 
@@ -176,10 +176,10 @@ const simulation = d3.forceSimulation()
     .force('charge', d3.forceManyBody().strength(chargeFn))
     .force('center', d3.forceCenter(width / 2, height / 2).strength(forceParams.centerStrength))
     .force('collide', d3.forceCollide().radius(d => {
-        if (d.depth === 0) return 40;
-        if (d.depth === 1) return 25;
-        if (d.depth === 2) return 15;
-        return 10;
+        if (d.depth === 0) return 60;
+        if (d.depth === 1) return 40;
+        if (d.depth === 2) return 25;
+        return 16;
     }))
     .stop(); // Start stopped — we'll kick it off after the loader
 
@@ -464,33 +464,4 @@ setTimeout(() => {
     }
 }, 400); // Faster dismiss — graph is already rendered
 
-// ===== Control Panel Sliders =====
-function bindSlider(id, param, applyFn) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('input', () => {
-        forceParams[param] = parseFloat(el.value);
-        applyFn();
-        simulation.alpha(forceParams.animSpeed).restart();
-    });
-}
 
-bindSlider('ctrl-anim-speed', 'animSpeed', () => {
-    simulation.velocityDecay(0.25 + (1 - forceParams.animSpeed / 3) * 0.55);
-});
-
-bindSlider('ctrl-center', 'centerStrength', () => {
-    simulation.force('center').strength(forceParams.centerStrength);
-});
-
-bindSlider('ctrl-repel', 'repelMultiplier', () => {
-    simulation.force('charge').strength(chargeFn);
-});
-
-bindSlider('ctrl-link-strength', 'linkStrength', () => {
-    simulation.force('link').strength(forceParams.linkStrength);
-});
-
-bindSlider('ctrl-link-distance', 'linkDistMultiplier', () => {
-    simulation.force('link').distance(linkDistFn);
-});

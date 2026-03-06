@@ -2,7 +2,7 @@ const resumeData = {
     "id": "root",
     "name": "Saravana Perumal R.",
     "type": "root",
-    "navigateTo": "bio.html",
+    "navigateTo": "#bio-section",
     "description": "AI Engineer | Data Scientist | Generative AI Specialist | AI Educator",
     "children": [
         {
