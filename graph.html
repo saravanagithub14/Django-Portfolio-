@@ -48,13 +48,18 @@
     <div class="content" id="bio-section">
         <nav class="top-nav">
             <a href="graph.html" class="nav-link">Graph</a>
-            <a href="#bio-section" class="nav-link active">Bio</a>
+            <a href="graph.html#bio-section" class="nav-link active">Bio</a>
             <a href="skills.html" class="nav-link">Skills</a>
             <a href="experience.html" class="nav-link">Experience</a>
             <a href="education.html" class="nav-link">Education</a>
-            <a href="projects.html" class="nav-link">Projects</a>
-            <a href="publications.html" class="nav-link">Publications</a>
-            <a href="workshops.html" class="nav-link">Workshops</a>
+            <div class="dropdown">
+                <button class="dropbtn nav-link">Portfolio ▾</button>
+                <div class="dropdown-content">
+                    <a href="projects.html" class="">Projects</a>
+                    <a href="publications.html" class="">Publications</a>
+                    <a href="workshops.html" class="">Workshops</a>
+                </div>
+            </div>
             <a href="contact.html" class="nav-link">Contact</a>
         </nav>
 
@@ -219,12 +224,12 @@
     </div>
 
     <div
-        style="position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
+        style="position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
         <div
-            style="font-size: 0.9rem; color: #ffffff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 12px; font-family: 'Inter', sans-serif;">
+            style="font-size: 0.9rem; color: #ffffff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 12px; font-family: 'Inter', sans-serif; white-space: nowrap;">
             Not bold enough to navigate?</div>
         <a href="#bio-section"
-            style="display: inline-block; background: linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9)); border: 2px solid #a078ff; color: #ffffff; padding: 12px 30px; border-radius: 40px; text-decoration: none; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 20px rgba(140, 100, 255, 0.6);"
+            style="display: inline-block; background: linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9)); border: 2px solid #a078ff; color: #ffffff; padding: 12px 30px; border-radius: 40px; text-decoration: none; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 20px rgba(140, 100, 255, 0.6); white-space: nowrap;"
             onmouseover="this.style.background='linear-gradient(135deg, rgba(160, 120, 255, 1), rgba(120, 80, 255, 1))'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 30px rgba(160, 120, 255, 0.8)';"
             onmouseout="this.style.background='linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9))'; this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 0 20px rgba(140, 100, 255, 0.6)';">SKIP
             TO WEBSITE ↓</a>
