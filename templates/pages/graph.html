@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config.site_title }} — Portfolio</title>
-    <meta name="description" content="Interactive Obsidian-style graph portfolio of {{ config.site_title }}.">
+    <meta name="description"
+        content="Interactive Obsidian-style graph portfolio of {{ config.site_title }} — {{ config.site_description }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="preload" href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    </noscript>
     <link rel="stylesheet" href="static/css/style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="icon" type="image/png" href="static/favicon.png">
+    <!-- Vendor Scripts -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
     <link rel="stylesheet" href="static/css/chat_widget.css">
 </head>
+
 <body>
     <!-- Loading Overlay -->
     <div id="loader">
         <div class="pulse-ring"></div>
-        <div class="loader-text">loading graph</div>
+        <div class="loader-text">initializing digital space</div>
     </div>
 
+    <!-- Background floating particles -->
     <canvas id="particle-canvas"></canvas>
+
+    <!-- Graph -->
     <div id="graph-container"></div>
 
+    <!-- Info Panel -->
     <div id="info-panel">
         <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
         <h2 id="panel-title">Title</h2>
@@ -53,10 +66,14 @@
         <!-- Metrics -->
         <div class="metrics">
             {% for m in config.metrics %}
-            <div class="metric"><div class="val">{{ m.value }}</div><div class="lbl">{{ m.label }}</div></div>
+            <div class="metric">
+                <div class="val">{{ m.value }}</div>
+                <div class="lbl">{{ m.label }}</div>
+            </div>
             {% endfor %}
         </div>
 
+        <!-- CTA -->
         <div class="cta-row">
             <a href="projects.html" class="cta-btn cta-primary">View Projects</a>
             <a href="contact.html" class="cta-btn cta-secondary">Contact Me</a>
@@ -65,6 +82,7 @@
 
         {% include 'components/social_icons.html' %}
 
+        <!-- About: Journey -->
         <div class="section-block" id="s-journey">
             <div class="section-label">{{ bio.journey.label }}</div>
             <h2 class="section-title">{{ bio.journey.title }}</h2>
@@ -73,6 +91,7 @@
             {% endfor %}
         </div>
 
+        <!-- About: Strengths -->
         <div class="section-block" id="s-strengths">
             <div class="section-label">{{ bio.strengths.label }}</div>
             <h2 class="section-title">{{ bio.strengths.title }}</h2>
@@ -86,12 +105,14 @@
             </div>
         </div>
 
+        <!-- Teaching -->
         <div class="section-block" id="s-teach">
             <div class="section-label">{{ bio.teaching.label }}</div>
             <h2 class="section-title">{{ bio.teaching.title }}</h2>
             <p class="section-text">{{ bio.teaching.description }}</p>
         </div>
 
+        <!-- Languages -->
         <div class="section-block" id="s-lang">
             <div class="section-label">Languages</div>
             <div class="lang-row">
@@ -100,16 +121,35 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- Navigation Grid -->
+        <div class="section-block" id="s-explore">
+            <div class="section-label">Explore More</div>
+            <h2 class="section-title">Enter Other Realities</h2>
+            <div class="nav-grid">
+                {% for item in bio.explore_grid %}
+                <a href="{{ item.url }}" class="nav-grid-btn">
+                    <span class="icon">{{ item.icon }}</span>
+                    <span class="title">{{ item.title }}</span>
+                    <span class="desc">{{ item.desc }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
     <div id="instructions">Drag to move &bull; Scroll to zoom &bull; Click nodes to explore</div>
 
-    <div style="position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
-        <div style="font-size: 0.9rem; color: #ffffff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 12px; font-family: 'Inter', sans-serif; white-space: nowrap;">Not bold enough to navigate?</div>
+    <div
+        style="position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
+        <div
+            style="font-size: 0.9rem; color: #ffffff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 12px; font-family: 'Inter', sans-serif; white-space: nowrap;">
+            Not bold enough to navigate?</div>
         <a href="#bio-section"
             style="display: inline-block; background: linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9)); border: 2px solid #a078ff; color: #ffffff; padding: 12px 30px; border-radius: 40px; text-decoration: none; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 20px rgba(140, 100, 255, 0.6); white-space: nowrap;"
             onmouseover="this.style.background='linear-gradient(135deg, rgba(160, 120, 255, 1), rgba(120, 80, 255, 1))'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 30px rgba(160, 120, 255, 0.8)';"
-            onmouseout="this.style.background='linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9))'; this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 0 20px rgba(140, 100, 255, 0.6)';">SKIP TO WEBSITE ↓</a>
+            onmouseout="this.style.background='linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9))'; this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 0 20px rgba(140, 100, 255, 0.6)';">SKIP
+            TO WEBSITE ↓</a>
     </div>
 
     <script>const resumeData = {{ graph_data|tojson }};</script>
@@ -119,5 +159,11 @@
     <div id="chat-widget-container"></div>
     <script src="static/js/chat_widget.js"></script>
     {% endif %}
+    
+    <script>
+        const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.section-block').forEach(el => obs.observe(el));
+    </script>
 </body>
+
 </html>
