@@ -79,8 +79,19 @@ try {
             link: node.link,
             depth: depth,
             color: color,
-            val: depth === 0 ? 20 : depth === 1 ? 12 : depth === 2 ? 6 : 4
+            val: depth === 0 ? 20 : depth === 1 ? 12 : depth === 2 ? 6 : 4,
+            // Initialize all nodes near center for branching effect
+            x: depth === 0 ? 0 : (Math.random() - 0.5) * 20,
+            y: depth === 0 ? 0 : (Math.random() - 0.5) * 20,
+            z: depth === 0 ? 0 : (Math.random() - 0.5) * 20
         };
+        
+        // Always keep central node at EXACT center
+        if (depth === 0) {
+            newNode.fx = 0;
+            newNode.fy = 0;
+            newNode.fz = 0;
+        }
         
         nodes.push(newNode);
         if (parent) {
@@ -300,14 +311,16 @@ try {
     }
 
     // 4. Final adjustments
-    Graph.d3Force('charge').strength(-200);
-    Graph.d3Force('link').distance(node => node.source.depth === 0 ? 120 : 60);
+    Graph.d3Force('charge').strength(-250);
+    Graph.d3Force('link').distance(node => node.source.depth === 0 ? 150 : 70);
 
-    // Initial Camera
-    Graph.cameraPosition({ z: 600 });
+    // Initial Camera: Start very close for dramatic "branching out" effect
+    Graph.cameraPosition({ x: 0, y: 0, z: 80 });
+    
     setTimeout(() => {
-        Graph.cameraPosition({ z: 450 }, { x: 0, y: 0, z: 0 }, 2500);
-    }, 500);
+        // Pull back camera as nodes branch out
+        Graph.cameraPosition({ z: 450 }, { x: 0, y: 0, z: 0 }, 3500);
+    }, 1200);
 
     // 5. Dismiss Loader
     console.log("Graph setup complete. Removing loader...");
