@@ -19,14 +19,17 @@
             rel="stylesheet">
     </noscript>
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Vendor Scripts -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
+    <link rel="stylesheet" href="chat_widget.css">
 </head>
 
 <body>
     <!-- Loading Overlay -->
     <div id="loader">
         <div class="pulse-ring"></div>
-        <div class="loader-text">loading graph</div>
+        <div class="loader-text">initializing digital space</div>
     </div>
 
     <!-- Background floating particles -->
@@ -238,7 +241,8 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script src="snowfall.js"></script>
+    <div id="chat-widget-container"></div>
+    <script src="chat_widget.js"></script>
 </body>
 
 </html>

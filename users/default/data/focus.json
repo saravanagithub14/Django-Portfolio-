@@ -1,0 +1,36 @@
+{
+    "page_label": "Now",
+    "page_title": "Current Focus",
+    "page_sub": "Where my thinking and building energy is directed right now — at the frontier of AI systems.",
+    "cards": [
+        {
+            "icon": "🤖",
+            "title": "Agentic AI Systems",
+            "description": "Designing multi-agent architectures with tool-use, planning, memory, and autonomous reasoning — moving beyond prompt-response to truly autonomous AI workflows."
+        },
+        {
+            "icon": "🖼",
+            "title": "Multimodal Models",
+            "description": "Exploring vision-language models and multimodal RAG systems that process images, text, and structured data together for richer, context-aware AI systems."
+        },
+        {
+            "icon": "🚀",
+            "title": "Production ML Pipelines",
+            "description": "Building robust, observable, and scalable ML pipelines with MLflow, Docker, and cloud deployments — bridging the gap between experimental notebooks and production systems."
+        },
+        {
+            "icon": "🎓",
+            "title": "AI in Education",
+            "description": "Designing next-generation AI curricula, mentoring programs, and learning frameworks that prepare professionals to build and use AI responsibly and effectively."
+        }
+    ],
+    "positioning": {
+        "entries": [
+            "Not just a Data Scientist",
+            "An AI System Builder",
+            "A Scientific Thinker",
+            "An Educator shaping future AI professionals"
+        ],
+        "tagline": "From the precision of a research lab to the complexity of production AI —<br>engineering intelligent systems with discipline, curiosity, and purpose."
+    }
+}

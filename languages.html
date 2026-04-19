@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Languages — Saravana Perumal R.</title>
+    <meta name="description" content="Spoken and programming languages of Saravana Perumal R.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Trench-Thin loaded async to avoid blocking render -->
+    <link rel="preload" href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin"
+            rel="stylesheet">
+    </noscript>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat_widget.css">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
+</head>
+
+<body>
+    <!-- Background floating particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="content">
+        <nav class="top-nav">
+            <a href="graph.html" class="nav-link">Graph</a>
+            <a href="graph.html#bio-section" class="nav-link">Bio</a>
+            <a href="skills.html" class="nav-link">Skills</a>
+            <a href="experience.html" class="nav-link">Experience</a>
+            <a href="education.html" class="nav-link">Education</a>
+            <div class="dropdown">
+                <button class="dropbtn nav-link active">Portfolio ▾</button>
+                <div class="dropdown-content">
+                    <a href="projects.html" class="">Projects</a>
+                    <a href="publications.html" class="">Publications</a>
+                    <a href="workshops.html" class="">Workshops</a>
+                    <a href="gallery.html" class="">Gallery</a>
+                </div>
+            </div>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </nav>
+
+        <div class="page-label">Languages</div>
+        <h1 class="page-title">Polyglot & Programmer</h1>
+        <p class="section-text" style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
+            Bridging biological complexity and computational intelligence through diverse communication and coding frameworks.
+        </p>
+
+        <!-- Spoken -->
+        <div class="section-block visible" style="width: 100%;">
+            <div class="section-label">Spoken Languages</div>
+            <h2 class="section-title">Communication & Culture</h2>
+            <div class="strengths" style="margin-top: 20px;">
+                <div class="strength-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="si-title">English</div>
+                        <span class="role-pill">Fluent</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(140, 100, 255, 0.1); border-radius: 2px;">
+                        <div style="height: 100%; width: 90%; background: #a078ff; border-radius: 2px; box-shadow: 0 0 10px #a078ff;"></div>
+                    </div>
+                </div>
+                <div class="strength-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="si-title">Malayalam</div>
+                        <span class="role-pill">Native</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(140, 100, 255, 0.1); border-radius: 2px;">
+                        <div style="height: 100%; width: 100%; background: #a078ff; border-radius: 2px; box-shadow: 0 0 10px #a078ff;"></div>
+                    </div>
+                </div>
+                <div class="strength-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="si-title">Tamil</div>
+                        <span class="role-pill">Native</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(140, 100, 255, 0.1); border-radius: 2px;">
+                        <div style="height: 100%; width: 100%; background: #a078ff; border-radius: 2px; box-shadow: 0 0 10px #a078ff;"></div>
+                    </div>
+                </div>
+                <div class="strength-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="si-title">Hindi</div>
+                        <span class="role-pill">Conversational</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(140, 100, 255, 0.1); border-radius: 2px;">
+                        <div style="height: 100%; width: 60%; background: #a078ff; border-radius: 2px; box-shadow: 0 0 10px #a078ff;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programming -->
+        <div class="section-block visible" style="margin-top: 60px; width: 100%;">
+            <div class="section-label">Programming & Data</div>
+            <h2 class="section-title">Computational Frameworks</h2>
+            <div class="metrics" style="margin-top: 20px;">
+                <div class="metric">
+                    <div class="val">Python</div>
+                    <div class="lbl">Primary Strength</div>
+                </div>
+                <div class="metric">
+                    <div class="val">SQL</div>
+                    <div class="lbl">Data Architect</div>
+                </div>
+                <div class="metric">
+                    <div class="val">R</div>
+                    <div class="lbl">Statistical Computing</div>
+                </div>
+                <div class="metric">
+                    <div class="val">JS</div>
+                    <div class="lbl">Frontend Logic</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graph container at bottom -->
+    <div id="graph-container" style="height: 500px; width: 100%; margin-top: 80px; opacity: 0.6;"></div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <div id="chat-widget-container"></div>
+    <script src="chat_widget.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+{
+    "page_label": "Research Output",
+    "page_title": "Publications & Achievements",
+    "page_sub": "Peer-reviewed research in biomedical sciences and professional milestones in AI education.",
+    "book_chapters": [
+        {
+            "title": "Emerging Strategies in Bone Tissue Engineering",
+            "meta": "Comprehensive review of innovative biomaterial scaffolds and regenerative approaches for bone repair — contributed chapter in edited academic volume."
+        },
+        {
+            "title": "Periostin and Integrin Signaling in Tissue Remodeling",
+            "meta": "In-depth examination of periostin's role in extracellular matrix dynamics and integrin-mediated cell adhesion — contributed chapter in biomedical engineering compilation."
+        }
+    ],
+    "research_articles": [
+        {
+            "title": "Biosynthesized Nanosilver from Alginate: Characterization and Applications",
+            "meta": "Investigation into green synthesis of silver nanoparticles using alginate, with structural characterization via SEM/TEM and antimicrobial efficacy testing."
+        },
+        {
+            "title": "Bi-layered polycarbonate urethane/alginate di-aldehyde crosslinked gelatin membrane as a potential biomaterial for wound healing applications",
+            "meta": "Prathyusha, Resmi Rajalekshmi, Saravana Perumal Ramakrishna, Jasmin Joseph, Rekha M., Anugya Bhatt. <a href=\"https://doi.org/10.1080/09205063.2026.2644608\" target=\"_blank\">https://doi.org/10.1080/09205063.2026.2644608</a> (2026). Published in <em>Physical Sciences Journal</em>."
+        },
+        {
+            "title": "Anti-Microbial Hydrogel Development for Wound Care Applications",
+            "meta": "Synthesis and evaluation of hydrogel biomaterials with antibacterial properties for advanced wound dressing applications in tissue engineering contexts."
+        }
+    ],
+    "achievements": [
+        {
+            "icon": "🎤",
+            "title": "Invited AI Workshop Speaker",
+            "description": "Delivered workshops on GenAI, YOLO, and AI for business to professional and student audiences."
+        },
+        {
+            "icon": "📚",
+            "title": "AI Curriculum Developer",
+            "description": "Designed comprehensive ML/DL/GenAI curricula used in professional training programs."
+        },
+        {
+            "icon": "🎖",
+            "title": "UGC-NET Qualified",
+            "description": "National eligibility for Assistant Professor and Junior Research Fellowship in Life Sciences — 2019."
+        },
+        {
+            "icon": "🔬",
+            "title": "Research Fellowship — SCTIMST",
+            "description": "Awarded Senior Research Fellowship at a premier national biomedical research institution (Govt. of India)."
+        }
+    ]
+}

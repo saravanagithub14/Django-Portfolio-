@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Education & Certifications — {{ config.site_title }}{% endblock %}
+{% block description %}Academic background and certifications of {{ config.site_title }}.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ education.page_label }}</div>
+    <h1 class="page-title">{{ education.page_title }}</h1>
+    <p class="page-sub">{{ education.page_sub }}</p>
+
+    <div class="section-heading">🎓 Academic Degrees</div>
+
+    {% for ed in education.degrees %}
+    <div class="edu-card">
+        <div class="edu-icon">{{ ed.icon }}</div>
+        <div class="edu-body">
+            <div class="edu-degree">{{ ed.degree }}</div>
+            <div class="edu-school">{{ ed.school }}</div>
+            <div class="edu-year">{{ ed.year }}</div>
+            <div class="edu-detail">{{ ed.detail }}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="section-heading">🏆 Certifications & Qualifications</div>
+
+    {% for cert in education.certifications %}
+    <div class="cert-card">
+        <div class="cert-badge">{{ cert.badge }}</div>
+        <div>
+            <div class="cert-name">{{ cert.name }}</div>
+            <div class="cert-body">{{ cert.detail }}</div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.edu-card, .cert-card').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Skills — {{ config.site_title }}{% endblock %}
+{% block description %}Technical skills spanning AI/ML, Deep Learning, GenAI, Deployment, and Life Sciences.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ skills.page_label }}</div>
+    <h1 class="page-title">{{ skills.page_title }}</h1>
+    <p class="page-sub">{{ skills.page_sub }}</p>
+
+    {% for section in skills.sections %}
+    <div class="skill-section">
+        <div class="skill-section-header">
+            <span class="skill-section-icon">{{ section.icon }}</span>
+            <span class="skill-section-name">{{ section.name }}</span>
+            <div class="skill-section-line"></div>
+        </div>
+        <div class="skill-tags">
+            {% for tag in section.tags %}
+            <span class="skill-tag{% if tag.highlight %} highlight{% endif %}">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="skill-section">
+        <div class="skill-section-header">
+            <span class="skill-section-icon">💼</span>
+            <span class="skill-section-name">Soft Skills & Leadership</span>
+            <div class="skill-section-line"></div>
+        </div>
+        <div class="soft-grid">
+            {% for s in skills.soft_skills %}
+            <div class="soft-item">
+                <div class="si-icon">{{ s.icon }}</div>{{ s.name }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.05 });
+        document.querySelectorAll('.skill-section').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

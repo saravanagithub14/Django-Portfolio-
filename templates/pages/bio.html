@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ config.site_title }} — AI Engineer & Data Scientist{% endblock %}
+
+{% block content %}
+    <!-- Hero -->
+    <div class="profile-container">
+        <div class="profile-glow"></div>
+        <div class="profile-ring">
+            <img src="{{ config.profile_image }}" alt="{{ config.site_title }}">
+        </div>
+    </div>
+
+    <h1 class="bio-name">{{ config.site_title }}</h1>
+
+    <div class="bio-roles">
+        {% for role in config.roles %}
+        <span class="role-pill">{{ role }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="bio-tagline"><strong>{{ config.tagline }}</strong> · {{ config.tagline_sub }}</div>
+    <div class="divider"></div>
+
+    <p class="bio-intro">{{ config.intro }}</p>
+
+    <!-- Metrics -->
+    <div class="metrics">
+        {% for m in config.metrics %}
+        <div class="metric">
+            <div class="val">{{ m.value }}</div>
+            <div class="lbl">{{ m.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-row">
+        <a href="projects.html" class="cta-btn cta-primary">View Projects</a>
+        <a href="contact.html" class="cta-btn cta-secondary">Contact Me</a>
+        <a href="#" class="cta-btn cta-secondary" onclick="alert('Resume download coming soon!')">Download Resume</a>
+    </div>
+
+    <!-- Social -->
+    {% include 'components/social_icons.html' %}
+
+    <!-- About: Journey -->
+    <div class="section-block" id="s-journey">
+        <div class="section-label">{{ bio.journey.label }}</div>
+        <h2 class="section-title">{{ bio.journey.title }}</h2>
+        {% for p in bio.journey.paragraphs %}
+        <p class="section-text">{{ p }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- About: Strengths -->
+    <div class="section-block" id="s-strengths">
+        <div class="section-label">{{ bio.strengths.label }}</div>
+        <h2 class="section-title">{{ bio.strengths.title }}</h2>
+        <div class="strengths">
+            {% for item in bio.strengths.entries %}
+            <div class="strength-item">
+                <div class="si-title">{{ item.icon }} {{ item.title }}</div>
+                <div class="si-desc">{{ item.description }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Teaching -->
+    <div class="section-block" id="s-teach">
+        <div class="section-label">{{ bio.teaching.label }}</div>
+        <h2 class="section-title">{{ bio.teaching.title }}</h2>
+        <p class="section-text">{{ bio.teaching.description }}</p>
+    </div>
+
+    <!-- Languages -->
+    <div class="section-block" id="s-lang">
+        <div class="section-label">Languages</div>
+        <div class="lang-row">
+            {% for lang in bio.languages %}
+            <span class="lang-tag">{{ lang.name }} <span>{{ lang.level }}</span></span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Explore Grid -->
+    <div class="section-block" id="s-explore">
+        <div class="section-label">Explore More</div>
+        <h2 class="section-title">Enter Other Realities</h2>
+        <div class="nav-grid">
+            {% for item in bio.explore_grid %}
+            <a href="{{ item.url }}" class="nav-grid-btn">
+                <span class="icon">{{ item.icon }}</span>
+                <span class="title">{{ item.title }}</span>
+                <span class="desc">{{ item.desc }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.section-block').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

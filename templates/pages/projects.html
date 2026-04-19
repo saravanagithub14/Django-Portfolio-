@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects — {{ config.site_title }}{% endblock %}
+{% block description %}AI, ML, Deep Learning, and Biomedical projects by {{ config.site_title }}.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ projects.page_label }}</div>
+    <h1 class="page-title">{{ projects.page_title }}</h1>
+    <p class="page-sub">{{ projects.page_sub }}</p>
+
+    <!-- Featured -->
+    <div class="section-heading">{{ projects.featured.heading }}</div>
+    <div class="featured-grid">
+        {% for item in projects.featured.entries %}
+        <div class="feat-card">
+            <div class="fc-emoji">{{ item.emoji }}</div>
+            <div class="fc-title">{{ item.title }}</div>
+            <div class="fc-desc">{{ item.description }}</div>
+            <div class="fc-tags">
+                {% for tag in item.tags %}<span class="fc-tag">{{ tag }}</span>{% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% for cat in projects.categories %}
+    <div class="section-heading">{{ cat.heading }}</div>
+    <div class="proj-list">
+        {% for item in cat.entries %}
+        <div class="proj-item"><span class="pi-dot"></span>{{ item }}</div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.feat-card, .proj-item').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

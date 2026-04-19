@@ -1,0 +1,59 @@
+{
+    "journey": {
+        "label": "Professional Journey",
+        "title": "From Biotechnology to Agentic AI",
+        "paragraphs": [
+            "My path began in biology — studying molecular dynamics, designing experiments, and publishing research at SCTIMST. The analytical discipline of science became the foundation for a career pivot into Data Science in 2023, rapidly evolving through machine learning, deep learning, and now Generative & Agentic AI systems.",
+            "Today I design and deploy Generative AI systems as a Gen AI Engineer at Blackbox Learning — building RAG pipelines, multimodal models, and agentic architectures — while continuing to educate the next generation of AI professionals."
+        ]
+    },
+    "strengths": {
+        "label": "What Makes Me Different",
+        "title": "Scientific Rigor Meets AI Engineering",
+        "entries": [
+            {
+                "icon": "🧪",
+                "title": "Experimental Design Mindset",
+                "description": "I treat ML problems like research experiments — hypothesis, validation, iteration."
+            },
+            {
+                "icon": "📊",
+                "title": "Statistical Thinking",
+                "description": "Deep statistical intuition from years of research data analysis and publication."
+            },
+            {
+                "icon": "🔬",
+                "title": "Scientific Rigor in AI Systems",
+                "description": "Every model is validated, every claim evidenced — no cargo-cult ML."
+            },
+            {
+                "icon": "🎓",
+                "title": "Simplifying Complexity",
+                "description": "I translate advanced AI concepts into actionable insights for students and stakeholders."
+            }
+        ]
+    },
+    "teaching": {
+        "label": "Teaching & Mentorship",
+        "title": "Building Skilled Professionals & Responsible Humans",
+        "description": "I design and deliver AI curriculum covering ML, Deep Learning, and Generative AI — guiding 100+ students through placement mentorship and hands-on project work. My philosophy: technical excellence paired with critical, ethical thinking."
+    },
+    "languages": [
+        { "name": "English", "level": "Fluent" },
+        { "name": "Tamil", "level": "Native" },
+        { "name": "Malayalam", "level": "Native" },
+        { "name": "Hindi", "level": "Basic" }
+    ],
+    "explore_grid": [
+        { "icon": "🕸️", "title": "Graph", "desc": "The Big Picture", "url": "graph.html" },
+        { "icon": "⚔️", "title": "Skills", "desc": "Tech Arsenal", "url": "skills.html" },
+        { "icon": "📜", "title": "Experience", "desc": "Professional Arc", "url": "experience.html" },
+        { "icon": "🛠️", "title": "Projects", "desc": "Work Built", "url": "projects.html" },
+        { "icon": "📚", "title": "Publications", "desc": "Research Lore", "url": "publications.html" },
+        { "icon": "🎓", "title": "Workshops", "desc": "Knowledge Drops", "url": "workshops.html" },
+        { "icon": "🖼️", "title": "Gallery", "desc": "Visual Story", "url": "gallery.html" },
+        { "icon": "🏛️", "title": "Education", "desc": "Foundations", "url": "education.html" },
+        { "icon": "🚀", "title": "Focus", "desc": "Current Path", "url": "summary.html" },
+        { "icon": "✉️", "title": "Contact", "desc": "Get in Touch", "url": "contact.html" }
+    ]
+}

@@ -37,7 +37,9 @@ def get_nav_html(current_page):
         ('education.html', 'Education'),
         ('projects.html', 'Projects'),
         ('publications.html', 'Publications'),
-        ('workshops.html', 'Workshops'),
+        ('certificates.html', 'Certificates'),
+        ('achievements.html', 'Achievements'),
+        ('languages.html', 'Languages'),
         ('contact.html', 'Contact')
     ]
     
@@ -51,7 +53,7 @@ def get_nav_html(current_page):
 {links_str}
         </nav>"""
 
-files = ['bio.html', 'skills.html', 'experience.html', 'education.html', 'projects.html', 'publications.html', 'workshops.html', 'contact.html', 'summary.html']
+files = ['bio.html', 'skills.html', 'experience.html', 'education.html', 'projects.html', 'publications.html', 'workshops.html', 'contact.html', 'summary.html', 'certificates.html', 'achievements.html', 'languages.html']
 
 for f in files:
     if not os.path.exists(f): 

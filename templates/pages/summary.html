@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Current Focus — {{ config.site_title }}{% endblock %}
+{% block description %}What {{ config.site_title }} is currently building and thinking about in AI.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ focus.page_label }}</div>
+    <h1 class="page-title">{{ focus.page_title }}</h1>
+    <p class="page-sub">{{ focus.page_sub }}</p>
+
+    <div class="focus-grid">
+        {% for card in focus.cards %}
+        <div class="focus-card">
+            <div class="focus-icon">{{ card.icon }}</div>
+            <div class="focus-title">{{ card.title }}</div>
+            <div class="focus-desc">{{ card.description }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="positioning">
+        <div class="positioning-label">Final Positioning</div>
+        <div class="positioning-items">
+            {% for item in focus.positioning.entries %}
+            <span class="pos-item">{{ item }}</span>
+            {% endfor %}
+        </div>
+        <div class="positioning-tag">{{ focus.positioning.tagline }}</div>
+    </div>
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.focus-card').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

@@ -15,15 +15,16 @@ const resumeData = {
                 {
                     "name": "AI & Data Science",
                     "children": [
-                        { "name": "Data Scientist – Dexpro / Edure", "description": "2025–Present · Multimodal ML, RAG systems, deployment, mentoring" },
-                        { "name": "Junior Data Scientist – Edure", "description": "2024–2025 · Model development, EDA, AI apps" },
-                        { "name": "Data Science Intern – Edure", "description": "2023–2024 · ML prototyping, NLP, Computer Vision" }
+                        { "name": "Gen AI Engineer – Blackbox Learning", "description": "Apr 2026–Present · Gen AI and Project Management" },
+                        { "name": "Data Scientist – Dexpro Innovations", "description": "Apr 2025–Mar 2026 · Data Visualization, MLflow & GenAI" },
+                        { "name": "Jr. Data Scientist – Dexpro Innovations", "description": "Feb 2024–Feb 2025 · Data Visualization, Machine Learning" },
+                        { "name": "Data Science Intern – Edure", "description": "Sep 2023–Feb 2024 · Data Visualization, AI, NLP" }
                     ]
                 },
                 {
                     "name": "Research & Life Sciences",
                     "children": [
-                        { "name": "Senior Research Fellow – SCTIMST", "description": "2019–2023 · Biomaterials, tissue engineering, publications" },
+                        { "name": "Senior Research Fellow – SCTIMST", "description": "Jul 2019–Nov 2023 · Data Visualization, Scholarly Research" },
                         { "name": "Young Professional II – CIBA (ICAR)", "description": "2019 · Aquaculture research, data analysis" }
                     ]
                 }
@@ -114,7 +115,16 @@ const resumeData = {
                     "name": "Life Sciences",
                     "children": [
                         { "name": "Molecular Biology" }, { "name": "Biomaterials" },
-                        { "name": "Histology" }, { "name": "HPLC / SEM / TEM" }
+                        { "name": "Histology" }, { "name": "HPLC / SEM / TEM" },
+                { "name": "Teaching & Training", "children": [ { "name": "Curriculum Development" }, { "name": "Lesson Planning" }, { "name": "Interactive Teaching Methods" }, { "name": "Student Engagement" }, { "name": "Mentorship and Coaching" }, { "name": "Educational Resources" }, { "name": "Online & In-person Teaching" }, { "name": "Workshop Facilitation" }, { "name": "Classroom Management" }, { "name": "Career Readiness Guidance" }, { "name": "Assessments and Feedback" } ] },
+                { "name": "Microbiological Techniques", "children": [ { "name": "Media and Broth Preparation" }, { "name": "Staining Techniques (Gram Staining, Microscopy)" }, { "name": "Streaking and Bacterial Culture" } ] },
+                { "name": "Cell Culture and Maintenance", "children": [ { "name": "Cell Culture (Media Preparation, Cryopreservation, Hood Maintenance)" }, { "name": "Maintaining Stock" }, { "name": "Cell Count" }, { "name": "Hematology Techniques" }, { "name": "Flow cytometry" }, { "name": "Cytotoxicity evaluation" }, { "name": "Stem cell Isolation and culture" } ] },
+                { "name": "Histology and Plant Research", "children": [ { "name": "Herbarium Preparation" }, { "name": "Slide Preparation (Plant and Animal Specimens)" }, { "name": "Biochemical Tests" }, { "name": "Protoplast Isolation" }, { "name": "Taxonomy" } ] },
+                { "name": "Molecular Biology Techniques", "children": [ { "name": "PCR" }, { "name": "AGE" }, { "name": "PAGE" }, { "name": "DNA/RNA Isolation" }, { "name": "Primer Synthesis" }, { "name": "Sequencing" }, { "name": "Bioinformatics (BLAST, NCBI, PDB)" } ] },
+                { "name": "Polymeric and Biomaterial Techniques", "children": [ { "name": "Polymeric Scaffold Development" }, { "name": "3D Bioprinting" }, { "name": "Biomaterial Synthesis" }, { "name": "Electrospinning" } ] },
+                { "name": "Chromatography and Instrumentation", "children": [ { "name": "GC" }, { "name": "HPLC" }, { "name": "Paper/Thin-Layer Chromatography" }, { "name": "Instrumentation Skills (Spectrophotometry, Microscopy)" }, { "name": "Electron Microscopy (SEM/TEM)" } ] },
+                { "name": "Data Analysis and Interpretation", "children": [ { "name": "Data Analysis using Statistical Tools (Excel, Python, GraphPad Prism)" }, { "name": "Biostatistics and machine learning for biological data interpretation" } ] },
+                { "name": "Laboratory Management", "children": [ { "name": "Lab safety and quality assurance" }, { "name": "Grant writing and fundraising" }, { "name": "Collaborative research with cross-disciplinary teams" }, { "name": "Scientific publication in high-impact journals" }, { "name": "Research proposal writing" }, { "name": "Public outreach and education" } ] }
                     ]
                 }
             ]
@@ -142,7 +152,8 @@ const resumeData = {
                 { "name": "Bone Tissue Engineering", "description": "Book Chapter – Emerging Strategies" },
                 { "name": "Periostin & Integrin Signaling", "description": "Book Chapter" },
                 { "name": "Biosynthesized Nanosilver", "description": "Research Article" },
-                { "name": "Anti-Microbial Hydrogel", "description": "Research Article" }
+                { "name": "Anti-Microbial Hydrogel", "description": "Research Article" },
+                { "name": "Bi-layered polycarbonate urethane/alginate di-aldehyde crosslinked gelatin membrane as a potential biomaterial for wound healing applications", "description": "Research Article" }
             ]
         },
         {
@@ -181,9 +192,34 @@ const resumeData = {
             "children": [
                 { "name": "saravanaperumalr14@gmail.com" },
                 { "name": "github.com/saravanagithub14", "link": "https://github.com/saravanagithub14" },
-                { "name": "linkedin.com/in/saravana-perumal-r", "link": "https://linkedin.com/in/saravana-perumal-r-04b368288" },
+                { "name": "linkedin.com/in/saravana-perumal-r-04b368288", "link": "https://linkedin.com/in/saravana-perumal-r-04b368288" },
+                { "name": "Medium: @mynamesaravanaperumal", "link": "https://medium.com/@mynamesaravanaperumal" },
                 { "name": "Kochi, Kerala, India" }
             ]
+        },
+        {
+            "id": "certificates",
+            "name": "Certificates",
+            "collapsed": false,
+            "navigateTo": "certificates.html",
+            "description": "Professional certifications and courses",
+            "children": []
+        },
+        {
+            "id": "achievements",
+            "name": "Achievements",
+            "collapsed": false,
+            "navigateTo": "achievements.html",
+            "description": "Awards and recognitions",
+            "children": []
+        },
+        {
+            "id": "languages",
+            "name": "Languages",
+            "collapsed": false,
+            "navigateTo": "languages.html",
+            "description": "Spoken and programming languages",
+            "children": []
         }
     ]
 };

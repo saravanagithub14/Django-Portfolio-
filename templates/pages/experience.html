@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Experience — {{ config.site_title }}{% endblock %}
+{% block description %}AI & Data Science experience plus Research and Life Sciences background of {{ config.site_title }}.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ experience.page_label }}</div>
+    <h1 class="page-title">{{ experience.page_title }}</h1>
+    <p class="page-sub">{{ experience.page_sub }}</p>
+
+    {% for section in experience.sections %}
+    <div class="section-heading">{{ section.heading }}</div>
+    <div class="timeline">
+        {% for job in section.jobs %}
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">{{ job.title }}</span>
+                <span class="job-company">{{ job.company }}</span>
+                <span class="job-period">{{ job.period }}</span>
+            </div>
+            <p class="job-desc">{{ job.description }}</p>
+            <div class="job-tags">
+                {% for tag in job.tags %}<span class="job-tag">{{ tag }}</span>{% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.job').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

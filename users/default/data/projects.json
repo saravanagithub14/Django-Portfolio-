@@ -1,0 +1,64 @@
+{
+    "page_label": "Portfolio",
+    "page_title": "Projects",
+    "page_sub": "20+ projects spanning Generative AI, Computer Vision, ML, and Biomedical Research.",
+    "featured": {
+        "heading": "⭐ Featured AI Projects",
+        "entries": [
+            {
+                "emoji": "🧠",
+                "title": "RAG Document Intelligence System",
+                "description": "A production-grade document Q&A system using LangChain, LLaMA3, and vector databases. Enables real-time retrieval-augmented generation over large document corpora.",
+                "tags": ["LangChain", "LLaMA3", "Vector DB", "RAG"]
+            },
+            {
+                "emoji": "🤖",
+                "title": "Agentic AI Search Engine",
+                "description": "Tool-using autonomous AI agents that orchestrate multiple APIs to perform autonomous research, reasoning, and structured output generation.",
+                "tags": ["Agentic AI", "LangChain", "API Orchestration"]
+            },
+            {
+                "emoji": "🦺",
+                "title": "Construction Site Safety (YOLO)",
+                "description": "Real-time PPE (Personal Protective Equipment) detection system for construction sites using YOLO object detection. Full training, evaluation, and deployment pipeline.",
+                "tags": ["YOLOv8", "Computer Vision", "Real-time"]
+            },
+            {
+                "emoji": "🏥",
+                "title": "Brain Tumor Detection (CNN)",
+                "description": "Medical image classification system using CNNs and transfer learning to detect and classify brain tumors from MRI scans with performance benchmarking.",
+                "tags": ["CNN", "Transfer Learning", "Medical Imaging"]
+            }
+        ]
+    },
+    "categories": [
+        {
+            "heading": "🔮 Generative AI & LLM Applications",
+            "entries": [
+                "Chat with PDF (RAG)",
+                "SQL Database Chat Assistant",
+                "Multi-Language Code Assistant",
+                "AWS Bedrock GenAI Deployment",
+                "Ollama Local LLM Chatbot",
+                "Text Summarization (LangChain)"
+            ]
+        },
+        {
+            "heading": "📊 Machine Learning & NLP",
+            "entries": [
+                "Tweet Sentiment Analysis (SVM + TF-IDF)",
+                "Classification & Regression Pipelines",
+                "Feature Engineering & Model Comparison"
+            ]
+        },
+        {
+            "heading": "🔬 Biomedical & Research Projects",
+            "entries": [
+                "3D Bioprinting of Skin Tissue",
+                "Anti-Microbial Hydrogel Development",
+                "Biosynthesized Nanosilver Research",
+                "siRNA Study in C. elegans"
+            ]
+        }
+    ]
+}

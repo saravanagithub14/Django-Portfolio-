@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Workshops & Talks — {{ config.site_title }}{% endblock %}
+{% block description %}AI workshops conducted and seminars delivered by {{ config.site_title }}.{% endblock %}
+
+{% block content %}
+    <div class="page-label">{{ workshops.page_label }}</div>
+    <h1 class="page-title">{{ workshops.page_title }}</h1>
+    <p class="page-sub">{{ workshops.page_sub }}</p>
+
+    <div class="section-heading">🛠 Workshops Conducted</div>
+    {% for w in workshops.workshops %}
+    <div class="talk-card">
+        <div class="talk-icon icon-workshop">{{ w.icon }}</div>
+        <div class="talk-body">
+            <span class="talk-type type-w">Workshop</span>
+            <div class="talk-title">{{ w.title }}</div>
+            <div class="talk-desc">{{ w.description }}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="section-heading">🎤 Seminars & Talks</div>
+    {% for s in workshops.seminars %}
+    <div class="talk-card">
+        <div class="talk-icon icon-seminar">{{ s.icon }}</div>
+        <div class="talk-body">
+            <span class="talk-type type-s">Seminar</span>
+            <div class="talk-title">{{ s.title }}</div>
+            <div class="talk-desc">{{ s.description }}</div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.talk-card').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}

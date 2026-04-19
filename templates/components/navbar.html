@@ -1,0 +1,20 @@
+<nav class="top-nav">
+    {% for item in config.navigation %}
+        {% if item.dropdown %}
+            {% set ns = namespace(dropdown_active=false) %}
+            {% for child in item.children %}
+                {% if active_page == child.id %}{% set ns.dropdown_active = true %}{% endif %}
+            {% endfor %}
+            <div class="dropdown">
+                <button class="dropbtn nav-link{% if ns.dropdown_active %} active{% endif %}">{{ item.label }} &#9662;</button>
+                <div class="dropdown-content">
+                    {% for child in item.children %}
+                        <a href="{{ child.url }}" class="{% if active_page == child.id %}active{% endif %}">{{ child.label }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <a href="{{ item.url }}" class="nav-link{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>

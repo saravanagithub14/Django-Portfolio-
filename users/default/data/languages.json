@@ -1,0 +1,14 @@
+{
+    "spoken": [
+        { "name": "English", "proficiency": "Fluent", "level": 90 },
+        { "name": "Malayalam", "proficiency": "Native", "level": 100 },
+        { "name": "Tamil", "proficiency": "Native", "level": 100 },
+        { "name": "Hindi", "proficiency": "Conversational", "level": 60 }
+    ],
+    "programming": [
+        { "name": "Python", "proficiency": "Proficient", "level": 95 },
+        { "name": "R", "proficiency": "Proficient", "level": 80 },
+        { "name": "JavaScript", "proficiency": "Proficient", "level": 75 },
+        { "name": "SQL", "proficiency": "Proficient", "level": 85 }
+    ]
+}
