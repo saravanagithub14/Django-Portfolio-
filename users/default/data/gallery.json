@@ -1,0 +1,20 @@
+{
+    "videos": [
+        {
+            "title": "Python for Data Science",
+            "embed_url": "https://www.youtube.com/embed/klsK_Pl-LIw?start=2306"
+        },
+        {
+            "title": "Data Analysis Projects",
+            "embed_url": "https://www.youtube.com/embed/h0T74TcvBN4?start=2"
+        },
+        {
+            "title": "Machine Learning Workflows",
+            "embed_url": "https://www.youtube.com/embed/a29OinkSuKk?start=2212"
+        },
+        {
+            "title": "Deep Learning Specialization",
+            "embed_url": "https://www.youtube.com/embed/iCSkyJWMhrU"
+        }
+    ]
+}

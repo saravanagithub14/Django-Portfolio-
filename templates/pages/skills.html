@@ -1,51 +1,88 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}Skills — {{ config.site_title }}{% endblock %}
-{% block description %}Technical skills spanning AI/ML, Deep Learning, GenAI, Deployment, and Life Sciences.{% endblock %}
+
+{% block head_extra %}
+<style>
+    .page-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #e8e0ff;
+        margin-bottom: 20px;
+        text-align: left;
+        width: 100%;
+        letter-spacing: -1px;
+    }
+
+    .page-sub {
+        font-size: 1.1rem;
+        color: rgba(200, 192, 232, 0.5);
+        margin-bottom: 50px;
+        text-align: left;
+        width: 100%;
+        line-height: 1.6;
+    }
+
+    .page-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #a078ff;
+        margin-bottom: 15px;
+        text-align: left;
+        width: 100%;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="page-label">{{ skills.page_label }}</div>
-    <h1 class="page-title">{{ skills.page_title }}</h1>
-    <p class="page-sub">{{ skills.page_sub }}</p>
+<div class="page-label">{{ skills.page_label }}</div>
+<h1 class="page-title">{{ skills.page_title }}</h1>
+<p class="page-sub">{{ skills.page_sub }}</p>
 
-    {% for section in skills.sections %}
-    <div class="skill-section">
-        <div class="skill-section-header">
-            <span class="skill-section-icon">{{ section.icon }}</span>
-            <span class="skill-section-name">{{ section.name }}</span>
-            <div class="skill-section-line"></div>
+<div class="accordion">
+    {% for group in skills.accordion_groups %}
+    <div class="accordion-item {% if group.active %}active{% endif %}" id="{{ group.id }}">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            {{ group.name }}
+            <div class="chevron"></div>
         </div>
-        <div class="skill-tags">
-            {% for tag in section.tags %}
-            <span class="skill-tag{% if tag.highlight %} highlight{% endif %}">{{ tag.name }}</span>
-            {% endfor %}
+        <div class="accordion-content">
+            <div class="skill-tags">
+                {% for tag in group.tags %}
+                <span class="skill-tag {% if tag.highlight %}highlight{% endif %}">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
         </div>
     </div>
     {% endfor %}
+</div>
 
-    <div class="skill-section">
-        <div class="skill-section-header">
-            <span class="skill-section-icon">💼</span>
-            <span class="skill-section-name">Soft Skills & Leadership</span>
-            <div class="skill-section-line"></div>
-        </div>
-        <div class="soft-grid">
-            {% for s in skills.soft_skills %}
-            <div class="soft-item">
-                <div class="si-icon">{{ s.icon }}</div>{{ s.name }}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+<script>
+    function toggleAccordion(header) {
+        const item = header.parentElement;
+        const isActive = item.classList.contains('active');
+        
+        // Optionally close other accordions
+        // document.querySelectorAll('.accordion-item').forEach(el => {
+        //     el.classList.remove('active');
+        // });
+
+        if (isActive) {
+            item.classList.remove('active');
+        } else {
+            item.classList.add('active');
+        }
+    }
+
+    const obs = new IntersectionObserver(e => e.forEach(i => { 
+        if (i.isIntersecting) i.target.classList.add('visible'); 
+    }), { threshold: 0.1 });
+    document.querySelectorAll('.accordion-item').forEach(el => obs.observe(el));
+</script>
 {% endblock %}
 
 {% block after_content %}
     {% include 'components/graph_section.html' %}
-{% endblock %}
-
-{% block scripts %}
-    <script>
-        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.05 });
-        document.querySelectorAll('.skill-section').forEach(el => obs.observe(el));
-    </script>
 {% endblock %}

@@ -63,13 +63,21 @@ try {
     function flattenData(node, parent = null, depth = 0) {
         const id = node.id || node.name || `node_${nodes.length}`;
         
+        // Detect if this node corresponds to the current page
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const targetPage = node.navigateTo || '';
+        const isCurrentPage = (typeof activePage !== 'undefined' && activePage === id) || 
+                             (targetPage && targetPage.includes(currentPage));
+
         const depthColors = [
             '#ffffff', // Root
             '#a078ff', // Level 1
             '#7b6fc4', // Level 2
             '#3d2f8f'  // Level 3
         ];
-        const color = depthColors[Math.min(depth, depthColors.length - 1)];
+        
+        // Use a distinct, unique highlight color for the current page (Neon Cyan)
+        const color = isCurrentPage ? '#00f2ff' : depthColors[Math.min(depth, depthColors.length - 1)];
 
         const newNode = {
             id,
@@ -79,7 +87,9 @@ try {
             link: node.link,
             depth: depth,
             color: color,
-            val: depth === 0 ? 20 : depth === 1 ? 12 : depth === 2 ? 6 : 4,
+            isCurrentPage: isCurrentPage,
+            parent: parent, // Track parent for breadcrumbs
+            val: isCurrentPage ? 35 : (depth === 0 ? 20 : depth === 1 ? 12 : depth === 2 ? 6 : 4),
             // Initialize all nodes near center for branching effect
             x: depth === 0 ? 0 : (Math.random() - 0.5) * 20,
             y: depth === 0 ? 0 : (Math.random() - 0.5) * 20,
@@ -103,6 +113,29 @@ try {
     }
 
     flattenData(resumeData);
+
+    // Function to update breadcrumbs
+    function updateBreadcrumbs(node) {
+        const breadcrumbContainer = document.getElementById('breadcrumbs');
+        if (!breadcrumbContainer) return;
+
+        if (!node || node.isGhost) {
+            breadcrumbContainer.style.opacity = '0.5';
+            return;
+        }
+
+        breadcrumbContainer.style.opacity = '1';
+        const path = [];
+        let curr = node;
+        while (curr) {
+            path.unshift(curr);
+            curr = curr.parent;
+        }
+
+        breadcrumbContainer.innerHTML = path.map((n, i) => 
+            `<span class="breadcrumb-item ${i === path.length - 1 ? 'active' : ''}">${n.name || 'Multiverse'}</span>`
+        ).join('');
+    }
 
     // 1.5 Generate background "ghost" clusters for Multiverse effect
     const ghostClusters = 8;
@@ -143,11 +176,15 @@ try {
 
     const gData = { nodes, links };
 
-    // 2. Initialize 3D Force Graph
-    const container = document.getElementById('graph-container');
-    if (!container) throw new Error("graph-container not found");
+    function initGraph() {
+        console.log("Initializing 3D Graph sub-view...");
+        const container = document.getElementById('graph-container');
+        if (!container) {
+            console.warn("graph-container not found on this page.");
+            return;
+        }
 
-    const Graph = ForceGraph3D()(container)
+        const Graph = ForceGraph3D()(container)
         .graphData(gData)
         .backgroundColor('#06040f')
         .showNavInfo(false)
@@ -170,6 +207,8 @@ try {
             if (node && node.isGhost) return; // Ignore ghost nodes for interaction
             container.style.cursor = node ? 'pointer' : 'grab';
             
+            updateBreadcrumbs(node);
+
             // Highlight links on hover
             Graph.linkWidth(l => {
                 if (l.isGhost) return 0.3;
@@ -242,7 +281,7 @@ try {
                 metalness: 0.3,
                 roughness: 0.05,
                 emissive: node.color,
-                emissiveIntensity: node.isGhost ? 0.2 : 0.5
+                emissiveIntensity: node.isCurrentPage ? 2.5 : (node.isGhost ? 0.2 : 0.5)
             });
             const sphere = new THREE.Mesh(sphereGeom, sphereMat);
             group.add(sphere);
@@ -271,37 +310,39 @@ try {
                 const sprite = new THREE.Sprite(spriteMaterial);
                 sprite.scale.set(node.val * 3.5, node.val * 3.5, 1.0);
                 group.add(sprite);
-            }
 
-            // Persistent Text Labels for important nodes (Depth 0 and 1)
-            if (!node.isGhost && node.depth <= 1) {
-                const labelCanvas = document.createElement('canvas');
-                const labelCtx = labelCanvas.getContext('2d');
-                const fontSize = node.depth === 0 ? 48 : 36;
-                labelCtx.font = `Bold ${fontSize}px 'Inter', sans-serif`;
-                const textWidth = labelCtx.measureText(node.name).width;
-                
-                labelCanvas.width = textWidth + 20;
-                labelCanvas.height = fontSize + 20;
-                
-                labelCtx.font = `Bold ${fontSize}px 'Inter', sans-serif`;
-                labelCtx.fillStyle = '#ffffff';
-                labelCtx.shadowColor = 'rgba(0,0,0,0.8)';
-                labelCtx.shadowBlur = 8;
-                labelCtx.fillText(node.name, 10, fontSize);
-                
-                const labelTexture = new THREE.CanvasTexture(labelCanvas);
-                const labelMaterial = new THREE.SpriteMaterial({ 
-                    map: labelTexture,
-                    transparent: true,
-                    opacity: 0.9
-                });
-                const labelSprite = new THREE.Sprite(labelMaterial);
-                
-                const labelScale = (node.depth === 0 ? 15 : 10) * (labelCanvas.width / labelCanvas.height);
-                labelSprite.scale.set(labelScale, node.depth === 0 ? 15 : 10, 1);
-                labelSprite.position.set(0, node.val + 8, 0);
-                group.add(labelSprite);
+                // Persistent Text Labels for important nodes (Depth 0, 1, or Current Page)
+                if (!node.isGhost && (node.depth <= 1 || node.isCurrentPage)) {
+                    const labelCanvas = document.createElement('canvas');
+                    const labelCtx = labelCanvas.getContext('2d');
+                    const fontSize = node.depth === 0 ? 48 : (node.isCurrentPage ? 42 : 36);
+                    labelCtx.font = `Bold ${fontSize}px 'Inter', sans-serif`;
+                    
+                    const labelText = node.isCurrentPage ? `${node.name} (You are here)` : node.name;
+                    const textWidth = labelCtx.measureText(labelText).width;
+                    
+                    labelCanvas.width = textWidth + 40;
+                    labelCanvas.height = fontSize + 40;
+                    
+                    labelCtx.font = `Bold ${fontSize}px 'Inter', sans-serif`;
+                    labelCtx.fillStyle = node.isCurrentPage ? '#00f2ff' : '#ffffff';
+                    labelCtx.shadowColor = node.isCurrentPage ? 'rgba(0, 242, 255, 0.8)' : 'rgba(0,0,0,0.8)';
+                    labelCtx.shadowBlur = 12;
+                    labelCtx.fillText(labelText, 20, fontSize + 20);
+                    
+                    const labelTexture = new THREE.CanvasTexture(labelCanvas);
+                    const labelMaterial = new THREE.SpriteMaterial({ 
+                        map: labelTexture,
+                        transparent: true,
+                        opacity: 0.95
+                    });
+                    const labelSprite = new THREE.Sprite(labelMaterial);
+                    
+                    const labelScale = (node.depth === 0 ? 15 : (node.isCurrentPage ? 20 : 10)) * (labelCanvas.width / labelCanvas.height);
+                    labelSprite.scale.set(labelScale, node.depth === 0 ? 15 : (node.isCurrentPage ? 20 : 10), 1);
+                    labelSprite.position.set(0, node.val + (node.isCurrentPage ? 14 : 8), 0);
+                    group.add(labelSprite);
+                }
             }
 
             return group;
@@ -332,9 +373,17 @@ try {
         }
     }, 1500);
 
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGraph);
+    } else {
+        initGraph();
+    }
+
 } catch (err) {
     console.error("3D Graph Error:", err);
-    // If it fails, at least dismiss the loader so user can see the bio
+    // If it fails, at least dismiss the loader so user can see the content
     setTimeout(() => {
         const loader = document.getElementById('loader');
         if (loader) loader.remove();

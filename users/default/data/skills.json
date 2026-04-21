@@ -1,138 +1,93 @@
 {
-    "page_label": "Technical Expertise",
+    "page_label": "High-Impact Expertise",
     "page_title": "Skills & Technologies",
-    "page_sub": "Spanning the full stack from data to deployment — and from lab bench to language model.",
-    "sections": [
+    "page_sub": "Organized hierarchy for cognitive clarity. Use the accordions to explore specific technical stacks.",
+    "accordion_groups": [
         {
-            "icon": "📊", "name": "Data Science & Machine Learning",
+            "id": "core-ai",
+            "name": "🧠 Core AI & Data",
+            "active": true,
+            "tags": [
+                { "name": "LLMs & Agentic AI", "highlight": true },
+                { "name": "Data Science & ML", "highlight": true },
+                { "name": "Deep Learning", "highlight": true },
+                { "name": "AI Deployment", "highlight": true }
+            ]
+        },
+        {
+            "id": "gen-ai",
+            "name": "🔮 Generative AI & LLMs",
+            "active": false,
+            "tags": [
+                { "name": "LangChain", "highlight": true },
+                { "name": "RAG", "highlight": true },
+                { "name": "Agentic AI", "highlight": true },
+                { "name": "OpenAI API", "highlight": false },
+                { "name": "LLaMA3", "highlight": false },
+                { "name": "HuggingFace", "highlight": false },
+                { "name": "Vector DBs", "highlight": false }
+            ]
+        },
+        {
+            "id": "data-science",
+            "name": "📊 Data Science & Machine Learning",
+            "active": false,
             "tags": [
                 { "name": "Python", "highlight": true },
                 { "name": "SQL", "highlight": true },
-                { "name": "Scikit-Learn" }, { "name": "Pandas / NumPy" },
-                { "name": "MLflow" }, { "name": "PySpark" }, { "name": "Kafka" },
-                { "name": "EDA" }, { "name": "Feature Engineering" }, { "name": "Statistical Analysis" }
+                { "name": "Scikit-Learn", "highlight": false },
+                { "name": "Pandas / NumPy", "highlight": false },
+                { "name": "MLflow", "highlight": false },
+                { "name": "EDA", "highlight": false }
             ]
         },
         {
-            "icon": "🧠", "name": "Deep Learning",
+            "id": "deep-learning",
+            "name": "🧠 Deep Learning",
+            "active": false,
             "tags": [
                 { "name": "PyTorch", "highlight": true },
-                { "name": "TensorFlow", "highlight": true },
-                { "name": "CNNs" }, { "name": "RNNs / LSTMs" }, { "name": "Transformers" },
-                { "name": "Transfer Learning" }, { "name": "Computer Vision" }, { "name": "Object Detection (YOLO)" }
+                { "name": "TensorFlow", "highlight": false },
+                { "name": "CNNs", "highlight": false },
+                { "name": "Transformers", "highlight": false },
+                { "name": "YOLO", "highlight": false }
             ]
         },
         {
-            "icon": "🔮", "name": "Generative AI & LLMs",
+            "id": "deployment",
+            "name": "🚀 Deployment & Engineering",
+            "active": false,
             "tags": [
-                { "name": "LangChain", "highlight": true },
-                { "name": "RAG Architectures", "highlight": true },
-                { "name": "Agentic AI Systems", "highlight": true },
-                { "name": "OpenAI API" }, { "name": "LLaMA3" }, { "name": "HuggingFace" },
-                { "name": "Vector Databases" }, { "name": "Prompt Engineering" },
-                { "name": "Ollama" }, { "name": "GROQ" }
+                { "name": "Docker", "highlight": false },
+                { "name": "Flask", "highlight": false },
+                { "name": "Streamlit", "highlight": false },
+                { "name": "AWS", "highlight": false },
+                { "name": "REST APIs", "highlight": false }
             ]
         },
         {
-            "icon": "🚀", "name": "Deployment & Engineering",
+            "id": "life-sciences",
+            "name": "🧬 Life Sciences & Research",
+            "active": false,
             "tags": [
-                { "name": "Streamlit" }, { "name": "Flask" }, { "name": "Docker" },
-                { "name": "AWS Bedrock" }, { "name": "AWS Lambda" },
-                { "name": "Git / GitHub" }, { "name": "REST APIs" }
+                { "name": "Molecular Biology", "highlight": false },
+                { "name": "Cell Culture", "highlight": false },
+                { "name": "Microbiology", "highlight": false },
+                { "name": "Histology", "highlight": false },
+                { "name": "3D Bioprinting", "highlight": false },
+                { "name": "HPLC / SEM / TEM", "highlight": false }
             ]
         },
         {
-            "icon": "🔬", "name": "Life Sciences Expertise",
+            "id": "teaching",
+            "name": "📚 Teaching & Training",
+            "active": false,
             "tags": [
-                { "name": "Molecular Biology" }, { "name": "Biomaterials" },
-                { "name": "Tissue Engineering" }, { "name": "3D Bioprinting" },
-                { "name": "Histology" }, { "name": "Microbiology" },
-                { "name": "HPLC / SEM / TEM" }, { "name": "PCR" },
-                { "name": "Cell Culture" }, { "name": "Cell seeding" }
-            ]
-        },
-        {
-            "icon": "📚", "name": "Teaching & Training",
-            "tags": [
-                { "name": "Curriculum Development" }, { "name": "Lesson Planning" },
-                { "name": "Interactive Teaching Methods" }, { "name": "Student Engagement" },
-                { "name": "Mentorship and Coaching" }, { "name": "Educational Resources" },
-                { "name": "Online & In-person Teaching" }, { "name": "Workshop Facilitation" },
-                { "name": "Classroom Management" }, { "name": "Career Readiness Guidance" },
-                { "name": "Assessments and Feedback" }
-            ]
-        },
-        {
-            "icon": "🦠", "name": "Microbiological Techniques",
-            "tags": [
-                { "name": "Media and Broth Preparation" },
-                { "name": "Staining Techniques (Gram Staining, Microscopy)" },
-                { "name": "Streaking and Bacterial Culture" }
-            ]
-        },
-        {
-            "icon": "🧫", "name": "Cell Culture and Maintenance",
-            "tags": [
-                { "name": "Cell Culture (Media Preparation, Cryopreservation, Hood Maintenance)" },
-                { "name": "Maintaining Stock" }, { "name": "Cell Count" },
-                { "name": "Hematology Techniques" }, { "name": "Flow cytometry" },
-                { "name": "Cytotoxicity evaluation" }, { "name": "Stem cell Isolation and culture" }
-            ]
-        },
-        {
-            "icon": "🌱", "name": "Histology and Plant Research",
-            "tags": [
-                { "name": "Herbarium Preparation" },
-                { "name": "Slide Preparation (Plant and Animal Specimens)" },
-                { "name": "Biochemical Tests" }, { "name": "Protoplast Isolation" }, { "name": "Taxonomy" }
-            ]
-        },
-        {
-            "icon": "🧬", "name": "Molecular Biology Techniques",
-            "tags": [
-                { "name": "PCR" }, { "name": "AGE" }, { "name": "PAGE" },
-                { "name": "DNA/RNA Isolation" }, { "name": "Primer Synthesis" },
-                { "name": "Sequencing" }, { "name": "Bioinformatics (BLAST, NCBI, PDB)" }
-            ]
-        },
-        {
-            "icon": "🧪", "name": "Polymeric & Biomaterial Techniques",
-            "tags": [
-                { "name": "Polymeric Scaffold Development" }, { "name": "3D Bioprinting" },
-                { "name": "Biomaterial Synthesis" }, { "name": "Electrospinning" }
-            ]
-        },
-        {
-            "icon": "⚗️", "name": "Chromatography & Instrumentation",
-            "tags": [
-                { "name": "GC" }, { "name": "HPLC" },
-                { "name": "Paper/Thin-Layer Chromatography" },
-                { "name": "Instrumentation (Spectrophotometry, Microscopy)" },
-                { "name": "Electron Microscopy (SEM/TEM)" }
-            ]
-        },
-        {
-            "icon": "📊", "name": "Data Analysis & Interpretation",
-            "tags": [
-                { "name": "Statistical Tools (Excel, Python, GraphPad Prism)" },
-                { "name": "Biostatistics & ML for Biological Data" }
-            ]
-        },
-        {
-            "icon": "🏢", "name": "Laboratory Management",
-            "tags": [
-                { "name": "Lab Safety & Quality Assurance" }, { "name": "Grant Writing & Fundraising" },
-                { "name": "Cross-disciplinary Collaboration" }, { "name": "High-impact Publications" },
-                { "name": "Research Proposal Writing" }, { "name": "Public Outreach & Education" }
+                { "name": "Curriculum Development", "highlight": false },
+                { "name": "Mentorship", "highlight": false },
+                { "name": "Workshops", "highlight": false },
+                { "name": "Student Engagement", "highlight": false }
             ]
         }
-    ],
-    "soft_skills": [
-        { "icon": "🗂", "name": "Project Management" },
-        { "icon": "✍️", "name": "Scientific Writing" },
-        { "icon": "🎤", "name": "Public Speaking" },
-        { "icon": "📚", "name": "Curriculum Development" },
-        { "icon": "🤝", "name": "Mentorship" },
-        { "icon": "🔭", "name": "Research Design" }
     ]
 }

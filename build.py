@@ -55,7 +55,7 @@ def load_user_data(user_dir):
     # Optional section data
     optional_files = [
         "bio", "experience", "education", "projects",
-        "publications", "skills", "workshops", "focus", "graph", "languages"
+        "publications", "skills", "workshops", "focus", "graph", "languages", "gallery"
     ]
     for name in optional_files:
         filepath = data_dir / f"{name}.json"
@@ -85,7 +85,7 @@ def setup_jinja_env():
 PAGES = [
     ("pages/index.html",        "index.html",        "home",         []),
     ("pages/graph.html",        "graph.html",        "graph",        ["bio", "graph_data"]),
-    ("pages/bio.html",          "bio.html",          "bio",          ["bio"]),
+    ("pages/bio.html",          "bio.html",          "bio",          ["bio", "graph_data"]),
     ("pages/experience.html",   "experience.html",   "experience",   ["experience", "graph_data"]),
     ("pages/education.html",    "education.html",    "education",    ["education", "graph_data"]),
     ("pages/skills.html",       "skills.html",       "skills",       ["skills", "graph_data"]),
@@ -95,6 +95,7 @@ PAGES = [
     ("pages/summary.html",      "summary.html",      "focus",        ["focus", "graph_data"]),
     ("pages/contact.html",      "contact.html",      "contact",      ["graph_data"]),
     ("pages/languages.html",    "languages.html",    "languages",    ["languages", "graph_data"]),
+    ("pages/gallery.html",      "gallery.html",      "gallery",      ["gallery", "graph_data"]),
 ]
 
 

@@ -29,7 +29,8 @@
         "whatsapp_number": "+91 7012753018",
         "instagram": "https://www.instagram.com/prof_ds_?igsh=MTZhbTFuM3ZrMnBreA==",
         "instagram_handle": "@prof_ds_",
-        "location": "Kochi, Kerala, India"
+        "location": "Kochi, Kerala, India",
+        "resume_url": "static/resume.pdf"
     },
     "chat_widget": {
         "enabled": true,

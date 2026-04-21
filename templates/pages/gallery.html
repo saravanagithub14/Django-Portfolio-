@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery — {{ config.site_title }}{% endblock %}
+{% block description %}Video content and media showcases by {{ config.site_title }}.{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Video gallery scroll container */
+    .video-gallery-wrapper {
+        max-width: 480px;
+        margin: 0 auto 60px;
+        position: relative;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .video-scroll-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 20px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 20px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .video-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .video-scroll-container .project-card {
+        flex: 0 0 100%;
+        min-width: 100%;
+        width: 100%;
+        margin-bottom: 0 !important;
+        scroll-snap-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    /* Carousel Navigation Buttons */
+    .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% + 100px);
+        left: -50px;
+        pointer-events: none;
+    }
+
+    .nav-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(100, 60, 200, 0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(140, 100, 255, 0.3);
+        color: #e8e0ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: all 0.3s;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-btn:hover {
+        background: rgba(140, 100, 255, 0.4);
+        border-color: rgba(180, 140, 255, 0.5);
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+        .video-gallery-wrapper {
+            max-width: 90vw;
+        }
+
+        .carousel-nav {
+            width: 100%;
+            left: 0;
+            padding: 0 5px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-label">Media & Presentations</div>
+    <h1 class="page-title">Video Gallery</h1>
+    <p class="page-sub">Featured video content, presentations, and showcases.</p>
+
+    <div class="video-gallery-wrapper">
+        <div class="carousel-nav">
+            <button class="nav-btn" id="prevBtn" title="Previous">←</button>
+            <button class="nav-btn" id="nextBtn" title="Next">→</button>
+        </div>
+        <div class="video-scroll-container" id="videoSlider">
+            {% for video in gallery.videos %}
+            <div class="project-card"
+                style="margin-bottom: 28px; padding: 20px; text-align: center; background: rgba(100, 60, 200, 0.08); border: 1px solid rgba(140, 100, 255, 0.2); border-radius: 16px;">
+                <h2 class="project-title" style="margin-bottom: 20px; font-size: 1.5rem; color: #e8e0ff;">{{ video.title }}</h2>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                        src="{{ video.embed_url }}" title="{{ video.title }}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block after_content %}
+    {% include 'components/graph_section.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const slider = document.getElementById('videoSlider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        nextBtn.addEventListener('click', () => {
+            const cardWidth = slider.querySelector('.project-card').offsetWidth + 20;
+            slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            const cardWidth = slider.querySelector('.project-card').offsetWidth + 20;
+            slider.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        });
+
+        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.project-card').forEach(el => obs.observe(el));
+    </script>
+{% endblock %}
