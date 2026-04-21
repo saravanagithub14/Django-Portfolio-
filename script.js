@@ -226,7 +226,7 @@ try {
                     document.getElementById('panel-content').innerHTML = `
                         <p style="margin-bottom: 12px; line-height: 1.6;">${node.description}</p>
                         ${node.link ? `<a href="${node.link}" target="_blank" style="color: #a078ff; text-decoration: underline; font-weight: 700;">VISIT LINK →</a>` : ''}
-                        ${node.navigateTo ? `<div style="margin-top: 10px; font-size: 11px; color: #a078ff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Click node to visit page</div>` : ''}
+                        ${(node.navigateTo && !node.isCurrentPage) ? `<div style="margin-top: 10px; font-size: 11px; color: #a078ff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Click node to visit page</div>` : ''}
                     `;
                     panel.style.display = 'block';
                     panel.style.opacity = '1';
