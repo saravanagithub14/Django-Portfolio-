@@ -114,7 +114,7 @@ try {
 
     flattenData(resumeData);
 
-    // Function to update breadcrumbs
+    /* Breadcrumb feature removed as per user request
     function updateBreadcrumbs(node) {
         const breadcrumbContainer = document.getElementById('breadcrumbs');
         if (!breadcrumbContainer) return;
@@ -136,6 +136,8 @@ try {
             `<span class="breadcrumb-item ${i === path.length - 1 ? 'active' : ''}">${n.name || 'Multiverse'}</span>`
         ).join('');
     }
+    */
+    function updateBreadcrumbs(node) { return; }
 
     // 1.5 Generate background "ghost" clusters for Multiverse effect
     const ghostClusters = 8;

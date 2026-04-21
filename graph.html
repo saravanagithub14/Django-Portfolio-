@@ -36,11 +36,6 @@
     <!-- Graph -->
     <div id="graph-container"></div>
 
-    <!-- Breadcrumbs -->
-    <div id="breadcrumbs">
-        <span class="breadcrumb-item" data-id="root">Multiverse</span>
-    </div>
-
     <!-- Info Panel -->
     <div id="info-panel">
         <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
@@ -49,35 +44,6 @@
     </div>
 
     <style>
-        #breadcrumbs {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-            display: flex;
-            gap: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: rgba(10, 10, 10, 0.4);
-            padding: 8px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .breadcrumb-item:not(:last-child)::after {
-            content: '›';
-            margin-left: 10px;
-            color: rgba(140, 100, 255, 0.5);
-        }
-        .breadcrumb-item.active {
-            color: #a078ff;
-            font-weight: 600;
-        }
     </style>
 
     <!-- Bio section below graph -->
