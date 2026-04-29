@@ -275,7 +275,7 @@ try {
             const opacity = node.isGhost ? 0.2 : 0.85;
             
             // Sphere (Glass Orb)
-            const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 16, 16);
+            const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 32, 32);
             const sphereMat = new THREE.MeshStandardMaterial({
                 color: node.color,
                 transparent: true,
