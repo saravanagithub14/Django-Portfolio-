@@ -1,5 +1,6 @@
 # Build output
-dist/
+# dist/ is now tracked for Vercel deployment
+
 
 # Python
 __pycache__/

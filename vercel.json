@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/dist/default/index.html" },
+    { "source": "/(static/.*)", "destination": "/dist/default/$1" },
+    { "source": "/(.*\\.html)", "destination": "/dist/default/$1" },
+    { "source": "/(.*)", "destination": "/dist/default/$1" }
+  ]
+}
