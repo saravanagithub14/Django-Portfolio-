@@ -26,10 +26,11 @@
             <div class="dl-icon">📍</div>
             <div><div class="dl-label">Location</div><div class="dl-val">{{ config.social.location }}</div></div>
         </a>
+        <!-- TODO: Audit for any other PII in raw text. Current check: Only public email/handles shown. -->
         {% if config.social.whatsapp %}
         <a href="{{ config.social.whatsapp }}" target="_blank" class="direct-link">
             <div class="dl-icon">💬</div>
-            <div><div class="dl-label">WhatsApp</div><div class="dl-val">{{ config.social.whatsapp_number }}</div></div>
+            <div><div class="dl-label">WhatsApp</div><div class="dl-val">WhatsApp</div></div>
         </a>
         {% endif %}
         {% if config.social.instagram %}

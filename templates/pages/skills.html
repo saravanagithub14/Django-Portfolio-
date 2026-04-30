@@ -23,15 +23,67 @@
         line-height: 1.6;
     }
 
-    .page-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        color: #a078ff;
-        margin-bottom: 15px;
-        text-align: left;
+    .skill-tag {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background: rgba(140, 100, 255, 0.05);
+        border: 1px solid rgba(140, 100, 255, 0.2);
+        padding: 12px 18px;
+        border-radius: 12px;
+        color: #e8e0ff;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-tag.highlight {
+        background: rgba(140, 100, 255, 0.15);
+        border-color: rgba(140, 100, 255, 0.4);
+        box-shadow: 0 4px 20px rgba(140, 100, 255, 0.1);
+    }
+
+    .skill-tag:hover {
+        background: rgba(140, 100, 255, 0.2);
+        border-color: #a078ff;
+        transform: translateY(-2px);
+    }
+
+    .skill-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
         width: 100%;
+    }
+
+    .skill-name {
         font-weight: 600;
+    }
+
+    .skill-dots {
+        display: flex;
+        gap: 4px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dot.filled {
+        background: #a078ff;
+        box-shadow: 0 0 8px rgba(160, 120, 255, 0.6);
+    }
+
+    .skill-context {
+        font-size: 0.7rem;
+        color: rgba(200, 192, 232, 0.4);
+        font-weight: 400;
+        letter-spacing: 0.5px;
     }
 </style>
 {% endblock %}
@@ -51,7 +103,19 @@
         <div class="accordion-content">
             <div class="skill-tags">
                 {% for tag in group.tags %}
-                <span class="skill-tag {% if tag.highlight %}highlight{% endif %}">{{ tag.name }}</span>
+                <div class="skill-tag {% if tag.highlight %}highlight{% endif %}">
+                    <div class="skill-meta">
+                        <span class="skill-name">{{ tag.name }}</span>
+                        <div class="skill-dots">
+                            <span class="dot {% if tag.tier >= 1 %}filled{% endif %}"></span>
+                            <span class="dot {% if tag.tier >= 2 %}filled{% endif %}"></span>
+                            <span class="dot {% if tag.tier >= 3 %}filled{% endif %}"></span>
+                        </div>
+                    </div>
+                    {% if tag.context %}
+                    <div class="skill-context">{{ tag.context }}</div>
+                    {% endif %}
+                </div>
                 {% endfor %}
             </div>
         </div>

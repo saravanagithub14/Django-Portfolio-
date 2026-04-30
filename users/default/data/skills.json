@@ -8,10 +8,10 @@
             "name": "🧠 Core AI & Data",
             "active": true,
             "tags": [
-                { "name": "LLMs & Agentic AI", "highlight": true },
-                { "name": "Data Science & ML", "highlight": true },
-                { "name": "Deep Learning", "highlight": true },
-                { "name": "AI Deployment", "highlight": true }
+                { "name": "LLMs & Agentic AI", "highlight": true, "tier": 3, "context": "Focus of current work" },
+                { "name": "Data Science & ML", "highlight": true, "tier": 3, "context": "5+ years experience" },
+                { "name": "Deep Learning", "highlight": true, "tier": 2, "context": "Research applications" },
+                { "name": "AI Deployment", "highlight": true, "tier": 2, "context": "Full-stack integration" }
             ]
         },
         {
@@ -19,13 +19,13 @@
             "name": "🔮 Generative AI & LLMs",
             "active": false,
             "tags": [
-                { "name": "LangChain", "highlight": true },
-                { "name": "RAG", "highlight": true },
-                { "name": "Agentic AI", "highlight": true },
-                { "name": "OpenAI API", "highlight": false },
-                { "name": "LLaMA3", "highlight": false },
-                { "name": "HuggingFace", "highlight": false },
-                { "name": "Vector DBs", "highlight": false }
+                { "name": "LangChain", "highlight": true, "tier": 3, "context": "Core framework used" },
+                { "name": "RAG", "highlight": true, "tier": 3, "context": "Production systems built" },
+                { "name": "Agentic AI", "highlight": true, "tier": 3, "context": "Multi-agent orchestration" },
+                { "name": "OpenAI API", "highlight": false, "tier": 1, "context": "LLM integration" },
+                { "name": "LLaMA3", "highlight": false, "tier": 1, "context": "Local deployment" },
+                { "name": "HuggingFace", "highlight": false, "tier": 2, "context": "Model fine-tuning" },
+                { "name": "Vector DBs", "highlight": false, "tier": 3, "context": "Pinecone, ChromaDB" }
             ]
         },
         {
@@ -33,12 +33,12 @@
             "name": "📊 Data Science & Machine Learning",
             "active": false,
             "tags": [
-                { "name": "Python", "highlight": true },
-                { "name": "SQL", "highlight": true },
-                { "name": "Scikit-Learn", "highlight": false },
-                { "name": "Pandas / NumPy", "highlight": false },
-                { "name": "MLflow", "highlight": false },
-                { "name": "EDA", "highlight": false }
+                { "name": "Python", "highlight": true, "tier": 3, "context": "Primary language" },
+                { "name": "SQL", "highlight": true, "tier": 2, "context": "Data extraction" },
+                { "name": "Scikit-Learn", "highlight": false, "tier": 3, "context": "Core ML library" },
+                { "name": "Pandas", "highlight": false, "tier": 3, "context": "Data manipulation" },
+                { "name": "MLflow", "highlight": false, "tier": 2, "context": "Experiment tracking" },
+                { "name": "EDA", "highlight": false, "tier": 3, "context": "Statistical analysis" }
             ]
         },
         {
@@ -46,11 +46,11 @@
             "name": "🧠 Deep Learning",
             "active": false,
             "tags": [
-                { "name": "PyTorch", "highlight": true },
-                { "name": "TensorFlow", "highlight": false },
-                { "name": "CNNs", "highlight": false },
-                { "name": "Transformers", "highlight": false },
-                { "name": "YOLO", "highlight": false }
+                { "name": "PyTorch", "highlight": true, "tier": 2, "context": "Deep research" },
+                { "name": "TensorFlow", "highlight": false, "tier": 2, "context": "Legacy projects" },
+                { "name": "CNNs", "highlight": false, "tier": 3, "context": "Medical imaging focus" },
+                { "name": "Transformers", "highlight": false, "tier": 1, "context": "Self-attention models" },
+                { "name": "YOLO", "highlight": false, "tier": 2, "context": "Computer vision" }
             ]
         },
         {
@@ -58,11 +58,11 @@
             "name": "🚀 Deployment & Engineering",
             "active": false,
             "tags": [
-                { "name": "Docker", "highlight": false },
-                { "name": "Flask", "highlight": false },
-                { "name": "Streamlit", "highlight": false },
-                { "name": "AWS", "highlight": false },
-                { "name": "REST APIs", "highlight": false }
+                { "name": "Docker", "highlight": false, "tier": 2, "context": "Containerization" },
+                { "name": "Flask", "highlight": false, "tier": 2, "context": "Backend API" },
+                { "name": "Streamlit", "highlight": false, "tier": 3, "context": "Internal tool UI" },
+                { "name": "AWS", "highlight": false, "tier": 1, "context": "Basic cloud ops" },
+                { "name": "REST APIs", "highlight": false, "tier": 1, "context": "API design" }
             ]
         },
         {
@@ -70,12 +70,12 @@
             "name": "🧬 Life Sciences & Research",
             "active": false,
             "tags": [
-                { "name": "Molecular Biology", "highlight": false },
-                { "name": "Cell Culture", "highlight": false },
-                { "name": "Microbiology", "highlight": false },
-                { "name": "Histology", "highlight": false },
-                { "name": "3D Bioprinting", "highlight": false },
-                { "name": "HPLC / SEM / TEM", "highlight": false }
+                { "name": "Molecular Biology", "highlight": false, "tier": 3, "context": "M.Sc Level" },
+                { "name": "Cell Culture", "highlight": false, "tier": 2, "context": "Lab techniques" },
+                { "name": "Microbiology", "highlight": false, "tier": 2, "context": "Research studies" },
+                { "name": "Histology", "highlight": false, "tier": 2, "context": "Tissue analysis" },
+                { "name": "3D Bioprinting", "highlight": false, "tier": 3, "context": "Regenerative medicine" },
+                { "name": "HPLC / SEM / TEM", "highlight": false, "tier": 2, "context": "Analytical tools" }
             ]
         },
         {
@@ -83,10 +83,10 @@
             "name": "📚 Teaching & Training",
             "active": false,
             "tags": [
-                { "name": "Curriculum Development", "highlight": false },
-                { "name": "Mentorship", "highlight": false },
-                { "name": "Workshops", "highlight": false },
-                { "name": "Student Engagement", "highlight": false }
+                { "name": "Curriculum Development", "highlight": false, "tier": 3, "context": "100+ students" },
+                { "name": "Mentorship", "highlight": false, "tier": 3, "context": "Career guidance" },
+                { "name": "Workshops", "highlight": false, "tier": 3, "context": "Hands-on sessions" },
+                { "name": "Student Engagement", "highlight": false, "tier": 2, "context": "Active learning" }
             ]
         }
     ]

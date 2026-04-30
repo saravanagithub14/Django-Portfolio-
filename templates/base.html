@@ -5,7 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ config.site_title }}{% endblock %}</title>
+    
+    <!-- SEO & Meta Tags -->
     <meta name="description" content="{% block description %}{{ config.site_description }}{% endblock %}">
+    <meta name="keywords" content="AI engineer, data scientist, generative AI, RAG, LangChain, Kerala, India">
+    <link rel="canonical" href="https://saravanaperumal.vercel.app/{{ active_page if active_page and active_page != 'home' else '' }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://saravanaperumal.vercel.app/{{ active_page if active_page and active_page != 'home' else '' }}">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+    <meta property="og:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://saravanaperumal.vercel.app/{{ active_page if active_page and active_page != 'home' else '' }}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ self.title() }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ self.description() }}{% endblock %}">
+    <meta property="twitter:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">

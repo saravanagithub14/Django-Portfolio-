@@ -5,7 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skills — Saravana Perumal R.</title>
+    
+    <!-- SEO & Meta Tags -->
     <meta name="description" content="AI Engineer, Data Scientist &amp; Educator. From Cells to Code — Engineering Intelligence with Scientific Discipline.">
+    <meta name="keywords" content="AI engineer, data scientist, generative AI, RAG, LangChain, Kerala, India">
+    <link rel="canonical" href="https://saravanaperumal.vercel.app/skills">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://saravanaperumal.vercel.app/skills">
+    <meta property="og:title" content="Skills — Saravana Perumal R.">
+    <meta property="og:description" content="AI Engineer, Data Scientist &amp; Educator. From Cells to Code — Engineering Intelligence with Scientific Discipline.">
+    <meta property="og:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://saravanaperumal.vercel.app/skills">
+    <meta property="twitter:title" content="Skills — Saravana Perumal R.">
+    <meta property="twitter:description" content="AI Engineer, Data Scientist &amp; Educator. From Cells to Code — Engineering Intelligence with Scientific Discipline.">
+    <meta property="twitter:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -33,15 +52,67 @@
         line-height: 1.6;
     }
 
-    .page-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        color: #a078ff;
-        margin-bottom: 15px;
-        text-align: left;
+    .skill-tag {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background: rgba(140, 100, 255, 0.05);
+        border: 1px solid rgba(140, 100, 255, 0.2);
+        padding: 12px 18px;
+        border-radius: 12px;
+        color: #e8e0ff;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-tag.highlight {
+        background: rgba(140, 100, 255, 0.15);
+        border-color: rgba(140, 100, 255, 0.4);
+        box-shadow: 0 4px 20px rgba(140, 100, 255, 0.1);
+    }
+
+    .skill-tag:hover {
+        background: rgba(140, 100, 255, 0.2);
+        border-color: #a078ff;
+        transform: translateY(-2px);
+    }
+
+    .skill-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
         width: 100%;
+    }
+
+    .skill-name {
         font-weight: 600;
+    }
+
+    .skill-dots {
+        display: flex;
+        gap: 4px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dot.filled {
+        background: #a078ff;
+        box-shadow: 0 0 8px rgba(160, 120, 255, 0.6);
+    }
+
+    .skill-context {
+        font-size: 0.7rem;
+        color: rgba(200, 192, 232, 0.4);
+        font-weight: 400;
+        letter-spacing: 0.5px;
     }
 </style>
 </head>
@@ -77,10 +148,50 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag highlight">LLMs &amp; Agentic AI</span>
-                <span class="skill-tag highlight">Data Science &amp; ML</span>
-                <span class="skill-tag highlight">Deep Learning</span>
-                <span class="skill-tag highlight">AI Deployment</span>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">LLMs &amp; Agentic AI</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Focus of current work</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">Data Science &amp; ML</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">5+ years experience</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">Deep Learning</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Research applications</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">AI Deployment</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Full-stack integration</div>
+                </div>
             </div>
         </div>
     </div>
@@ -91,13 +202,83 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag highlight">LangChain</span>
-                <span class="skill-tag highlight">RAG</span>
-                <span class="skill-tag highlight">Agentic AI</span>
-                <span class="skill-tag ">OpenAI API</span>
-                <span class="skill-tag ">LLaMA3</span>
-                <span class="skill-tag ">HuggingFace</span>
-                <span class="skill-tag ">Vector DBs</span>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">LangChain</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Core framework used</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">RAG</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Production systems built</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">Agentic AI</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Multi-agent orchestration</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">OpenAI API</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">LLM integration</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">LLaMA3</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Local deployment</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">HuggingFace</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Model fine-tuning</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Vector DBs</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Pinecone, ChromaDB</div>
+                </div>
             </div>
         </div>
     </div>
@@ -108,12 +289,72 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag highlight">Python</span>
-                <span class="skill-tag highlight">SQL</span>
-                <span class="skill-tag ">Scikit-Learn</span>
-                <span class="skill-tag ">Pandas / NumPy</span>
-                <span class="skill-tag ">MLflow</span>
-                <span class="skill-tag ">EDA</span>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">Python</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Primary language</div>
+                </div>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">SQL</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Data extraction</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Scikit-Learn</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Core ML library</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Pandas</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Data manipulation</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">MLflow</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Experiment tracking</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">EDA</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Statistical analysis</div>
+                </div>
             </div>
         </div>
     </div>
@@ -124,11 +365,61 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag highlight">PyTorch</span>
-                <span class="skill-tag ">TensorFlow</span>
-                <span class="skill-tag ">CNNs</span>
-                <span class="skill-tag ">Transformers</span>
-                <span class="skill-tag ">YOLO</span>
+                <div class="skill-tag highlight">
+                    <div class="skill-meta">
+                        <span class="skill-name">PyTorch</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Deep research</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">TensorFlow</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Legacy projects</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">CNNs</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Medical imaging focus</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Transformers</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Self-attention models</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">YOLO</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Computer vision</div>
+                </div>
             </div>
         </div>
     </div>
@@ -139,11 +430,61 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag ">Docker</span>
-                <span class="skill-tag ">Flask</span>
-                <span class="skill-tag ">Streamlit</span>
-                <span class="skill-tag ">AWS</span>
-                <span class="skill-tag ">REST APIs</span>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Docker</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Containerization</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Flask</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Backend API</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Streamlit</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Internal tool UI</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">AWS</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Basic cloud ops</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">REST APIs</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">API design</div>
+                </div>
             </div>
         </div>
     </div>
@@ -154,12 +495,72 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag ">Molecular Biology</span>
-                <span class="skill-tag ">Cell Culture</span>
-                <span class="skill-tag ">Microbiology</span>
-                <span class="skill-tag ">Histology</span>
-                <span class="skill-tag ">3D Bioprinting</span>
-                <span class="skill-tag ">HPLC / SEM / TEM</span>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Molecular Biology</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">M.Sc Level</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Cell Culture</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Lab techniques</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Microbiology</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Research studies</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Histology</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Tissue analysis</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">3D Bioprinting</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Regenerative medicine</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">HPLC / SEM / TEM</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Analytical tools</div>
+                </div>
             </div>
         </div>
     </div>
@@ -170,10 +571,50 @@
         </div>
         <div class="accordion-content">
             <div class="skill-tags">
-                <span class="skill-tag ">Curriculum Development</span>
-                <span class="skill-tag ">Mentorship</span>
-                <span class="skill-tag ">Workshops</span>
-                <span class="skill-tag ">Student Engagement</span>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Curriculum Development</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">100+ students</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Mentorship</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Career guidance</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Workshops</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Hands-on sessions</div>
+                </div>
+                <div class="skill-tag ">
+                    <div class="skill-meta">
+                        <span class="skill-name">Student Engagement</span>
+                        <div class="skill-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot "></span>
+                        </div>
+                    </div>
+                    <div class="skill-context">Active learning</div>
+                </div>
             </div>
         </div>
     </div>
