@@ -1,0 +1,9 @@
+@echo off
+echo Staging changes...
+git add .
+echo Committing changes...
+git commit -m "UI Polish: Remove info panel, fix favicon, and implement sticky navbar"
+echo Pushing to GitHub...
+git push
+echo Done!
+pause

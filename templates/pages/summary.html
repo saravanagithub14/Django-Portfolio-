@@ -25,7 +25,7 @@
             <span class="pos-item">{{ item }}</span>
             {% endfor %}
         </div>
-        <div class="positioning-tag">{{ focus.positioning.tagline }}</div>
+        <div class="positioning-tag">{{ focus.positioning.tagline | safe }}</div>
     </div>
 {% endblock %}
 

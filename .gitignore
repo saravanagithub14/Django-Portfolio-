@@ -1,0 +1,24 @@
+# Build output
+dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Legacy archive
+_legacy/
+
+# Scratch files
+scratch/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+*~

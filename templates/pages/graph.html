@@ -36,16 +36,14 @@
     <!-- Graph -->
     <div id="graph-container"></div>
 
-    <!-- Info Panel -->
-    <div id="info-panel">
-        <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
-        <h2 id="panel-title">Title</h2>
-        <div id="panel-content">Content goes here...</div>
-    </div>
+
+
+    <!-- Navbar (Fixed/Sticky) -->
+    {% include 'components/navbar.html' %}
 
     <!-- Bio section below graph -->
     <div class="content" id="bio-section">
-        {% include 'components/navbar.html' %}
+
 
         <!-- Hero -->
         <div class="profile-container">

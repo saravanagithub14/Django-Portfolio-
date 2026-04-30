@@ -20,8 +20,8 @@
 <body>
     {% block body_start %}{% endblock %}
     <canvas id="particle-bg"></canvas>
+    {% include 'components/navbar.html' %}
     <div class="content{% block content_class %}{% endblock %}"{% block content_attrs %}{% endblock %}>
-        {% include 'components/navbar.html' %}
         {% block content %}{% endblock %}
     </div>
     {% block after_content %}{% endblock %}

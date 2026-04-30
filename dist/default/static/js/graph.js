@@ -88,7 +88,7 @@ try {
             depth: depth,
             color: color,
             isCurrentPage: isCurrentPage,
-            parent: parent, // Track parent for breadcrumbs
+            parent: parent,
             val: isCurrentPage ? 35 : (depth === 0 ? 20 : depth === 1 ? 12 : depth === 2 ? 6 : 4),
             // Initialize all nodes near center for branching effect
             x: depth === 0 ? 0 : (Math.random() - 0.5) * 20,
@@ -114,30 +114,7 @@ try {
 
     flattenData(resumeData);
 
-    /* Breadcrumb feature removed as per user request
-    function updateBreadcrumbs(node) {
-        const breadcrumbContainer = document.getElementById('breadcrumbs');
-        if (!breadcrumbContainer) return;
 
-        if (!node || node.isGhost) {
-            breadcrumbContainer.style.opacity = '0.5';
-            return;
-        }
-
-        breadcrumbContainer.style.opacity = '1';
-        const path = [];
-        let curr = node;
-        while (curr) {
-            path.unshift(curr);
-            curr = curr.parent;
-        }
-
-        breadcrumbContainer.innerHTML = path.map((n, i) => 
-            `<span class="breadcrumb-item ${i === path.length - 1 ? 'active' : ''}">${n.name || 'Multiverse'}</span>`
-        ).join('');
-    }
-    */
-    function updateBreadcrumbs(node) { return; }
 
     // 1.5 Generate background "ghost" clusters for Multiverse effect
     const ghostClusters = 8;
@@ -209,7 +186,7 @@ try {
             if (node && node.isGhost) return; // Ignore ghost nodes for interaction
             container.style.cursor = node ? 'pointer' : 'grab';
             
-            updateBreadcrumbs(node);
+
 
             // Highlight links on hover
             Graph.linkWidth(l => {
@@ -221,19 +198,7 @@ try {
                 return (node && (l.source.id === node.id || l.target.id === node.id)) ? 'rgba(255, 255, 255, 0.8)' : 'rgba(160, 130, 255, 0.4)';
             });
             
-            if (node && node.description) {
-                const panel = document.getElementById('info-panel');
-                if (panel) {
-                    document.getElementById('panel-title').innerText = node.name;
-                    document.getElementById('panel-content').innerHTML = `
-                        <p style="margin-bottom: 12px; line-height: 1.6;">${node.description}</p>
-                        ${node.link ? `<a href="${node.link}" target="_blank" style="color: #a078ff; text-decoration: underline; font-weight: 700;">VISIT LINK →</a>` : ''}
-                        ${(node.navigateTo && !node.isCurrentPage) ? `<div style="margin-top: 10px; font-size: 11px; color: #a078ff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Click node to visit page</div>` : ''}
-                    `;
-                    panel.style.display = 'block';
-                    panel.style.opacity = '1';
-                }
-            }
+
         })
         .onNodeClick(node => {
             if (node && node.isGhost) return; // Ignore ghosts
@@ -275,7 +240,7 @@ try {
             const opacity = node.isGhost ? 0.2 : 0.85;
             
             // Sphere (Glass Orb)
-            const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 32, 32);
+            const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 16, 16);
             const sphereMat = new THREE.MeshStandardMaterial({
                 color: node.color,
                 transparent: true,

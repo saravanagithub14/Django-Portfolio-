@@ -36,16 +36,11 @@
     <!-- Graph -->
     <div id="graph-container"></div>
 
-    <!-- Info Panel -->
-    <div id="info-panel">
-        <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
-        <h2 id="panel-title">Title</h2>
-        <div id="panel-content">Content goes here...</div>
-    </div>
-
     <!-- Bio section below graph -->
     <div class="content" id="bio-section">
-<nav class="top-nav">
+        <!-- Sticky Navbar -->
+        <nav class="top-nav">
+
             <a href="graph.html" class="nav-link active">Graph</a>
             <a href="bio.html" class="nav-link">Bio</a>
             <a href="skills.html" class="nav-link">Skills</a>
@@ -54,19 +49,21 @@
             <div class="dropdown">
                 <button class="dropbtn nav-link">Portfolio &#9662;</button>
                 <div class="dropdown-content">
-                        <a href="projects.html" class="">Projects</a>
-                        <a href="publications.html" class="">Publications</a>
-                        <a href="workshops.html" class="">Workshops</a>
-                        <a href="gallery.html" class="">Gallery</a>
+                    <a href="projects.html">Projects</a>
+                    <a href="publications.html">Publications</a>
+                    <a href="workshops.html">Workshops</a>
+                    <a href="gallery.html">Gallery</a>
                 </div>
             </div>
             <a href="contact.html" class="nav-link">Contact</a>
-</nav>
+        </nav>
+
+
         <!-- Hero -->
         <div class="profile-container">
             <div class="profile-glow"></div>
             <div class="profile-ring">
-                <img src="profile.jpg" alt="Saravana Perumal R.">
+                <img src="static/images/profile.jpg" alt="Saravana Perumal R.">
             </div>
         </div>
 
