@@ -113,11 +113,19 @@ def build_user(user_name, env):
     data = load_user_data(user_dir)
     config = data["config"]
 
-    # Output directory
+    # Output directory — use Windows-safe cleanup that handles locked files
     out_dir = DIST_DIR / user_name
     if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+        import stat
+        def _remove_readonly(func, path, _):
+            """Clear read-only flag and retry on Windows permission errors."""
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
+        try:
+            shutil.rmtree(out_dir, onerror=_remove_readonly)
+        except Exception as e:
+            print(f"    [!] Could not fully clear old output ({e}). Continuing anyway.")
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     # Copy static assets
     static_out = out_dir / "static"
@@ -161,6 +169,10 @@ def build_user(user_name, env):
 
         # Write output
         out_path = out_dir / out_name
+        # Post-process: make /static/ paths relative so files work both
+        # when opened via file:// locally AND when served on Vercel.
+        html = html.replace('href="/static/', 'href="static/')
+        html = html.replace('src="/static/', 'src="static/')
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(html)
         rendered += 1

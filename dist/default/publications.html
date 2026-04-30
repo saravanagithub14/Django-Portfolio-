@@ -7,7 +7,7 @@
     <title>Publications & Achievements — Saravana Perumal R.</title>
     
     <!-- SEO & Meta Tags -->
-    <meta name="description" content="Research publications, book chapters, and professional achievements.">
+    <meta name="description" content="Research publications, book chapters, and professional achievements by Saravana Perumal R..">
     <meta name="keywords" content="AI engineer, data scientist, generative AI, RAG, LangChain, Kerala, India">
     <link rel="canonical" href="https://saravanaperumal.vercel.app/publications">
     
@@ -15,14 +15,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://saravanaperumal.vercel.app/publications">
     <meta property="og:title" content="Publications & Achievements — Saravana Perumal R.">
-    <meta property="og:description" content="Research publications, book chapters, and professional achievements.">
+    <meta property="og:description" content="Research publications, book chapters, and professional achievements by Saravana Perumal R..">
     <meta property="og:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://saravanaperumal.vercel.app/publications">
     <meta property="twitter:title" content="Publications & Achievements — Saravana Perumal R.">
-    <meta property="twitter:description" content="Research publications, book chapters, and professional achievements.">
+    <meta property="twitter:description" content="Research publications, book chapters, and professional achievements by Saravana Perumal R..">
     <meta property="twitter:image" content="https://saravanaperumal.vercel.app/static/images/profile.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +31,186 @@
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
+<style>
+/* ===== Publications Page ===== */
+
+/* Publication Card */
+.pub-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.pub-card {
+    background: rgba(100, 60, 200, 0.05);
+    border: 1px solid rgba(140, 100, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px 28px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.pub-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    border-radius: 16px 0 0 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.pub-card.type-book-card::before  { background: linear-gradient(180deg, #a078ff, #6040c0); }
+.pub-card.type-article-card::before { background: linear-gradient(180deg, #40c0ff, #2080c0); }
+
+.pub-card:hover {
+    background: rgba(140, 100, 255, 0.09);
+    border-color: rgba(160, 120, 255, 0.35);
+    transform: translateX(5px);
+}
+
+.pub-card:hover::before { opacity: 1; }
+
+.pub-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.pub-type {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.type-book    { background: rgba(160, 120, 255, 0.15); color: #c8a0ff; border: 1px solid rgba(160,120,255,0.3); }
+.type-article { background: rgba(64, 192, 255, 0.12);  color: #80d8ff; border: 1px solid rgba(64,192,255,0.25); }
+
+.pub-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e8e0ff;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.pub-meta {
+    font-size: 0.83rem;
+    line-height: 1.75;
+    color: rgba(200, 192, 232, 0.5);
+}
+
+.pub-meta a {
+    color: rgba(160, 120, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(160,120,255,0.3);
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.pub-meta a:hover {
+    color: #c8a0ff;
+    border-color: rgba(200, 160, 255, 0.6);
+}
+
+/* Achievements Grid */
+.achieve-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.achieve-item {
+    background: rgba(100, 60, 200, 0.05);
+    border: 1px solid rgba(140, 100, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.achieve-item:hover {
+    background: rgba(140, 100, 255, 0.1);
+    border-color: rgba(180, 140, 255, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(100, 60, 220, 0.15);
+}
+
+.achieve-icon {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 6px rgba(140,100,255,0.3));
+}
+
+.achieve-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e8e0ff;
+    line-height: 1.3;
+}
+
+.achieve-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: rgba(200, 192, 232, 0.5);
+}
+
+/* Stats bar */
+.pub-stats {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 40px;
+    padding: 20px 24px;
+    background: rgba(100, 60, 200, 0.05);
+    border: 1px solid rgba(140, 100, 255, 0.12);
+    border-radius: 14px;
+}
+
+.pub-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 4px 0;
+    border-right: 1px solid rgba(140, 100, 255, 0.1);
+}
+
+.pub-stat:last-child { border-right: none; }
+
+.ps-num {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #c8b4ff;
+    margin-bottom: 3px;
+}
+
+.ps-lbl {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(200, 192, 232, 0.4);
+}
+
+@media (max-width: 580px) {
+    .achieve-grid { grid-template-columns: 1fr; }
+    .pub-stats { flex-wrap: wrap; gap: 12px; }
+    .pub-stat { flex: 1 1 40%; border-right: none; border-bottom: 1px solid rgba(140,100,255,0.1); padding-bottom: 12px; }
+}
+</style>
     <link rel="stylesheet" href="static/css/chat_widget.css">
 </head>
 
@@ -57,35 +237,72 @@
     <h1 class="page-title">Publications &amp; Achievements</h1>
     <p class="page-sub">Peer-reviewed research in biomedical sciences and professional milestones in AI education.</p>
 
+    <!-- Stats Bar -->
+    <div class="pub-stats">
+        <div class="pub-stat">
+            <div class="ps-num">2</div>
+            <div class="ps-lbl">Book Chapters</div>
+        </div>
+        <div class="pub-stat">
+            <div class="ps-num">3</div>
+            <div class="ps-lbl">Research Articles</div>
+        </div>
+        <div class="pub-stat">
+            <div class="ps-num">4</div>
+            <div class="ps-lbl">Achievements</div>
+        </div>
+        <div class="pub-stat">
+            <div class="ps-num">5+</div>
+            <div class="ps-lbl">Years Research</div>
+        </div>
+    </div>
+
+    <!-- Book Chapters -->
     <div class="section-heading">📖 Book Chapters</div>
-    <div class="pub-card">
-        <span class="pub-type type-book">Book Chapter</span>
-        <div class="pub-title">Emerging Strategies in Bone Tissue Engineering</div>
-        <div class="pub-meta">Comprehensive review of innovative biomaterial scaffolds and regenerative approaches for bone repair — contributed chapter in edited academic volume.</div>
-    </div>
-    <div class="pub-card">
-        <span class="pub-type type-book">Book Chapter</span>
-        <div class="pub-title">Periostin and Integrin Signaling in Tissue Remodeling</div>
-        <div class="pub-meta">In-depth examination of periostin&#39;s role in extracellular matrix dynamics and integrin-mediated cell adhesion — contributed chapter in biomedical engineering compilation.</div>
+    <div class="pub-list">
+        <div class="pub-card type-book-card">
+            <div class="pub-top">
+                <div class="pub-title">Emerging Strategies in Bone Tissue Engineering</div>
+                <span class="pub-type type-book">Book Chapter</span>
+            </div>
+            <div class="pub-meta">Comprehensive review of innovative biomaterial scaffolds and regenerative approaches for bone repair — contributed chapter in edited academic volume.</div>
+        </div>
+        <div class="pub-card type-book-card">
+            <div class="pub-top">
+                <div class="pub-title">Periostin and Integrin Signaling in Tissue Remodeling</div>
+                <span class="pub-type type-book">Book Chapter</span>
+            </div>
+            <div class="pub-meta">In-depth examination of periostin&#39;s role in extracellular matrix dynamics and integrin-mediated cell adhesion — contributed chapter in biomedical engineering compilation.</div>
+        </div>
     </div>
 
+    <!-- Research Articles -->
     <div class="section-heading">📄 Research Articles</div>
-    <div class="pub-card">
-        <span class="pub-type type-article">Research Article</span>
-        <div class="pub-title">Biosynthesized Nanosilver from Alginate: Characterization and Applications</div>
-        <div class="pub-meta">Investigation into green synthesis of silver nanoparticles using alginate, with structural characterization via SEM/TEM and antimicrobial efficacy testing.</div>
-    </div>
-    <div class="pub-card">
-        <span class="pub-type type-article">Research Article</span>
-        <div class="pub-title">Bi-layered polycarbonate urethane/alginate di-aldehyde crosslinked gelatin membrane as a potential biomaterial for wound healing applications</div>
-        <div class="pub-meta">Prathyusha, Resmi Rajalekshmi, Saravana Perumal Ramakrishna, Jasmin Joseph, Rekha M., Anugya Bhatt. &lt;a href=&#34;https://doi.org/10.1080/09205063.2026.2644608&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1080/09205063.2026.2644608&lt;/a&gt; (2026). Published in &lt;em&gt;Physical Sciences Journal&lt;/em&gt;.</div>
-    </div>
-    <div class="pub-card">
-        <span class="pub-type type-article">Research Article</span>
-        <div class="pub-title">Anti-Microbial Hydrogel Development for Wound Care Applications</div>
-        <div class="pub-meta">Synthesis and evaluation of hydrogel biomaterials with antibacterial properties for advanced wound dressing applications in tissue engineering contexts.</div>
+    <div class="pub-list">
+        <div class="pub-card type-article-card">
+            <div class="pub-top">
+                <div class="pub-title">Biosynthesized Nanosilver from Alginate: Characterization and Applications</div>
+                <span class="pub-type type-article">Research Article</span>
+            </div>
+            <div class="pub-meta">Investigation into green synthesis of silver nanoparticles using alginate, with structural characterization via SEM/TEM and antimicrobial efficacy testing.</div>
+        </div>
+        <div class="pub-card type-article-card">
+            <div class="pub-top">
+                <div class="pub-title">Bi-layered polycarbonate urethane/alginate di-aldehyde crosslinked gelatin membrane as a potential biomaterial for wound healing applications</div>
+                <span class="pub-type type-article">Research Article</span>
+            </div>
+            <div class="pub-meta">Prathyusha, Resmi Rajalekshmi, Saravana Perumal Ramakrishna, Jasmin Joseph, Rekha M., Anugya Bhatt. <a href="https://doi.org/10.1080/09205063.2026.2644608" target="_blank">https://doi.org/10.1080/09205063.2026.2644608</a> (2026). Published in <em>Physical Sciences Journal</em>.</div>
+        </div>
+        <div class="pub-card type-article-card">
+            <div class="pub-top">
+                <div class="pub-title">Anti-Microbial Hydrogel Development for Wound Care Applications</div>
+                <span class="pub-type type-article">Research Article</span>
+            </div>
+            <div class="pub-meta">Synthesis and evaluation of hydrogel biomaterials with antibacterial properties for advanced wound dressing applications in tissue engineering contexts.</div>
+        </div>
     </div>
 
+    <!-- Achievements -->
     <div class="section-heading">🏆 Professional Achievements</div>
     <div class="achieve-grid">
         <div class="achieve-item">
@@ -143,7 +360,9 @@
     </script>
 
     <script>
-        const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
+        const obs = new IntersectionObserver(e => e.forEach(i => {
+            if (i.isIntersecting) i.target.classList.add('visible');
+        }), { threshold: 0.08 });
         document.querySelectorAll('.pub-card, .achieve-item').forEach(el => obs.observe(el));
     </script>
 
