@@ -55,7 +55,7 @@ def load_user_data(user_dir):
     # Optional section data
     optional_files = [
         "bio", "experience", "education", "projects",
-        "publications", "skills", "workshops", "focus", "graph", "languages", "gallery"
+        "publications", "skills", "workshops", "focus", "graph", "languages", "gallery", "blogs"
     ]
     for name in optional_files:
         filepath = data_dir / f"{name}.json"
@@ -96,6 +96,7 @@ PAGES = [
     ("pages/contact.html",      "contact.html",      "contact",      ["graph_data"]),
     ("pages/languages.html",    "languages.html",    "languages",    ["languages", "graph_data"]),
     ("pages/gallery.html",      "gallery.html",      "gallery",      ["gallery", "graph_data"]),
+    ("pages/blogs.html",        "blogs.html",        "blogs",        ["blogs", "graph_data"]),
 ]
 
 

@@ -49,7 +49,8 @@
                 { "label": "Projects", "url": "projects.html", "id": "projects" },
                 { "label": "Publications", "url": "publications.html", "id": "publications" },
                 { "label": "Workshops", "url": "workshops.html", "id": "workshops" },
-                { "label": "Gallery", "url": "gallery.html", "id": "gallery" }
+                { "label": "Gallery", "url": "gallery.html", "id": "gallery" },
+                { "label": "Blogs", "url": "blogs.html", "id": "blogs" }
             ]
         },
         { "label": "Contact", "url": "contact.html", "id": "contact" }

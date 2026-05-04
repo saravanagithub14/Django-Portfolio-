@@ -1,0 +1,52 @@
+{
+    "page_label": "Thoughts & Insights",
+    "page_title": "Blog",
+    "page_sub": "Technical deep-dives, AI insights, and explorations — published on Medium.",
+    "stats": {
+        "total_posts": "4",
+        "platform": "Medium",
+        "topics": "AI / ML / Python"
+    },
+    "posts": [
+        {
+            "title": "The Evolution of Object Detection: A Comparative Analysis of Two-Stage and YOLO Models",
+            "excerpt": "A deep dive into the evolution of object detection architectures — from two-stage detectors like R-CNN and Faster R-CNN to the real-time revolution brought by YOLO models.",
+            "category": "Computer Vision",
+            "date": "2024",
+            "read_time": "8 min read",
+            "emoji": "🔍",
+            "tags": ["YOLO", "Object Detection", "Deep Learning", "CNN"],
+            "medium_url": "https://medium.com/@mynamesaravanaperumal/the-evolution-of-object-detection-a-comparative-analysis-of-two-stage-and-yolo-models-bc2d01285fb1"
+        },
+        {
+            "title": "When Can We Expect an AI Takeover?",
+            "excerpt": "Exploring the timeline and feasibility of artificial general intelligence — separating hype from reality in the conversation about AI surpassing human capability.",
+            "category": "AI & Society",
+            "date": "2024",
+            "read_time": "6 min read",
+            "emoji": "🤖",
+            "tags": ["AGI", "AI Ethics", "Future of AI", "Technology"],
+            "medium_url": "https://medium.com/@mynamesaravanaperumal/when-can-we-expect-an-ai-takeover-3a05783b8477"
+        },
+        {
+            "title": "AI PCs: Bringing the Future to Your Desktop",
+            "excerpt": "How next-generation AI-optimized hardware is transforming personal computing — from Neural Processing Units to on-device AI inference and what it means for developers.",
+            "category": "Hardware & AI",
+            "date": "2024",
+            "read_time": "5 min read",
+            "emoji": "💻",
+            "tags": ["AI Hardware", "NPU", "Edge AI", "AI PCs"],
+            "medium_url": "https://medium.com/@mynamesaravanaperumal/ai-pcs-bringing-the-future-to-your-desktop-3cee3cdf6065"
+        },
+        {
+            "title": "How Python Stores Data in a Variable",
+            "excerpt": "Understanding Python's memory model — how variables are references to objects, the role of id(), type(), and the difference between mutable and immutable data storage.",
+            "category": "Python",
+            "date": "2024",
+            "read_time": "5 min read",
+            "emoji": "🐍",
+            "tags": ["Python", "Memory Management", "Programming", "Internals"],
+            "medium_url": "https://medium.com/@mynamesaravanaperumal/how-python-stores-data-in-a-variable-b7e4a1ea4f0a"
+        }
+    ]
+}
