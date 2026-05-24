@@ -13,8 +13,9 @@
     <link rel="preload" href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin"
         as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     </noscript>
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
     <script type="application/ld+json">
@@ -201,6 +202,7 @@
         const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
         document.querySelectorAll('.section-block').forEach(el => obs.observe(el));
     </script>
+    <script src="static/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
