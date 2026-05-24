@@ -455,10 +455,45 @@
 
 .reel-card:hover::before { opacity: 1; }
 
-.reel-card iframe {
+.reel-card {
+    text-decoration: none;
+    display: block;
+}
+.reel-gradient-bg {
     width: 100%;
     height: 100%;
-    border: none;
+    background: linear-gradient(135deg, rgba(140, 100, 255, 0.1), rgba(80, 40, 200, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+.reel-card:hover .reel-gradient-bg {
+    background: linear-gradient(135deg, rgba(220, 60, 120, 0.2), rgba(188, 24, 136, 0.3));
+}
+.play-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.play-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+    margin-left: 4px;
+}
+.reel-card:hover .play-btn {
+    transform: scale(1.15);
+    background: rgba(220, 60, 120, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(220, 60, 120, 0.4);
 }
 
 /* Overlay info at bottom */
@@ -713,32 +748,7 @@
         </div>
     </div>
 
-    <!-- ★ Featured Hero Video -->
-    <div class="section-heading">⭐ Featured</div>
-    <div class="featured-video" id="featured-video">
-        <div class="fv-embed">
-            <iframe src="https://www.youtube.com/embed/klsK_Pl-LIw?start=2306"
-                title="Python for Data Science"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen loading="lazy"></iframe>
-        </div>
-        <div class="fv-info">
-            <div class="fv-body">
-                <div class="fv-meta">
-                    <span class="fv-badge">Featured</span>
-                    <span class="fv-category">Lecture</span>
-                    <span class="fv-duration">Full Session</span>
-                </div>
-                <div class="fv-title">Python for Data Science</div>
-                <div class="fv-desc">A comprehensive lecture covering Python fundamentals for data science — from data structures to pandas, NumPy, and real-world analysis workflows.</div>
-            </div>
-            <a href="https://www.youtube.com/watch?v=klsK_Pl-LIw?start=2306"
-               target="_blank" class="fv-yt-link">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                Watch on YouTube
-            </a>
-        </div>
-    </div>
+
 
     <!-- More Videos Grid -->
     <div class="section-heading">🎬 More Videos</div>
@@ -812,118 +822,104 @@
                 <button class="reel-nav-btn" id="reelNext" title="Next">→</button>
             </div>
             <div class="reels-carousel" id="reelsCarousel">
-                <div class="reel-card" id="reel-card-1">
-                    <iframe
-                        src="https://www.instagram.com/reel/DXj_hRhE7Pm/embed/"
-                        title="Reel #1"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                <a href="https://www.instagram.com/bbx.learning/reel/DXj_hRhE7Pm/" target="_blank" class="reel-card" id="reel-card-1">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #1</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-2">
-                    <iframe
-                        src="https://www.instagram.com/reel/DXepWv2E3zG/embed/"
-                        title="Reel #2"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DXepWv2E3zG/" target="_blank" class="reel-card" id="reel-card-2">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #2</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-3">
-                    <iframe
-                        src="https://www.instagram.com/reel/DXRrhNXE8SG/embed/"
-                        title="Reel #3"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DXRrhNXE8SG/" target="_blank" class="reel-card" id="reel-card-3">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #3</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-4">
-                    <iframe
-                        src="https://www.instagram.com/reel/DW4M-3Dk0ik/embed/"
-                        title="Reel #4"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DW4M-3Dk0ik/" target="_blank" class="reel-card" id="reel-card-4">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #4</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-5">
-                    <iframe
-                        src="https://www.instagram.com/reel/DWt4Y9fE4zU/embed/"
-                        title="Reel #5"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DWt4Y9fE4zU/" target="_blank" class="reel-card" id="reel-card-5">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #5</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-6">
-                    <iframe
-                        src="https://www.instagram.com/reel/DWjPVAOkxH7/embed/"
-                        title="Reel #6"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DWjPVAOkxH7/" target="_blank" class="reel-card" id="reel-card-6">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #6</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
-                <div class="reel-card" id="reel-card-7">
-                    <iframe
-                        src="https://www.instagram.com/reel/DWUDu9mkxGq/embed/"
-                        title="Reel #7"
-                        loading="lazy"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
+                </a>
+                <a href="https://www.instagram.com/bbx.learning/reel/DWUDu9mkxGq/" target="_blank" class="reel-card" id="reel-card-7">
+                    <div class="reel-gradient-bg">
+                        <div class="play-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
                     <div class="reel-overlay">
                         <div class="reel-title">Reel #7</div>
                         <div class="reel-badge">
                             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
-                            Instagram Reel
+                            Watch on Instagram
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="reels-dots" id="reelsDots"></div>
         </div>
