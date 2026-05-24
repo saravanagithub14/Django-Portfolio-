@@ -311,6 +311,22 @@ conversations.{% endblock %}
         <div class="cg-val">{{ config.social.instagram_handle }}</div>
     </a>
     {% endif %}
+    {% if config.social.orcid %}
+    <a id="cy-effective-orcid-url" href="{{ config.social.orcid }}" target="orcid.widget" rel="me noopener noreferrer" class="cg-card">
+        <div class="cg-icon">
+            <img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width: 24px; height: 24px;" alt="ORCID iD icon"/>
+        </div>
+        <div class="cg-label">ORCID</div>
+        <div class="cg-val">0000-0002-6492-1103</div>
+    </a>
+    {% endif %}
+    {% if config.social.researchgate %}
+    <a href="{{ config.social.researchgate }}" target="_blank" class="cg-card">
+        <div class="cg-icon">🔬</div>
+        <div class="cg-label">ResearchGate</div>
+        <div class="cg-val">Saravana_Perumal_R</div>
+    </a>
+    {% endif %}
     <div class="cg-card" style="cursor: default;">
         <div class="cg-icon">📍</div>
         <div class="cg-label">Location</div>
