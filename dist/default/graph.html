@@ -17,7 +17,21 @@
     </noscript>
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
-    <!-- Vendor Scripts -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Saravana Perumal R.",
+  "jobTitle": "AI Engineer & Generative AI Specialist",
+  "url": "https://saravanaperumal.vercel.app/graph.html",
+  "sameAs": [
+    "https://linkedin.com/in/saravana-perumal-r-04b368288",
+    "https://github.com/saravanagithub14"
+  ],
+  "knowsAbout": ["RAG pipelines", "LangChain", "LLMs", "agentic AI", "data science"]
+}
+</script>
+<!-- Vendor Scripts -->
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
     <link rel="stylesheet" href="static/css/chat_widget.css">
@@ -34,29 +48,103 @@
     <canvas id="particle-canvas"></canvas>
 
     <!-- Graph -->
-    <div id="graph-container"></div>
-
-
-
-    <!-- Navbar (Fixed/Sticky) -->
-<nav class="top-nav">
-            <a href="graph.html" class="nav-link active">Graph</a>
-            <a href="bio.html" class="nav-link">Bio</a>
-            <a href="skills.html" class="nav-link">Skills</a>
-            <a href="experience.html" class="nav-link">Experience</a>
-            <a href="education.html" class="nav-link">Education</a>
-            <div class="dropdown">
-                <button class="dropbtn nav-link">Portfolio &#9662;</button>
-                <div class="dropdown-content">
-                        <a href="projects.html" class="">Projects</a>
-                        <a href="publications.html" class="">Publications</a>
-                        <a href="workshops.html" class="">Workshops</a>
-                        <a href="gallery.html" class="">Gallery</a>
-                        <a href="blogs.html" class="">Blogs</a>
-                </div>
+    <div class="d-none d-md-block">
+        <div id="graph-container"></div>
+    </div>
+    <div class="d-grid gap-3 d-md-none">
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="graph.html" class="stretched-link text-decoration-none">Graph</a>
             </div>
-            <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="bio.html" class="stretched-link text-decoration-none">Bio</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="skills.html" class="stretched-link text-decoration-none">Skills</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="experience.html" class="stretched-link text-decoration-none">Experience</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="education.html" class="stretched-link text-decoration-none">Education</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="" class="stretched-link text-decoration-none">Portfolio</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="contact.html" class="stretched-link text-decoration-none">Contact</a>
+            </div>
+        </div>
+    </div><!-- Navbar (Fixed/Sticky) -->
+<nav class="navbar navbar-expand-md bg-transparent px-3">
+  <!-- Hamburger for mobile -->
+  <button class="navbar-toggler d-flex d-md-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Desktop navigation (visible md+ only) -->
+  <div class="top-nav d-none d-md-flex w-100 justify-content-center">
+        <a href="graph.html" class="nav-link active">Graph</a>
+        <a href="bio.html" class="nav-link">Bio</a>
+        <a href="skills.html" class="nav-link">Skills</a>
+        <a href="experience.html" class="nav-link">Experience</a>
+        <a href="education.html" class="nav-link">Education</a>
+        <div class="dropdown">
+          <button class="dropbtn nav-link">
+            Portfolio &#9662;
+          </button>
+          <div class="dropdown-content">
+              <a href="projects.html" class="">Projects</a>
+              <a href="publications.html" class="">Publications</a>
+              <a href="workshops.html" class="">Workshops</a>
+              <a href="gallery.html" class="">Gallery</a>
+              <a href="blogs.html" class="">Blogs</a>
+          </div>
+        </div>
+        <a href="contact.html" class="nav-link">Contact</a>
+  </div>
+
+  <!-- Offcanvas for mobile (visible on small screens) -->
+  <div class="offcanvas offcanvas-start d-flex d-md-none" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="mobileNavLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+          <a href="graph.html" class="nav-link d-block py-2 active">Graph</a>
+          <a href="bio.html" class="nav-link d-block py-2">Bio</a>
+          <a href="skills.html" class="nav-link d-block py-2">Skills</a>
+          <a href="experience.html" class="nav-link d-block py-2">Experience</a>
+          <a href="education.html" class="nav-link d-block py-2">Education</a>
+          <div class="dropdown">
+            <button class="dropbtn nav-link w-100 text-start">
+              Portfolio
+            </button>
+            <div class="dropdown-content ms-3">
+                <a href="projects.html" class="d-block py-1">Projects</a>
+                <a href="publications.html" class="d-block py-1">Publications</a>
+                <a href="workshops.html" class="d-block py-1">Workshops</a>
+                <a href="gallery.html" class="d-block py-1">Gallery</a>
+                <a href="blogs.html" class="d-block py-1">Blogs</a>
+            </div>
+          </div>
+          <a href="contact.html" class="nav-link d-block py-2">Contact</a>
+    </div>
+  </div>
 </nav>
+    
     <!-- Bio section below graph -->
     <div class="content" id="bio-section">
 

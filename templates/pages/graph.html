@@ -17,7 +17,21 @@
     </noscript>
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
-    <!-- Vendor Scripts -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ config.site_title }}",
+  "jobTitle": "AI Engineer & Generative AI Specialist",
+  "url": "https://saravanaperumal.vercel.app/graph.html",
+  "sameAs": [
+    "{{ config.social.linkedin }}",
+    "{{ config.social.github }}"
+  ],
+  "knowsAbout": ["RAG pipelines", "LangChain", "LLMs", "agentic AI", "data science"]
+}
+</script>
+<!-- Vendor Scripts -->
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
     <link rel="stylesheet" href="static/css/chat_widget.css">
@@ -34,11 +48,18 @@
     <canvas id="particle-canvas"></canvas>
 
     <!-- Graph -->
-    <div id="graph-container"></div>
-
-
-
-    <!-- Navbar (Fixed/Sticky) -->
+    <div class="d-none d-md-block">
+        <div id="graph-container"></div>
+    </div>
+    <div class="d-grid gap-3 d-md-none">
+        {% for item in config.navigation %}
+        <div class="card">
+            <div class="card-body p-2">
+                <a href="{{ item.url }}" class="stretched-link text-decoration-none">{{ item.label }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div><!-- Navbar (Fixed/Sticky) -->
     {% include 'components/navbar.html' %}
 
     <!-- Bio section below graph -->

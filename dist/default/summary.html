@@ -29,31 +29,84 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-…" crossorigin="anonymous">
+<link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/png" href="static/favicon.png">
+<script type="application/ld+json">
+
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://saravanaperumal.vercel.app/"},
+    {% if active_page and active_page != 'home' %}
+    {"@type": "ListItem", "position": 2, "name": active_page|capitalize, "item": "https://saravanaperumal.vercel.app/{{ active_page }}.html"}
+    {% endif %}
+  ]
+}
+</script>
     <link rel="stylesheet" href="static/css/chat_widget.css">
 </head>
 
 <body>
     <canvas id="particle-bg"></canvas>
-<nav class="top-nav">
-            <a href="graph.html" class="nav-link">Graph</a>
-            <a href="bio.html" class="nav-link">Bio</a>
-            <a href="skills.html" class="nav-link">Skills</a>
-            <a href="experience.html" class="nav-link">Experience</a>
-            <a href="education.html" class="nav-link">Education</a>
-            <div class="dropdown">
-                <button class="dropbtn nav-link">Portfolio &#9662;</button>
-                <div class="dropdown-content">
-                        <a href="projects.html" class="">Projects</a>
-                        <a href="publications.html" class="">Publications</a>
-                        <a href="workshops.html" class="">Workshops</a>
-                        <a href="gallery.html" class="">Gallery</a>
-                        <a href="blogs.html" class="">Blogs</a>
-                </div>
+<nav class="navbar navbar-expand-md bg-transparent px-3">
+  <!-- Hamburger for mobile -->
+  <button class="navbar-toggler d-flex d-md-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Desktop navigation (visible md+ only) -->
+  <div class="top-nav d-none d-md-flex w-100 justify-content-center">
+        <a href="graph.html" class="nav-link">Graph</a>
+        <a href="bio.html" class="nav-link">Bio</a>
+        <a href="skills.html" class="nav-link">Skills</a>
+        <a href="experience.html" class="nav-link">Experience</a>
+        <a href="education.html" class="nav-link">Education</a>
+        <div class="dropdown">
+          <button class="dropbtn nav-link">
+            Portfolio &#9662;
+          </button>
+          <div class="dropdown-content">
+              <a href="projects.html" class="">Projects</a>
+              <a href="publications.html" class="">Publications</a>
+              <a href="workshops.html" class="">Workshops</a>
+              <a href="gallery.html" class="">Gallery</a>
+              <a href="blogs.html" class="">Blogs</a>
+          </div>
+        </div>
+        <a href="contact.html" class="nav-link">Contact</a>
+  </div>
+
+  <!-- Offcanvas for mobile (visible on small screens) -->
+  <div class="offcanvas offcanvas-start d-flex d-md-none" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="mobileNavLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+          <a href="graph.html" class="nav-link d-block py-2">Graph</a>
+          <a href="bio.html" class="nav-link d-block py-2">Bio</a>
+          <a href="skills.html" class="nav-link d-block py-2">Skills</a>
+          <a href="experience.html" class="nav-link d-block py-2">Experience</a>
+          <a href="education.html" class="nav-link d-block py-2">Education</a>
+          <div class="dropdown">
+            <button class="dropbtn nav-link w-100 text-start">
+              Portfolio
+            </button>
+            <div class="dropdown-content ms-3">
+                <a href="projects.html" class="d-block py-1">Projects</a>
+                <a href="publications.html" class="d-block py-1">Publications</a>
+                <a href="workshops.html" class="d-block py-1">Workshops</a>
+                <a href="gallery.html" class="d-block py-1">Gallery</a>
+                <a href="blogs.html" class="d-block py-1">Blogs</a>
             </div>
-            <a href="contact.html" class="nav-link">Contact</a>
-</nav>    <div class="content" >
+          </div>
+          <a href="contact.html" class="nav-link d-block py-2">Contact</a>
+    </div>
+  </div>
+</nav>
+        <div class="content" >
     <div class="page-label">Now</div>
     <h1 class="page-title">Current Focus</h1>
     <p class="page-sub">Where my thinking and building energy is directed right now — at the frontier of AI systems.</p>
@@ -128,6 +181,7 @@
         const obs = new IntersectionObserver(e => e.forEach(i => { if (i.isIntersecting) i.target.classList.add('visible'); }), { threshold: 0.1 });
         document.querySelectorAll('.focus-card').forEach(el => obs.observe(el));
     </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
 
     <script src="static/js/snowfall.js"></script>
     <div id="chat-widget-container"></div>

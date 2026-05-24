@@ -1,20 +1,57 @@
-<nav class="top-nav">
+<nav class="navbar navbar-expand-md bg-transparent px-3">
+  <!-- Hamburger for mobile -->
+  <button class="navbar-toggler d-flex d-md-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Desktop navigation (visible md+ only) -->
+  <div class="top-nav d-none d-md-flex w-100 justify-content-center">
     {% for item in config.navigation %}
-        {% if item.dropdown %}
-            {% set ns = namespace(dropdown_active=false) %}
+      {% if item.dropdown %}
+        {% set ns = namespace(dropdown_active=false) %}
+        {% for child in item.children %}
+          {% if active_page == child.id %}{% set ns.dropdown_active = true %}{% endif %}
+        {% endfor %}
+        <div class="dropdown">
+          <button class="dropbtn nav-link{% if ns.dropdown_active %} active{% endif %}">
+            {{ item.label }} &#9662;
+          </button>
+          <div class="dropdown-content">
             {% for child in item.children %}
-                {% if active_page == child.id %}{% set ns.dropdown_active = true %}{% endif %}
+              <a href="{{ child.url }}" class="{% if active_page == child.id %}active{% endif %}">{{ child.label }}</a>
             {% endfor %}
-            <div class="dropdown">
-                <button class="dropbtn nav-link{% if ns.dropdown_active %} active{% endif %}">{{ item.label }} &#9662;</button>
-                <div class="dropdown-content">
-                    {% for child in item.children %}
-                        <a href="{{ child.url }}" class="{% if active_page == child.id %}active{% endif %}">{{ child.label }}</a>
-                    {% endfor %}
-                </div>
-            </div>
-        {% else %}
-            <a href="{{ item.url }}" class="nav-link{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
-        {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <a href="{{ item.url }}" class="nav-link{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
+      {% endif %}
     {% endfor %}
+  </div>
+
+  <!-- Offcanvas for mobile (visible on small screens) -->
+  <div class="offcanvas offcanvas-start d-flex d-md-none" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="mobileNavLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      {% for item in config.navigation %}
+        {% if item.dropdown %}
+          <div class="dropdown">
+            <button class="dropbtn nav-link w-100 text-start">
+              {{ item.label }}
+            </button>
+            <div class="dropdown-content ms-3">
+              {% for child in item.children %}
+                <a href="{{ child.url }}" class="d-block py-1{% if active_page == child.id %} active{% endif %}">{{ child.label }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <a href="{{ item.url }}" class="nav-link d-block py-2{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 </nav>
+    
