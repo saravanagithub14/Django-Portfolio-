@@ -211,20 +211,6 @@
         </div>
     </div>
 
-    <!-- Book Chapters -->
-    <div class="section-heading">📖 Book Chapters</div>
-    <div class="pub-list">
-        {% for pub in publications.book_chapters %}
-        <div class="pub-card type-book-card">
-            <div class="pub-top">
-                <div class="pub-title">{{ pub.title }}</div>
-                <span class="pub-type type-book">Book Chapter</span>
-            </div>
-            <div class="pub-meta">{{ pub.meta }}</div>
-        </div>
-        {% endfor %}
-    </div>
-
     <!-- Research Articles -->
     <div class="section-heading">📄 Research Articles</div>
     <div class="pub-list">
@@ -233,6 +219,20 @@
             <div class="pub-top">
                 <div class="pub-title">{{ pub.title }}</div>
                 <span class="pub-type type-article">Research Article</span>
+            </div>
+            <div class="pub-meta">{{ pub.meta | safe }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Book Chapters -->
+    <div class="section-heading">📖 Book Chapters</div>
+    <div class="pub-list">
+        {% for pub in publications.book_chapters %}
+        <div class="pub-card type-book-card">
+            <div class="pub-top">
+                <div class="pub-title">{{ pub.title }}</div>
+                <span class="pub-type type-book">Book Chapter</span>
             </div>
             <div class="pub-meta">{{ pub.meta | safe }}</div>
         </div>

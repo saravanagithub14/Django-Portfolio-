@@ -4,26 +4,30 @@
     "page_sub": "Peer-reviewed research in biomedical sciences and professional milestones in AI education.",
     "book_chapters": [
         {
-            "title": "Emerging Strategies in Bone Tissue Engineering",
-            "meta": "Comprehensive review of innovative biomaterial scaffolds and regenerative approaches for bone repair — contributed chapter in edited academic volume."
+            "title": "Emerging strategies in bone tissue engineering",
+            "meta": "Anitha Radhakrishnan, Sreekanth Sreekumaran, Anjali Sudha [...], Saravana Perumal R<br>January 2022"
         },
         {
-            "title": "Periostin and Integrin Signaling in Tissue Remodeling",
-            "meta": "In-depth examination of periostin's role in extracellular matrix dynamics and integrin-mediated cell adhesion — contributed chapter in biomedical engineering compilation."
+            "title": "Periostin and Integrin Signaling in Stem Cell Regulation",
+            "meta": "Athira Suresh, Atreyi Biswas, Saravana Perumal R, Satish Khurana<br><em>Advances in Experimental Medicine and Biology</em> &middot; April 2019"
         }
     ],
     "research_articles": [
         {
-            "title": "Biosynthesized Nanosilver from Alginate: Characterization and Applications",
-            "meta": "Investigation into green synthesis of silver nanoparticles using alginate, with structural characterization via SEM/TEM and antimicrobial efficacy testing."
-        },
-        {
             "title": "Bi-layered polycarbonate urethane/alginate di-aldehyde crosslinked gelatin membrane as a potential biomaterial for wound healing applications",
-            "meta": "Prathyusha, Resmi Rajalekshmi, Saravana Perumal Ramakrishna, Jasmin Joseph, Rekha M., Anugya Bhatt. <a href=\"https://doi.org/10.1080/09205063.2026.2644608\" target=\"_blank\">https://doi.org/10.1080/09205063.2026.2644608</a> (2026). Published in <em>Physical Sciences Journal</em>."
+            "meta": "❤️ Prathyusha, Resmi Rajalekshmi, Saravana Perumal R [...], Ramesh Parameswaran<br><em>Journal of Biomaterials Science Polymer Edition</em> &middot; March 2026"
         },
         {
-            "title": "Anti-Microbial Hydrogel Development for Wound Care Applications",
-            "meta": "Synthesis and evaluation of hydrogel biomaterials with antibacterial properties for advanced wound dressing applications in tissue engineering contexts."
+            "title": "Ferulic acid incorporated anti-microbial self cross-linking hydrogel: A promising system for moderately exudating wounds",
+            "meta": "Anjali Sudha, Resmi Rajalekshmi, Saravana Perumal R [...], Mini Saraswathy<br><em>Journal of Drug Delivery Science and Technology</em> &middot; May 2022"
+        },
+        {
+            "title": "Biosynthesized Nanosilver from Alginate Dialdehyde: An In Vitro Evaluation",
+            "meta": "Resmi Rajalekshmi, Parvathy Jayasree, Saravana Perumal R [...], Roy Joseph<br><em>ChemistrySelect</em> &middot; November 2021"
+        },
+        {
+            "title": "Ferulic Acid Incorporated Anti-Microbial Self Crosslinking Hydrogel: A Promising System for Moderately Exudating Wounds",
+            "meta": "Anjali Sudha, Resmi Rajalekshmi, Saravana Perumal R [...], Mini Saraswathy<br><em>SSRN Electronic Journal</em> &middot; January 2021"
         }
     ],
     "achievements": [

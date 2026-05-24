@@ -524,21 +524,7 @@
         {% endfor %}
     </div>
 
-    <!-- Medium Embeds -->
-    <div class="blog-embed-section">
-        <div class="embed-heading">📖 Embedded Articles</div>
-        <div class="embed-grid">
-            {% for post in blogs.posts %}
-            <div class="embed-card" id="embed-card-{{ loop.index }}">
-                <div class="embed-card-header">
-                    <div class="embed-card-dot"></div>
-                    <div class="embed-card-label">{{ post.category }} — Medium</div>
-                </div>
-                <iframe src="https://medium.com/embed{{ post.medium_url | replace('https://medium.com', '') | replace('?source=your_stories_outbox---writer_outbox_published-----------------------------------------', '') }}" allowfullscreen></iframe>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+
 
     <!-- CTA -->
     <div class="blog-cta">

@@ -3,11 +3,21 @@
     "page_title": "Blog",
     "page_sub": "Technical deep-dives, AI insights, and explorations — published on Medium.",
     "stats": {
-        "total_posts": "4",
+        "total_posts": "5",
         "platform": "Medium",
         "topics": "AI / ML / Python"
     },
     "posts": [
+        {
+            "title": "AI Jobs in 2026: What's Real, What's Hype, and How to Break In",
+            "excerpt": "A deep dive into the 2026 AI job market, separating the hype from reality and detailing actionable strategies to break into the industry.",
+            "category": "AI & Careers",
+            "date": "2026",
+            "read_time": "7 min read",
+            "emoji": "🚀",
+            "tags": ["AI Jobs", "Careers", "Machine Learning", "Tech Industry"],
+            "medium_url": "https://medium.com/@mynamesaravanaperumal/ai-jobs-in-2026-whats-real-what-s-hype-and-how-to-break-in-d83a14b8ce6d"
+        },
         {
             "title": "The Evolution of Object Detection: A Comparative Analysis of Two-Stage and YOLO Models",
             "excerpt": "A deep dive into the evolution of object detection architectures — from two-stage detectors like R-CNN and Faster R-CNN to the real-time revolution brought by YOLO models.",

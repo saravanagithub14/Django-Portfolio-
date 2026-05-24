@@ -1,11 +1,15 @@
 import json
 import os
 import instaloader
+import requests
 
 def fetch_reels():
     TARGET_ACCOUNT = "prof_ds_"
     MAX_REELS = 10
     DATA_PATH = os.path.join("users", "default", "data", "gallery.json")
+    IMG_DIR = os.path.join("static", "images", "reels")
+    
+    os.makedirs(IMG_DIR, exist_ok=True)
 
     print(f"Fetching latest reels for {TARGET_ACCOUNT}...")
 
@@ -35,11 +39,27 @@ def fetch_reels():
             # Generate a title from the caption
             title = post.caption[:40] + "..." if post.caption else f"Reel #{len(reels)+1}"
             title = title.split("\n")[0] # keep it to one line
+            
+            # Download Thumbnail
+            img_filename = f"{post.shortcode}.jpg"
+            img_path = os.path.join(IMG_DIR, img_filename)
+            rel_img_path = f"static/images/reels/{img_filename}"
+            
+            if not os.path.exists(img_path):
+                print(f"Downloading thumbnail for {post.shortcode}...")
+                try:
+                    response = requests.get(post.url)
+                    if response.status_code == 200:
+                        with open(img_path, 'wb') as f:
+                            f.write(response.content)
+                except Exception as e:
+                    print(f"Failed to download thumbnail: {e}")
 
             reels.append({
                 "title": title,
                 "reel_url": f"https://www.instagram.com/reel/{post.shortcode}/",
-                "reel_id": post.shortcode
+                "reel_id": post.shortcode,
+                "thumbnail": rel_img_path
             })
             
             if len(reels) >= MAX_REELS:

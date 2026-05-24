@@ -677,7 +677,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="page-label">{{ gallery.page_label }}</div>
+    <div class="page-label" style="margin-top: 35px;">{{ gallery.page_label }}</div>
     <h1 class="page-title">{{ gallery.page_title }}</h1>
     <p class="page-sub">{{ gallery.page_sub }}</p>
 
@@ -705,29 +705,6 @@
 
 
 
-    <!-- More Videos Grid -->
-    <div class="section-heading">🎬 More Videos</div>
-    <div class="video-grid">
-        {% for video in gallery.videos %}
-        <div class="vid-card" id="vid-card-{{ loop.index }}">
-            <div class="vc-embed">
-                <iframe src="{{ video.embed_url }}"
-                    title="{{ video.title }}"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen loading="lazy"></iframe>
-            </div>
-            <div class="vc-info">
-                <div class="vc-meta">
-                    <span class="vc-cat">{{ video.category }}</span>
-                    <span class="vc-dur">{{ video.duration }}</span>
-                </div>
-                <div class="vc-title">{{ video.title }}</div>
-                <div class="vc-desc">{{ video.description }}</div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
     <!-- ===== Instagram Reels Carousel ===== -->
     {% if gallery.reels %}
     <div class="reels-section" id="reels-section">
@@ -750,7 +727,7 @@
             <div class="reels-carousel" id="reelsCarousel">
                 {% for reel in gallery.reels %}
                 <a href="{{ reel.reel_url }}" target="_blank" class="reel-card" id="reel-card-{{ loop.index }}">
-                    <div class="reel-gradient-bg">
+                    <div class="reel-gradient-bg" {% if reel.thumbnail %}style="background-image: url('{{ reel.thumbnail }}'); background-size: cover; background-position: center;"{% endif %}>
                         <div class="play-btn">
                             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         </div>
@@ -779,6 +756,29 @@
         </a>
     </div>
     {% endif %}
+
+    <!-- More Videos Grid -->
+    <div class="section-heading" style="margin-top: 50px;">🎬 More Videos</div>
+    <div class="video-grid">
+        {% for video in gallery.videos %}
+        <div class="vid-card" id="vid-card-{{ loop.index }}">
+            <div class="vc-embed">
+                <iframe src="{{ video.embed_url }}"
+                    title="{{ video.title }}"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="vc-info">
+                <div class="vc-meta">
+                    <span class="vc-cat">{{ video.category }}</span>
+                    <span class="vc-dur">{{ video.duration }}</span>
+                </div>
+                <div class="vc-title">{{ video.title }}</div>
+                <div class="vc-desc">{{ video.description }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
     <!-- YouTube CTA -->
     <div class="yt-cta">
