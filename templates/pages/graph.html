@@ -49,18 +49,8 @@
     <canvas id="particle-canvas"></canvas>
 
     <!-- Graph -->
-    <div class="d-none d-md-block">
-        <div id="graph-container"></div>
-    </div>
-    <div class="d-grid gap-3 d-md-none">
-        {% for item in config.navigation %}
-        <div class="card">
-            <div class="card-body p-2">
-                <a href="{{ item.url }}" class="stretched-link text-decoration-none">{{ item.label }}</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div><!-- Navbar (Fixed/Sticky) -->
+    <div id="graph-container"></div>
+    <!-- Navbar (Fixed/Sticky) -->
     {% include 'components/navbar.html' %}
 
     <!-- Bio section below graph -->
