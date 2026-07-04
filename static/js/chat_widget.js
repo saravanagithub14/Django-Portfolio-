@@ -5,7 +5,7 @@
 
 (function() {
     // ⚙️ CONFIG
-    const API_URL = "http://127.0.0.1:5000/chat";
+    const API_URL = "/chatbot/api/chat/";
     const BOT_NAME = "Saravana Perumal R.";
 
     // Inject HTML structure if not present

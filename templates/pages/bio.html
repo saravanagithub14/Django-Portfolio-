@@ -202,7 +202,7 @@
 
         <div class="bio-role-styled">
             {% for role in config.roles %}
-                {{ role }}{% if not loop.last %} • {% endif %}
+                {{ role }}{% if not forloop.last %} • {% endif %}
             {% endfor %}
         </div>
 
