@@ -1,8 +1,0 @@
-{
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/static/(.*)", "destination": "/dist/default/static/$1" },
-    { "source": "/(.*)", "destination": "/dist/default/$1" }
-  ]
-}

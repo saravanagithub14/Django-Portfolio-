@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,9 +8,9 @@
     <title>Welcome to the Multiverse</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/landing.css">
-    <link rel="icon" type="image/png" href="static/favicon.png">
-    <link rel="stylesheet" href="static/css/chat_widget.css">
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
 </head>
 
 <body>
@@ -53,7 +54,7 @@
     </script>
     {% if config.chat_widget.enabled %}
     <div id="chat-widget-container"></div>
-    <script src="static/js/chat_widget.js"></script>
+    <script src="{% static 'js/chat_widget.js' %}"></script>
     {% endif %}
 </body>
 

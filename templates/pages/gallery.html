@@ -684,7 +684,7 @@
     <!-- Stats -->
     <div class="gallery-stats">
         <div class="gallery-stat">
-            <div class="gs-num">{{ gallery.videos | length + 1 }}</div>
+            <div class="gs-num">{{ gallery.videos|length|add:"1" }}</div>
             <div class="gs-lbl">Videos</div>
         </div>
         {% if gallery.reels %}
@@ -726,7 +726,7 @@
             </div>
             <div class="reels-carousel" id="reelsCarousel">
                 {% for reel in gallery.reels %}
-                <a href="{{ reel.reel_url }}" target="_blank" class="reel-card" id="reel-card-{{ loop.index }}">
+                <a href="{{ reel.reel_url }}" target="_blank" class="reel-card" id="reel-card-{{ forloop.counter }}">
                     <div class="reel-gradient-bg" {% if reel.thumbnail %}style="background-image: url('{{ reel.thumbnail }}'); background-size: cover; background-position: center;"{% endif %}>
                         <div class="play-btn">
                             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -761,7 +761,7 @@
     <div class="section-heading" style="margin-top: 50px;">🎬 More Videos</div>
     <div class="video-grid">
         {% for video in gallery.videos %}
-        <div class="vid-card" id="vid-card-{{ loop.index }}">
+        <div class="vid-card" id="vid-card-{{ forloop.counter }}">
             <div class="vc-embed">
                 <iframe src="{{ video.embed_url }}"
                     title="{{ video.title }}"
@@ -784,7 +784,7 @@
     <div class="yt-cta">
         <div class="yt-cta-title">More content coming soon</div>
         <div class="yt-cta-sub">Subscribe for AI tutorials, project walkthroughs, and deep-learning lectures.</div>
-        <a href="https://www.youtube.com/@{{ config.site_title | replace(' ', '') }}" target="_blank" class="yt-cta-btn">
+        <a href="https://www.youtube.com/@{{ config.site_title|cut:" " }}" target="_blank" class="yt-cta-btn">
             <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             Subscribe on YouTube
         </a>

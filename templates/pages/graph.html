@@ -1,3 +1,4 @@
+{% load static portfolio_extras %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,9 +16,9 @@
     <noscript>
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     </noscript>
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/style.css">
-    <link rel="icon" type="image/png" href="static/favicon.png">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -35,7 +36,7 @@
 <!-- Vendor Scripts -->
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
-    <link rel="stylesheet" href="static/css/chat_widget.css">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
 </head>
 
 <body>
@@ -179,20 +180,27 @@
         }
 
         const resumeData = {{ graph_data|tojson }};
-        const activePage = "{{ active_page }}";
     </script>
-    <script src="static/js/graph.js"></script>
-    <script src="static/js/snowfall.js"></script>
+    <!-- Custom Force Graph logic -->
+    <script src="{% static 'js/graph.js' %}"></script>
+    <script src="{% static 'js/snowfall.js' %}"></script>
+
+    <!-- Chat widget -->
     {% if config.chat_widget.enabled %}
     <div id="chat-widget-container"></div>
-    <script src="static/js/chat_widget.js"></script>
+    <script src="{% static 'js/chat_widget.js' %}"></script>
     {% endif %}
+    <script>
+        const activePage = "graph";
+    </script>
+    
+    <!-- Bootstrap JS bundle -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     
     <script>
         const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
         document.querySelectorAll('.section-block').forEach(el => obs.observe(el));
     </script>
-    <script src="static/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

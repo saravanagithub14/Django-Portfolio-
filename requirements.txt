@@ -1,1 +1,11 @@
+django>=5.0,<6.0
+django-environ
+google-generativeai
 instaloader
+langchain-huggingface
+langchain-groq
+langchain-community
+langchain-core
+faiss-cpu
+pypdf
+sentence-transformers

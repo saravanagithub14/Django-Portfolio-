@@ -1,3 +1,4 @@
+{% load portfolio_extras %}
 <nav class="top-nav">
   <!-- Hamburger for mobile (visible small screens only) -->
   <div class="d-flex d-md-none w-100 justify-content-end">
@@ -10,12 +11,8 @@
   <div class="d-none d-md-flex w-100 justify-content-center align-items-center" style="gap: 25px;">
     {% for item in config.navigation %}
       {% if item.dropdown %}
-        {% set ns = namespace(dropdown_active=false) %}
-        {% for child in item.children %}
-          {% if active_page == child.id %}{% set ns.dropdown_active = true %}{% endif %}
-        {% endfor %}
         <div class="dropdown">
-          <button class="dropbtn nav-link{% if ns.dropdown_active %} active{% endif %}">
+          <button class="dropbtn nav-link{% if item|is_dropdown_active:active_page %} active{% endif %}">
             {{ item.label }} &#9662;
           </button>
           <div class="dropdown-content">

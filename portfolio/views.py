@@ -1,0 +1,399 @@
+import json
+from pathlib import Path
+from django.shortcuts import render
+from django.conf import settings
+from portfolio.models import (
+    UserProfile, SkillCategory, ProjectPage, ExperiencePage, EducationPage,
+    PublicationsPage, WorkshopsPage, FocusPage, LanguagePage, GalleryPage, BlogPage, GraphNode
+)
+
+BASE_DIR = Path(settings.BASE_DIR)
+
+# --- Helper to load fallback JSON ---
+def load_fallback_json(filename):
+    filepath = BASE_DIR / 'users' / 'default' / 'data' / filename
+    if filepath.exists():
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+# --- Helper to serialize Graph Nodes ---
+def get_graph_data():
+    try:
+        root_node = GraphNode.objects.filter(parent=None).first()
+        if root_node:
+            def serialize_node(node):
+                data = {
+                    "id": node.node_id,
+                    "name": node.name,
+                    "type": node.node_type,
+                }
+                if node.navigate_to:
+                    data["navigateTo"] = node.navigate_to
+                if node.description:
+                    data["description"] = node.description
+                
+                children = node.children.all()
+                if children.exists():
+                    data["children"] = [serialize_node(c) for c in children]
+                return data
+            return serialize_node(root_node)
+    except Exception:
+        pass
+    return load_fallback_json("graph.json")
+
+# --- Views ---
+
+def index_view(request):
+    return render(request, 'pages/index.html')
+
+def graph_view(request):
+    context = {
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/graph.html', context)
+
+def bio_view(request):
+    context = {
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/bio.html', context)
+
+def skills_view(request):
+    skills_context = {}
+    try:
+        profile = UserProfile.objects.first()
+        if profile:
+            # We look for a skill categories
+            cats = SkillCategory.objects.filter(profile=profile)
+            if cats.exists():
+                groups = []
+                for c in cats:
+                    groups.append({
+                        'id': c.accordion_id,
+                        'name': c.name,
+                        'active': c.active,
+                        'tags': [{'name': s.name, 'highlight': s.highlight, 'tier': s.tier, 'context': s.context} for s in c.skills.all()]
+                    })
+                skills_context = {
+                    'page_label': 'High-Impact Expertise',
+                    'page_title': 'Skills & Technologies',
+                    'page_sub': 'Organized hierarchy for cognitive clarity. Use the accordions to explore specific technical stacks.',
+                    'accordion_groups': groups
+                }
+    except Exception:
+        pass
+
+    if not skills_context:
+        skills_context = load_fallback_json("skills.json")
+
+    context = {
+        'skills': skills_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/skills.html', context)
+
+def experience_view(request):
+    exp_context = {}
+    try:
+        page = ExperiencePage.objects.first()
+        if page:
+            sections = []
+            for sec in page.sections.all():
+                jobs = []
+                for j in sec.jobs.all():
+                    jobs.append({
+                        'title': j.title,
+                        'company': j.company,
+                        'period': j.period,
+                        'description': j.description,
+                        'tags': j.tag_list
+                    })
+                sections.append({
+                    'heading': sec.heading,
+                    'jobs': jobs
+                })
+            exp_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'sections': sections
+            }
+    except Exception:
+        pass
+
+    if not exp_context:
+        exp_context = load_fallback_json("experience.json")
+
+    context = {
+        'experience': exp_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/experience.html', context)
+
+def education_view(request):
+    edu_context = {}
+    try:
+        page = EducationPage.objects.first()
+        if page:
+            degrees = [{'icon': d.icon, 'degree': d.degree, 'school': d.school, 'year': d.year, 'detail': d.detail} for d in page.degrees.all()]
+            certs = [{'badge': c.badge, 'name': c.name, 'detail': c.detail} for c in page.certifications.all()]
+            edu_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'degrees': degrees,
+                'certifications': certs
+            }
+    except Exception:
+        pass
+
+    if not edu_context:
+        edu_context = load_fallback_json("education.json")
+
+    context = {
+        'education': edu_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/education.html', context)
+
+def projects_view(request):
+    proj_context = {}
+    try:
+        page = ProjectPage.objects.first()
+        if page:
+            featured_entries = []
+            for p in page.projects.filter(featured=True):
+                featured_entries.append({
+                    'emoji': p.emoji,
+                    'title': p.title,
+                    'description': p.description,
+                    'tags': p.tag_list,
+                    'github_url': p.github_url,
+                    'demo_url': p.demo_url
+                })
+            
+            categories = []
+            for cat in page.categories.all():
+                entries = []
+                for p in cat.projects.all():
+                    entries.append({
+                        'name': p.title,
+                        'desc': p.description,
+                        'url': p.github_url
+                    })
+                categories.append({
+                    'heading': cat.heading,
+                    'entries': entries
+                })
+            
+            proj_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'featured': {
+                    'heading': page.featured_heading,
+                    'entries': featured_entries
+                },
+                'categories': categories
+            }
+    except Exception:
+        pass
+
+    if not proj_context:
+        proj_context = load_fallback_json("projects.json")
+
+    context = {
+        'projects': proj_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/projects.html', context)
+
+def publications_view(request):
+    pub_context = {}
+    try:
+        page = PublicationsPage.objects.first()
+        if page:
+            chapters = [{'title': c.title, 'meta': c.meta} for c in page.book_chapters.all()]
+            articles = [{'title': a.title, 'meta': a.meta} for a in page.research_articles.all()]
+            achievements = [{'icon': ac.icon, 'title': ac.title, 'description': ac.description} for ac in page.achievements.all()]
+            pub_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'book_chapters': chapters,
+                'research_articles': articles,
+                'achievements': achievements
+            }
+    except Exception:
+        pass
+
+    if not pub_context:
+        pub_context = load_fallback_json("publications.json")
+
+    context = {
+        'publications': pub_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/publications.html', context)
+
+def workshops_view(request):
+    ws_context = {}
+    try:
+        page = WorkshopsPage.objects.first()
+        if page:
+            workshops = [{'icon': w.icon, 'title': w.title, 'description': w.description} for w in page.workshops.all()]
+            seminars = [{'icon': s.icon, 'title': s.title, 'description': s.description} for s in page.seminars.all()]
+            ws_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'workshops': workshops,
+                'seminars': seminars
+            }
+    except Exception:
+        pass
+
+    if not ws_context:
+        ws_context = load_fallback_json("workshops.json")
+
+    context = {
+        'workshops': ws_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/workshops.html', context)
+
+def summary_view(request):
+    focus_context = {}
+    try:
+        page = FocusPage.objects.first()
+        if page:
+            cards = [{'icon': c.icon, 'title': c.title, 'description': c.description} for c in page.cards.all()]
+            entries = [e.text for e in page.positioning_entries.all()]
+            focus_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'cards': cards,
+                'positioning': {
+                    'entries': entries,
+                    'tagline': page.positioning_tagline
+                }
+            }
+    except Exception:
+        pass
+
+    if not focus_context:
+        focus_context = load_fallback_json("focus.json")
+
+    context = {
+        'focus': focus_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/summary.html', context)
+
+def contact_view(request):
+    context = {
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/contact.html', context)
+
+def languages_view(request):
+    lang_context = {}
+    try:
+        page = LanguagePage.objects.first()
+        if page:
+            spoken = [{'name': s.name, 'proficiency': s.proficiency, 'level': s.level} for s in page.spoken.all()]
+            programming = [{'name': p.name, 'proficiency': p.proficiency, 'level': p.level} for p in page.programming.all()]
+            lang_context = {
+                'spoken': spoken,
+                'programming': programming
+            }
+    except Exception:
+        pass
+
+    if not lang_context:
+        lang_context = load_fallback_json("languages.json")
+
+    context = {
+        'languages': lang_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/languages.html', context)
+
+def gallery_view(request):
+    gallery_context = {}
+    try:
+        page = GalleryPage.objects.first()
+        if page:
+            reels = [{'title': r.title, 'reel_url': r.reel_url, 'reel_id': r.reel_id} for r in page.reels.all()]
+            videos = [{'title': v.title, 'description': v.description, 'embed_url': v.embed_url, 'category': v.category, 'duration': v.duration} for v in page.videos.all()]
+            featured = {
+                'title': page.featured_title,
+                'description': page.featured_description,
+                'embed_url': page.featured_embed_url,
+                'category': page.featured_category,
+                'duration': page.featured_duration
+            }
+            gallery_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'reels': reels,
+                'featured': featured,
+                'videos': videos
+            }
+    except Exception:
+        pass
+
+    if not gallery_context:
+        gallery_context = load_fallback_json("gallery.json")
+
+    context = {
+        'gallery': gallery_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/gallery.html', context)
+
+def blogs_view(request):
+    blogs_context = {}
+    try:
+        page = BlogPage.objects.first()
+        if page:
+            posts = []
+            for p in page.posts.all():
+                posts.append({
+                    'title': p.title,
+                    'excerpt': p.excerpt,
+                    'category': p.category,
+                    'date': p.date,
+                    'read_time': p.read_time,
+                    'emoji': p.emoji,
+                    'tags': p.tag_list,
+                    'medium_url': p.medium_url
+                })
+            blogs_context = {
+                'page_label': page.page_label,
+                'page_title': page.page_title,
+                'page_sub': page.page_sub,
+                'stats': {
+                    'total_posts': page.stats_total_posts,
+                    'platform': page.stats_platform,
+                    'topics': page.stats_topics
+                },
+                'posts': posts
+            }
+    except Exception:
+        pass
+
+    if not blogs_context:
+        blogs_context = load_fallback_json("blogs.json")
+
+    context = {
+        'blogs': blogs_context,
+        'graph_data': get_graph_data()
+    }
+    return render(request, 'pages/blogs.html', context)

@@ -1,3 +1,4 @@
+{% load static portfolio_extras %}
 <!-- Graph View at the bottom -->
 <div style="text-align: center; margin-top: 80px; margin-bottom: 20px;">
     <div style="font-size: 1.5rem; color: #e8e0ff; margin-bottom: 12px;">Explore the Graph</div>
@@ -9,8 +10,6 @@
 <div id="graph-container"
     style="height: 70vh; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;">
 </div>
-
-
 
 <!-- Instructions -->
 <div id="instructions"
@@ -24,4 +23,5 @@
     const resumeData = {{ graph_data|tojson }};
     const activePage = "{{ active_page }}";
 </script>
-<script src="static/js/graph.js"></script>
+<script src="{% static 'js/graph.js' %}"></script>
+
