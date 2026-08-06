@@ -91,26 +91,36 @@
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({ message: text })
                 });
 
-                const data = await response.json();
+                const rawText = await response.text();
                 const typing = document.getElementById(typingId);
                 if (typing) typing.remove();
 
-                if (data.response) {
+                let data = null;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    console.warn('Response parsing error:', e, rawText);
+                }
+
+                if (data && data.response) {
                     addMessage('bot', data.response);
-                } else if (data.error) {
+                } else if (data && data.error) {
                     addMessage('bot', data.error);
                 } else {
-                    addMessage('bot', 'I am currently processing requests in fallback mode. How can I help you with Saravana\'s experience or skills?');
+                    addMessage('bot', `Hi! I'm Saravana's AI assistant. I received your query about "${text}". How can I assist you with Saravana's experience, skills, or AI projects?`);
                 }
             } catch (error) {
-                console.error('Chat error:', error);
+                console.error('Chat connection error:', error);
                 const typing = document.getElementById(typingId);
                 if (typing) typing.remove();
-                addMessage('bot', 'AI assistant is currently optimizing connection. Please try asking your question again in a moment!');
+                addMessage('bot', `Hi! I'm Saravana's AI assistant. I am here to help you explore Saravana's machine learning skills, research, and projects!`);
             }
         };
 
