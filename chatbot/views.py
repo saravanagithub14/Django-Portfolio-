@@ -122,9 +122,24 @@ Question:
 Answer:
 """
 
-# Fallback answering function based on database keyword matching
+# Fallback answering function based on database keyword matching & concept lookup
 def get_keyword_fallback_response(query, profile):
     query_lower = query.lower()
+
+    # Educational concept explanations
+    CONCEPT_ANSWERS = {
+        'machine learning': "Machine Learning (ML) is a branch of artificial intelligence where algorithms learn underlying patterns from data to make predictions or decisions without explicit rule-based programming. In my work as an AI Engineer, I design and deploy ML pipelines spanning statistical classification, regression, and model evaluation.",
+        'deep learning': "Deep Learning is a specialized subfield of machine learning inspired by biological neural networks. It utilizes multi-layered neural architectures to automatically extract features from complex, high-dimensional data like images, audio, and text.",
+        'neural network': "Artificial Neural Networks (ANNs) are computational models inspired by biological brain structures. They consist of interconnected nodes (neurons) arranged in layers that process inputs, apply learned weights, and pass signals forward to produce outputs.",
+        'rag': "Retrieval-Augmented Generation (RAG) is an architectural pattern that connects Large Language Models (LLMs) with external knowledge sources (like FAISS vector databases). It retrieves relevant document context before generating answers, ensuring precise, grounded, and hallucination-free responses.",
+        'generative ai': "Generative AI refers to artificial intelligence models capable of generating new text, images, audio, or code based on patterns learned from vast training datasets. I specialize in building agentic Gen AI systems and RAG pipelines.",
+        'llm': "Large Language Models (LLMs) are massive neural networks trained on vast text corpora to understand, reason, and generate human language. Examples include Llama 3, GPT-4, and Claude.",
+        'computer vision': "Computer Vision is a field of AI enabling computers to interpret and analyze visual information from images and video feeds, using convolutional neural networks (CNNs) and vision transformers."
+    }
+
+    for concept_key, concept_answer in CONCEPT_ANSWERS.items():
+        if concept_key in query_lower:
+            return concept_answer
     
     # 1. Check Projects
     from portfolio.models import Project, Skill, Job
@@ -177,9 +192,8 @@ def get_keyword_fallback_response(query, profile):
     contact_email = profile.email if profile else "saravanaperumalr14@gmail.com"
     return (
         f"Hi! I'm Saravana's AI assistant.\n\n"
-        f"I searched my portfolio database for '{query}' but didn't find specific matches. "
-        f"You can explore my full work details in the main navigation or contact me directly "
-        f"via email at {contact_email} or WhatsApp."
+        f"I am here to answer questions about Saravana's experience in AI Engineering, Data Science, machine learning research, and projects. "
+        f"You can ask about specific skills, projects, or reach out directly at {contact_email}."
     )
 
 def is_rate_limited(ip_address):
@@ -241,8 +255,26 @@ def chat_api_endpoint(request):
             logger.warning(f"Could not save chat session to DB: {e}")
             session = None
 
-        # 3. Get active Chatbot configuration
+        # 3. Get active Chatbot configuration (auto-create default if missing)
         bot = Chatbot.objects.filter(enabled=True).first()
+        if not bot:
+            try:
+                cfg, _ = AIModelConfig.objects.get_or_create(
+                    name="Groq Llama 3 Default",
+                    defaults={
+                        'provider': 'groq',
+                        'model_name': 'llama-3.1-8b-instant',
+                        'api_key': '',
+                        'temperature': 0.0,
+                    }
+                )
+                bot = Chatbot.objects.create(
+                    bot_name="Saravana's AI",
+                    enabled=True,
+                    model_config=cfg
+                )
+            except Exception as e:
+                logger.warning(f"Could not auto-create Chatbot config: {e}")
 
         # Fallback to Mock if no bot is configured or if provider is mock
         if not bot or not bot.model_config or bot.model_config.provider == 'mock':
