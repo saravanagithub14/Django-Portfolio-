@@ -224,7 +224,7 @@ def chat_api_endpoint(request):
 
         # Handle provider: Groq LLM with RAG
         if model_cfg.provider == 'groq':
-            api_key = model_cfg.api_key or os.getenv("GROQ_API_KEY")
+            api_key = os.getenv("GROQ_API_KEY") or model_cfg.api_key
             if not api_key:
                 logger.warning("Groq API key is missing. Using keyword fallback.")
                 bot_response = get_keyword_fallback_response(user_message, profile)
