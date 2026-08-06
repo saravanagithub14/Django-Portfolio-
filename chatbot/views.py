@@ -219,128 +219,167 @@ def chat_api_endpoint(request):
     if len(user_message) > 500:
         return JsonResponse({'error': 'Message exceeds the maximum limit of 500 characters'}, status=400)
 
-    # 2. Resolve Session
-    if not request.session.session_key:
-        request.session.create()
-    django_session_key = request.session.session_key
+    try:
+        # 2. Resolve Session
+        try:
+            if not request.session.session_key:
+                request.session.create()
+            django_session_key = request.session.session_key
+        except Exception:
+            django_session_key = "anonymous_session"
 
-    session, _ = ChatSession.objects.get_or_create(
-        session_id=django_session_key,
-        defaults={'user_ip': ip}
-    )
+        profile = UserProfile.objects.first()
 
-    # Log user message
-    ChatMessage.objects.create(session=session, role='user', content=user_message)
+        try:
+            session, _ = ChatSession.objects.get_or_create(
+                session_id=django_session_key,
+                defaults={'user_ip': ip}
+            )
+            # Log user message
+            ChatMessage.objects.create(session=session, role='user', content=user_message)
+        except Exception as e:
+            logger.warning(f"Could not save chat session to DB: {e}")
+            session = None
 
-    # 3. Get active Chatbot configuration
-    bot = Chatbot.objects.filter(enabled=True).first()
-    profile = UserProfile.objects.first()
+        # 3. Get active Chatbot configuration
+        bot = Chatbot.objects.filter(enabled=True).first()
 
-    # Fallback to Mock if no bot is configured or if provider is mock
-    if not bot or not bot.model_config or bot.model_config.provider == 'mock':
-        bot_response = get_keyword_fallback_response(user_message, profile)
-        ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
+        # Fallback to Mock if no bot is configured or if provider is mock
+        if not bot or not bot.model_config or bot.model_config.provider == 'mock':
+            bot_response = get_keyword_fallback_response(user_message, profile)
+            if session:
+                try:
+                    ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
+                except Exception:
+                    pass
+            return JsonResponse({'response': bot_response})
+
+        model_cfg = bot.model_config
+
+        # Handle provider: Groq LLM with RAG
+        if model_cfg.provider == 'groq':
+            api_key = model_cfg.api_key or os.getenv("GROQ_API_KEY")
+            if not api_key:
+                logger.warning("Groq API key is missing. Using keyword fallback.")
+                bot_response = get_keyword_fallback_response(user_message, profile)
+                if session:
+                    try:
+                        ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
+                    except Exception:
+                        pass
+                return JsonResponse({'response': bot_response})
+
+            try:
+                from langchain_groq import ChatGroq
+                from langchain_core.messages import HumanMessage
+                
+                # Retrieve context from FAISS RAG index safely
+                context = ""
+                try:
+                    retriever = get_retriever()
+                    if retriever is not None:
+                        docs = retriever.invoke(user_message)
+                        context = "\n\n".join([doc.page_content for doc in docs])
+                except Exception as rag_err:
+                    logger.warning(f"RAG retrieval error (proceeding with direct prompt): {rag_err}")
+
+                selected_objection = random.choice(FUNNY_OBJECTIONS)
+                
+                # Format prompt template
+                formatted_prompt = (
+                    PROMPT_TEMPLATE
+                    .replace("{context}", context)
+                    .replace("{question}", user_message)
+                    .replace("{refusal_objection}", selected_objection)
+                )
+                
+                # Initialize ChatGroq LLM
+                llm = ChatGroq(
+                    groq_api_key=api_key,
+                    model_name=model_cfg.model_name or "llama-3.1-8b-instant",
+                    temperature=model_cfg.temperature or 0.0,
+                    timeout=30.0,
+                )
+                
+                response = llm.invoke([HumanMessage(content=formatted_prompt)])
+                bot_response = response.content
+                
+            except Exception as e:
+                logger.error(f"Groq API execution error: {e}", exc_info=True)
+                bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
+
+        # Handle provider: Google Gemini
+        elif model_cfg.provider == 'gemini':
+            api_key = model_cfg.api_key or os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                logger.warning("Gemini API key is missing. Using keyword fallback.")
+                bot_response = get_keyword_fallback_response(user_message, profile)
+                if session:
+                    try:
+                        ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
+                    except Exception:
+                        pass
+                return JsonResponse({'response': bot_response})
+
+            try:
+                import google.generativeai as genai
+                genai.configure(api_key=api_key)
+
+                # Build standard context for prompt safely
+                rag_context = ""
+                try:
+                    from chatbot.views import get_rag_context
+                    rag_context = get_rag_context(user_message)
+                except Exception:
+                    pass
+
+                full_system_instruction = f"{model_cfg.system_prompt}\n\n[CONTEXT ABOUT SARAVANA'S PORTFOLIO]:\n{rag_context}"
+                
+                generation_config = {
+                    "temperature": model_cfg.temperature,
+                    "top_p": 0.95,
+                    "top_k": 40,
+                    "max_output_tokens": 2048,
+                }
+                
+                history = []
+                if session:
+                    messages_list = list(ChatMessage.objects.filter(session=session).order_by('timestamp'))
+                    for msg in messages_list[:-1]:
+                        role_val = 'user' if msg.role == 'user' else 'model'
+                        history.append({'role': role_val, 'parts': [msg.content]})
+
+                model = genai.GenerativeModel(
+                    model_name=model_cfg.model_name,
+                    generation_config=generation_config,
+                    system_instruction=full_system_instruction
+                )
+                
+                chat = model.start_chat(history=history)
+                response = chat.send_message(user_message)
+                bot_response = response.text
+                
+            except Exception as e:
+                logger.error(f"Gemini API execution error: {e}", exc_info=True)
+                bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
+
+        else:
+            bot_response = f"*(Provider {model_cfg.provider} is under development)*\n\n" + get_keyword_fallback_response(user_message, profile)
+
+        # Log assistant response
+        if session:
+            try:
+                ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
+            except Exception:
+                pass
+
         return JsonResponse({'response': bot_response})
 
-    model_cfg = bot.model_config
+    except Exception as fatal_err:
+        logger.error(f"Fatal error in chat endpoint: {fatal_err}", exc_info=True)
+        fallback = get_keyword_fallback_response(user_message, UserProfile.objects.first())
+        return JsonResponse({'response': fallback})
 
-    # Handle provider: Groq LLM with RAG
-    if model_cfg.provider == 'groq':
-        api_key = model_cfg.api_key or os.getenv("GROQ_API_KEY")
-        if not api_key:
-            logger.warning("Groq API key is missing. Using keyword fallback.")
-            bot_response = get_keyword_fallback_response(user_message, profile)
-            ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
-            return JsonResponse({'response': bot_response})
-
-        try:
-            from langchain_groq import ChatGroq
-            from langchain_core.messages import HumanMessage
-            
-            # Retrieve context from FAISS RAG index
-            retriever = get_retriever()
-            context = ""
-            if retriever is not None:
-                docs = retriever.invoke(user_message)
-                context = "\n\n".join([doc.page_content for doc in docs])
-                
-            selected_objection = random.choice(FUNNY_OBJECTIONS)
-            
-            # Format prompt template
-            formatted_prompt = (
-                PROMPT_TEMPLATE
-                .replace("{context}", context)
-                .replace("{question}", user_message)
-                .replace("{refusal_objection}", selected_objection)
-            )
-            
-            # Initialize ChatGroq LLM
-            llm = ChatGroq(
-                groq_api_key=api_key,
-                model_name=model_cfg.model_name or "llama-3.1-8b-instant",
-                temperature=model_cfg.temperature or 0.0,
-                timeout=30.0,
-            )
-            
-            response = llm.invoke([HumanMessage(content=formatted_prompt)])
-            bot_response = response.content
-            
-        except Exception as e:
-            logger.error(f"Groq API execution error: {e}", exc_info=True)
-            bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
-
-    # Handle provider: Google Gemini
-    elif model_cfg.provider == 'gemini':
-        api_key = model_cfg.api_key or os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            logger.warning("Gemini API key is missing. Using keyword fallback.")
-            bot_response = get_keyword_fallback_response(user_message, profile)
-            ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
-            return JsonResponse({'response': bot_response})
-
-        try:
-            import google.generativeai as genai
-            genai.configure(api_key=api_key)
-
-            # Build standard context for prompt
-            from chatbot.views import get_rag_context
-            rag_context = get_rag_context(user_message)
-            full_system_instruction = f"{model_cfg.system_prompt}\n\n[CONTEXT ABOUT SARAVANA'S PORTFOLIO]:\n{rag_context}"
-            
-            generation_config = {
-                "temperature": model_cfg.temperature,
-                "top_p": 0.95,
-                "top_k": 40,
-                "max_output_tokens": 2048,
-            }
-            
-            history = []
-            messages_list = list(ChatMessage.objects.filter(session=session).order_by('timestamp'))
-            for msg in messages_list[:-1]:
-                role_val = 'user' if msg.role == 'user' else 'model'
-                history.append({'role': role_val, 'parts': [msg.content]})
-
-            model = genai.GenerativeModel(
-                model_name=model_cfg.model_name,
-                generation_config=generation_config,
-                system_instruction=full_system_instruction
-            )
-            
-            chat = model.start_chat(history=history)
-            response = chat.send_message(user_message)
-            bot_response = response.text
-            
-        except Exception as e:
-            logger.error(f"Gemini API execution error: {e}", exc_info=True)
-            bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
-
-    else:
-        bot_response = f"*(Provider {model_cfg.provider} is under development)*\n\n" + get_keyword_fallback_response(user_message, profile)
-
-    # Log assistant response
-    ChatMessage.objects.create(session=session, role='assistant', content=bot_response)
-
-    return JsonResponse({'response': bot_response})
 
 def health_view(request):
     """

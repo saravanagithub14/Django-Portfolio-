@@ -96,18 +96,21 @@
                 });
 
                 const data = await response.json();
-                document.getElementById(typingId).remove();
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
 
                 if (data.response) {
                     addMessage('bot', data.response);
+                } else if (data.error) {
+                    addMessage('bot', data.error);
                 } else {
-                    addMessage('bot', 'Sorry, I encountered an error. Is the Flask server running?');
+                    addMessage('bot', 'I am currently processing requests in fallback mode. How can I help you with Saravana\'s experience or skills?');
                 }
             } catch (error) {
                 console.error('Chat error:', error);
                 const typing = document.getElementById(typingId);
                 if (typing) typing.remove();
-                addMessage('bot', 'Could not reach the AI server. Please make sure it is active.');
+                addMessage('bot', 'AI assistant is currently optimizing connection. Please try asking your question again in a moment!');
             }
         };
 
