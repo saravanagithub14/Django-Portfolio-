@@ -338,7 +338,7 @@ def chat_api_endpoint(request):
                 
             except Exception as e:
                 logger.error(f"Groq API execution error: {e}", exc_info=True)
-                bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
+                bot_response = get_keyword_fallback_response(user_message, profile)
 
         # Handle provider: Google Gemini
         elif model_cfg.provider == 'gemini':
@@ -393,7 +393,7 @@ def chat_api_endpoint(request):
                 
             except Exception as e:
                 logger.error(f"Gemini API execution error: {e}", exc_info=True)
-                bot_response = f"*(Connection issue. Falling back to keyword search)*\n\n" + get_keyword_fallback_response(user_message, profile)
+                bot_response = get_keyword_fallback_response(user_message, profile)
 
         else:
             bot_response = f"*(Provider {model_cfg.provider} is under development)*\n\n" + get_keyword_fallback_response(user_message, profile)
