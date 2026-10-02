@@ -23,3 +23,9 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# Downloaded ONNX models for the chatbot (fetched during build)
+.model_cache/
+
+# Eval reports
+chatbot/eval/reports/

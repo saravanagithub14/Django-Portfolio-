@@ -17,11 +17,40 @@
     Drag to move &bull; Scroll to zoom &bull; Click nodes to explore
 </div>
 
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
 <script>
     const resumeData = {{ graph_data|tojson }};
     const activePage = "{{ active_page }}";
+
+    // The graph sits at the bottom of the page, so only download the ~340KB of 3D libraries
+    // (and start rendering) when the visitor scrolls near it.
+    (function () {
+        const scripts = [
+            "https://unpkg.com/three@0.160.0/build/three.min.js",
+            "https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js",
+            "{% static 'js/graph.js' %}",
+        ];
+        let started = false;
+        function loadNext(i) {
+            if (i >= scripts.length) return;
+            const s = document.createElement("script");
+            s.src = scripts[i];
+            s.onload = () => loadNext(i + 1);
+            document.body.appendChild(s);
+        }
+        function start() {
+            if (started) return;
+            started = true;
+            loadNext(0);
+        }
+        const container = document.getElementById("graph-container");
+        if (!container || !("IntersectionObserver" in window)) return start();
+        const observer = new IntersectionObserver((entries) => {
+            if (entries.some((e) => e.isIntersecting)) {
+                observer.disconnect();
+                start();
+            }
+        }, { rootMargin: "600px 0px" });
+        observer.observe(container);
+    })();
 </script>
-<script src="{% static 'js/graph.js' %}"></script>
 

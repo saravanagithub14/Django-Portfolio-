@@ -1,0 +1,496 @@
+[
+ {
+  "category": "faq",
+  "question": "wat r u doing these days?",
+  "expected_chunk_ids": [
+   "faq#what-does-saravana-do-right-now",
+   "experience#saravana-perumal-r-gen-ai-engineer-at-blackbox-learning-april-2026-to-present",
+   "about#saravana-perumal-rs-current-role-location-and-contact-details"
+  ],
+  "notes": "Current role: Gen AI Engineer at Blackbox Learning since April 2026."
+ },
+ {
+  "category": "faq",
+  "question": "where r u based",
+  "expected_chunk_ids": [
+   "faq#where-is-saravana-based",
+   "about#saravana-perumal-rs-current-role-location-and-contact-details"
+  ],
+  "notes": "Location question with shorthand."
+ },
+ {
+  "category": "faq",
+  "question": "how many yrs of exp do u have in DS and AI",
+  "expected_chunk_ids": [
+   "faq#how-many-years-of-experience-does-saravana-have-in-data-science-and-ai",
+   "experience#saravana-perumal-r-data-science-intern-at-edure-september-2023-to-february-2024",
+   "experience#saravana-perumal-r-jr-data-scientist-training-development-at-dexpro-innovations-pvt-ltd-february-2024-to-february-2025"
+  ],
+  "notes": "Since September 2023, about three years. A list of the experience chunks also answers it."
+ },
+ {
+  "category": "faq",
+  "question": "u built any rag systems?",
+  "expected_chunk_ids": [
+   "faq#has-saravana-built-rag-systems",
+   "skills#saravana-perumal-rs-skills-in-rag-and-vector-databases"
+  ],
+  "notes": "RAG experience."
+ },
+ {
+  "category": "faq",
+  "question": "which vector dbs hav u used",
+  "expected_chunk_ids": [
+   "faq#which-vector-databases-has-saravana-worked-with",
+   "skills#saravana-perumal-rs-skills-in-rag-and-vector-databases"
+  ],
+  "notes": "ChromaDB, Pinecone, AstraDB, FAISS."
+ },
+ {
+  "category": "faq",
+  "question": "u used agents?",
+  "expected_chunk_ids": [
+   "faq#does-saravana-have-experience-with-ai-agents",
+   "skills#saravana-perumal-rs-skills-in-langchain-agents-tools-and-chains",
+   "projects#saravana-perumal-rs-project-search-engine-genai-app-using-tools-and-agents"
+  ],
+  "notes": "Very short shorthand question."
+ },
+ {
+  "category": "faq",
+  "question": "ever finetuned an llm??",
+  "expected_chunk_ids": [
+   "faq#has-saravana-fine-tuned-an-llm",
+   "projects#saravana-perumal-rs-project-fine-tuning-llms-using-lamini-and-google-gemma",
+   "skills#saravana-perumal-rs-skills-in-llm-fine-tuning-and-cloud-deployment"
+  ],
+  "notes": "Gemma on Lamini with LoRA/QLoRA."
+ },
+ {
+  "category": "faq",
+  "question": "can u deploy ai stuff on aws",
+  "expected_chunk_ids": [
+   "faq#can-saravana-deploy-ai-apps-on-aws",
+   "projects#saravana-perumal-rs-project-generative-ai-with-aws-bedrock-and-lambda",
+   "skills#saravana-perumal-rs-skills-in-llm-fine-tuning-and-cloud-deployment"
+  ],
+  "notes": "AWS Bedrock and Lambda."
+ },
+ {
+  "category": "faq",
+  "question": "what langs do u code in",
+  "expected_chunk_ids": [
+   "faq#what-programming-languages-does-saravana-use",
+   "skills#saravana-perumal-rs-skills-in-python-sql-and-data-analysis"
+  ],
+  "notes": "Programming languages, not spoken languages."
+ },
+ {
+  "category": "faq",
+  "question": "done any computer vision work?",
+  "expected_chunk_ids": [
+   "faq#has-saravana-done-any-computer-vision-work",
+   "projects#saravana-perumal-rs-project-automated-brain-tumor-detection-and-classification-using-deep-learning-2024",
+   "projects#saravana-perumal-rs-project-constructing-insight-real-time-object-detection-in-construction-sites",
+   "skills#saravana-perumal-rs-skills-in-deep-learning-and-computer-vision"
+  ],
+  "notes": "Brain tumor detection, construction site object detection."
+ },
+ {
+  "category": "faq",
+  "question": "what did u do at dexpro",
+  "expected_chunk_ids": [
+   "faq#what-did-saravana-do-at-dexpro-innovations",
+   "experience#saravana-perumal-r-data-scientist-at-dexpro-innovations-pvt-ltd-april-2025-to-march-2026",
+   "experience#saravana-perumal-r-jr-data-scientist-training-development-at-dexpro-innovations-pvt-ltd-february-2024-to-february-2025"
+  ],
+  "notes": "Two Dexpro roles."
+ },
+ {
+  "category": "faq",
+  "question": "did u get promoted at dexpro?",
+  "expected_chunk_ids": [
+   "faq#did-saravana-get-promoted-at-dexpro",
+   "experience#saravana-perumal-r-data-scientist-at-dexpro-innovations-pvt-ltd-april-2025-to-march-2026"
+  ],
+  "notes": "Jr. Data Scientist to Data Scientist."
+ },
+ {
+  "category": "faq",
+  "question": "do u teach students",
+  "expected_chunk_ids": [
+   "faq#has-saravana-taught-or-trained-students",
+   "teaching#saravana-perumal-rs-data-science-training-and-workshops-at-dexpro-innovations-pvt-ltd-february-2024-to-march-2026",
+   "teaching#saravana-perumal-rs-student-mentorship-and-placement-guidance-in-data-science-february-2024-to-march-2026"
+  ],
+  "notes": "Teaching at Dexpro."
+ },
+ {
+  "category": "faq",
+  "question": "r u qualified to teach at a college",
+  "expected_chunk_ids": [
+   "faq#is-saravana-qualified-to-teach-at-a-college",
+   "education#saravana-perumal-rs-ugc-net-qualification-for-assistant-professor-in-life-sciences-2019",
+   "teaching#saravana-perumal-rs-research-mentoring-and-teaching-qualification-in-life-sciences-2019-to-2023"
+  ],
+  "notes": "UGC-NET 2019."
+ },
+ {
+  "category": "faq",
+  "question": "whats ur education",
+  "expected_chunk_ids": [
+   "faq#whats-saravanas-educational-background",
+   "education#saravana-perumal-rs-master-of-science-in-biotechnology-and-bioinformatics-from-kufos-2016-to-2018",
+   "education#saravana-perumal-rs-bachelor-of-science-in-botany-and-biotechnology-from-the-university-of-kerala-2013-to-2016",
+   "education#saravana-perumal-rs-diploma-in-data-science-from-edure-2023-to-2024"
+  ],
+  "notes": "BSc, MSc, Diploma."
+ },
+ {
+  "category": "faq",
+  "question": "do u have a cs degree",
+  "expected_chunk_ids": [
+   "faq#does-saravana-have-a-computer-science-degree"
+  ],
+  "notes": "No; degrees are in biology."
+ },
+ {
+  "category": "faq",
+  "question": "how'd u go from bio to AI",
+  "expected_chunk_ids": [
+   "faq#how-did-saravana-switch-from-biology-to-ai",
+   "about#professional-summary-of-saravana-perumal-r",
+   "education#saravana-perumal-rs-diploma-in-data-science-from-edure-2023-to-2024"
+  ],
+  "notes": "Career switch."
+ },
+ {
+  "category": "faq",
+  "question": "wat was ur research abt",
+  "expected_chunk_ids": [
+   "faq#what-was-saravanas-research-about",
+   "experience#saravana-perumal-r-senior-research-fellow-in-biomedical-technology-at-sctimst-july-2019-to-november-2023"
+  ],
+  "notes": "Biomaterials and tissue engineering."
+ },
+ {
+  "category": "faq",
+  "question": "u published any papers",
+  "expected_chunk_ids": [
+   "faq#has-saravana-published-any-papers",
+   "projects#saravana-perumal-rs-book-chapter-emerging-strategies-in-bone-tissue-engineering-2022",
+   "projects#saravana-perumal-rs-research-project-biosynthesized-nanosilver-from-alginate-dialdehyde-2021",
+   "projects#saravana-perumal-rs-research-project-ferulic-acid-incorporated-antimicrobial-self-crosslinking-hydrogel-2021"
+  ],
+  "notes": "Four publications."
+ },
+ {
+  "category": "faq",
+  "question": "what did u work on at ciba chennai",
+  "expected_chunk_ids": [
+   "faq#what-did-saravana-work-on-at-ciba-in-chennai",
+   "experience#saravana-perumal-r-young-professional-ii-at-icar-central-institute-of-brackishwater-aquaculture-march-2019-to-july-2019"
+  ],
+  "notes": "Sea bass vaccine work."
+ },
+ {
+  "category": "faq",
+  "question": "could u build AI for healthcare",
+  "expected_chunk_ids": [
+   "faq#could-saravana-build-ai-for-healthcare",
+   "projects#saravana-perumal-rs-project-automated-brain-tumor-detection-and-classification-using-deep-learning-2024"
+  ],
+  "notes": "Biomedical background + medical imaging project."
+ },
+ {
+  "category": "faq",
+  "question": "have u managed teams or projects",
+  "expected_chunk_ids": [
+   "faq#has-saravana-managed-projects-or-teams",
+   "skills#saravana-perumal-rs-skills-in-project-management-and-research-leadership"
+  ],
+  "notes": "Research leadership at SCTIMST."
+ },
+ {
+  "category": "faq",
+  "question": "ur top skills?",
+  "expected_chunk_ids": [
+   "faq#what-are-saravanas-top-skills",
+   "about#professional-summary-of-saravana-perumal-r"
+  ],
+  "notes": "Top skills summary."
+ },
+ {
+  "category": "faq",
+  "question": "what languages do u speak",
+  "expected_chunk_ids": [
+   "faq#what-languages-does-saravana-speak",
+   "skills#saravana-perumal-rs-language-skills"
+  ],
+  "notes": "Spoken languages, not programming."
+ },
+ {
+  "category": "faq",
+  "question": "r u open to new jobs or freelance",
+  "expected_chunk_ids": [
+   "faq#is-saravana-open-to-new-opportunities"
+  ],
+  "notes": "Availability."
+ },
+ {
+  "category": "faq",
+  "question": "how can i contact u",
+  "expected_chunk_ids": [
+   "faq#how-do-i-contact-saravana",
+   "about#saravana-perumal-rs-current-role-location-and-contact-details"
+  ],
+  "notes": "Must give saravanaperumalr14@gmail.com.",
+  "answer_must_include": [
+   "saravanaperumalr14@gmail.com"
+  ]
+ },
+ {
+  "category": "faq",
+  "question": "where can i see ur code",
+  "expected_chunk_ids": [
+   "faq#where-can-i-see-saravanas-code-and-portfolio",
+   "about#saravana-perumal-rs-current-role-location-and-contact-details"
+  ],
+  "notes": "GitHub profile."
+ },
+ {
+  "category": "list",
+  "question": "list all ur projects",
+  "expected_chunk_ids": [
+   "projects#saravana-perumal-rs-project-automated-brain-tumor-detection-and-classification-using-deep-learning-2024",
+   "projects#saravana-perumal-rs-book-chapter-emerging-strategies-in-bone-tissue-engineering-2022",
+   "projects#saravana-perumal-rs-project-hybrid-search-rag-with-pinecone"
+  ],
+  "notes": "List intent, type project.",
+  "expected_intent": "list"
+ },
+ {
+  "category": "list",
+  "question": "how many papers have u published",
+  "expected_chunk_ids": [
+   "faq#has-saravana-published-any-papers",
+   "projects#saravana-perumal-rs-book-chapter-emerging-strategies-in-bone-tissue-engineering-2022"
+  ],
+  "notes": "Count question; answer is four.",
+  "answer_must_include": [
+   "four|4"
+  ]
+ },
+ {
+  "category": "list",
+  "question": "list every job you've had",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-gen-ai-engineer-at-blackbox-learning-april-2026-to-present",
+   "experience#saravana-perumal-r-data-science-intern-at-edure-september-2023-to-february-2024",
+   "experience#saravana-perumal-r-young-professional-ii-at-icar-central-institute-of-brackishwater-aquaculture-march-2019-to-july-2019"
+  ],
+  "notes": "List intent, type experience.",
+  "expected_intent": "list"
+ },
+ {
+  "category": "list",
+  "question": "what certifications do u have",
+  "expected_chunk_ids": [
+   "education#saravana-perumal-rs-ugc-net-qualification-for-assistant-professor-in-life-sciences-2019",
+   "faq#is-saravana-qualified-to-teach-at-a-college"
+  ],
+  "notes": "UGC-NET is the certification."
+ },
+ {
+  "category": "list",
+  "question": "what degrees do you have, list them",
+  "expected_chunk_ids": [
+   "education#saravana-perumal-rs-master-of-science-in-biotechnology-and-bioinformatics-from-kufos-2016-to-2018",
+   "education#saravana-perumal-rs-bachelor-of-science-in-botany-and-biotechnology-from-the-university-of-kerala-2013-to-2016",
+   "faq#whats-saravanas-educational-background"
+  ],
+  "notes": "List education."
+ },
+ {
+  "category": "year",
+  "question": "what were u doing in 2021",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-senior-research-fellow-in-biomedical-technology-at-sctimst-july-2019-to-november-2023",
+   "projects#saravana-perumal-rs-research-project-biosynthesized-nanosilver-from-alginate-dialdehyde-2021",
+   "projects#saravana-perumal-rs-research-project-ferulic-acid-incorporated-antimicrobial-self-crosslinking-hydrogel-2021"
+  ],
+  "notes": "Timeframe 2021.",
+  "expected_intent": "timeframe"
+ },
+ {
+  "category": "year",
+  "question": "where were you working in 2019?",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-young-professional-ii-at-icar-central-institute-of-brackishwater-aquaculture-march-2019-to-july-2019",
+   "experience#saravana-perumal-r-senior-research-fellow-in-biomedical-technology-at-sctimst-july-2019-to-november-2023"
+  ],
+  "notes": "Two jobs in 2019.",
+  "expected_intent": "timeframe"
+ },
+ {
+  "category": "year",
+  "question": "what did u do in 2024",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-jr-data-scientist-training-development-at-dexpro-innovations-pvt-ltd-february-2024-to-february-2025",
+   "experience#saravana-perumal-r-data-science-intern-at-edure-september-2023-to-february-2024",
+   "projects#saravana-perumal-rs-project-automated-brain-tumor-detection-and-classification-using-deep-learning-2024",
+   "education#saravana-perumal-rs-diploma-in-data-science-from-edure-2023-to-2024"
+  ],
+  "notes": "Timeframe 2024.",
+  "expected_intent": "timeframe"
+ },
+ {
+  "category": "year",
+  "question": "what were you up to in 2017",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-masters-dissertation-scholar-in-stem-cell-biology-at-iiser-thiruvananthapuram-november-2017-to-november-2018",
+   "education#saravana-perumal-rs-master-of-science-in-biotechnology-and-bioinformatics-from-kufos-2016-to-2018"
+  ],
+  "notes": "MSc and IISER dissertation.",
+  "expected_intent": "timeframe"
+ },
+ {
+  "category": "list",
+  "question": "how many companies have u worked at in AI",
+  "expected_chunk_ids": [
+   "faq#how-many-years-of-experience-does-saravana-have-in-data-science-and-ai",
+   "experience#saravana-perumal-r-gen-ai-engineer-at-blackbox-learning-april-2026-to-present",
+   "experience#saravana-perumal-r-data-scientist-at-dexpro-innovations-pvt-ltd-april-2025-to-march-2026"
+  ],
+  "notes": "Edure, Dexpro, Blackbox."
+ },
+ {
+  "category": "trap",
+  "question": "were you a data scientist at Edure",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-data-science-intern-at-edure-september-2023-to-february-2024"
+  ],
+  "notes": "No: Data Science Intern.",
+  "answer_must_include": [
+   "intern"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "when did you join CIBA",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-young-professional-ii-at-icar-central-institute-of-brackishwater-aquaculture-march-2019-to-july-2019",
+   "faq#what-did-saravana-work-on-at-ciba-in-chennai"
+  ],
+  "notes": "March 2019.",
+  "answer_must_include": [
+   "March 2019"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "you've been at blackbox since 2025 right?",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-gen-ai-engineer-at-blackbox-learning-april-2026-to-present",
+   "faq#what-does-saravana-do-right-now"
+  ],
+  "notes": "No: since April 2026.",
+  "answer_must_include": [
+   "April 2026|2026"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "did u do ur PhD at SCTIMST?",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-senior-research-fellow-in-biomedical-technology-at-sctimst-july-2019-to-november-2023"
+  ],
+  "notes": "No PhD in the sources: the reply must not claim one (naming the Senior Research Fellow role is ideal).",
+  "answer_must_not_include": [
+   "\\bI (did|completed|earned|got|have|hold)( my| a)? (PhD|Ph\\.D|doctorate)"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "is your masters in computer science?",
+  "expected_chunk_ids": [
+   "faq#does-saravana-have-a-computer-science-degree",
+   "education#saravana-perumal-rs-master-of-science-in-biotechnology-and-bioinformatics-from-kufos-2016-to-2018"
+  ],
+  "notes": "No: Biotechnology and Bioinformatics.",
+  "answer_must_include": [
+   "Bioinformatics"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "so you fine-tuned GPT-4?",
+  "expected_chunk_ids": [
+   "faq#has-saravana-fine-tuned-an-llm",
+   "projects#saravana-perumal-rs-project-fine-tuning-llms-using-lamini-and-google-gemma"
+  ],
+  "notes": "No: Google Gemma on Lamini.",
+  "answer_must_include": [
+   "Gemma"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "you joined dexpro as a senior data scientist right",
+  "expected_chunk_ids": [
+   "experience#saravana-perumal-r-jr-data-scientist-training-development-at-dexpro-innovations-pvt-ltd-february-2024-to-february-2025",
+   "faq#did-saravana-get-promoted-at-dexpro"
+  ],
+  "notes": "No: joined as Jr. Data Scientist in February 2024.",
+  "answer_must_include": [
+   "Jr|Junior"
+  ]
+ },
+ {
+  "category": "trap",
+  "question": "did u do ur MSc at IISER?",
+  "expected_chunk_ids": [
+   "education#saravana-perumal-rs-master-of-science-in-biotechnology-and-bioinformatics-from-kufos-2016-to-2018",
+   "experience#saravana-perumal-r-masters-dissertation-scholar-in-stem-cell-biology-at-iiser-thiruvananthapuram-november-2017-to-november-2018"
+  ],
+  "notes": "MSc from KUFOS; IISER was the dissertation.",
+  "answer_must_include": [
+   "KUFOS|Kerala University of Fisheries"
+  ]
+ },
+ {
+  "category": "out_of_scope",
+  "question": "whats ur salary",
+  "expected_chunk_ids": [],
+  "notes": "Salary: refuse.",
+  "expect_refusal": true
+ },
+ {
+  "category": "out_of_scope",
+  "question": "can i get your phone number",
+  "expected_chunk_ids": [],
+  "notes": "Phone number: never share.",
+  "expect_refusal": true
+ },
+ {
+  "category": "out_of_scope",
+  "question": "are u married? tell me about ur family",
+  "expected_chunk_ids": [],
+  "notes": "Family: refuse.",
+  "expect_refusal": true
+ },
+ {
+  "category": "out_of_scope",
+  "question": "how do i reverse a list in python",
+  "expected_chunk_ids": [],
+  "notes": "General coding help: out of scope.",
+  "expect_refusal": true
+ },
+ {
+  "category": "out_of_scope",
+  "question": "who will win the next election",
+  "expected_chunk_ids": [],
+  "notes": "Politics: out of scope.",
+  "expect_refusal": true
+ }
+]

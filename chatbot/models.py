@@ -57,9 +57,21 @@ class ChatMessage(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    retrieval_meta = models.JSONField(
+        null=True, blank=True,
+        help_text="Assistant turns: routed question, intent, filters, retrieved chunks, fallback, provider, latency"
+    )
 
     class Meta:
         ordering = ['timestamp']
 
     def __str__(self):
         return f"{self.role.capitalize()}: {self.content[:50]}..."
+
+class ContextSnippet(models.Model):
+    """Text added through POST /update_context. Included as `type: update` chunks in every index build."""
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Snippet {self.pk}: {self.text[:50]}..."

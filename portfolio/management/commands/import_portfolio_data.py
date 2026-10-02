@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 from portfolio.models import (
     UserProfile, Role, Metric, NavigationItem, BioSection, JourneyParagraph, Strength,
     SpokenLanguage, ExploreGridItem, SkillCategory, Skill, ProjectPage, ProjectCategory,
@@ -23,15 +24,20 @@ class Command(BaseCommand):
         if not admin_user:
             admin_user = User.objects.filter(username="admin").first()
         if not admin_user:
-            self.stdout.write("No superuser found. Creating default 'admin' user...")
+            self.stdout.write("No superuser found. Creating 'admin' user...")
+            # Never a fixed default: the DB is committed and deployed, so a known password is a public login
+            password = os.getenv("ADMIN_PASSWORD") or get_random_string(20)
             admin_user = User.objects.create_user(
                 username="admin",
                 email="admin@example.com",
-                password="adminpassword123",
+                password=password,
                 is_staff=True,
                 is_superuser=True
             )
-            self.stdout.write(self.style.SUCCESS("Default 'admin' user created (pass: adminpassword123)"))
+            if os.getenv("ADMIN_PASSWORD"):
+                self.stdout.write(self.style.SUCCESS("'admin' user created with the password from ADMIN_PASSWORD"))
+            else:
+                self.stdout.write(self.style.SUCCESS(f"'admin' user created. Generated password (shown once): {password}"))
 
         # Find data directory
         base_dir = Path(__file__).resolve().parent.parent.parent.parent

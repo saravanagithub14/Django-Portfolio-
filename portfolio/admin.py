@@ -5,7 +5,7 @@ from portfolio.models import (
     Project, ExperiencePage, ExperienceSection, Job, EducationPage, Degree, Certification,
     PublicationsPage, BookChapter, ResearchArticle, Achievement, WorkshopsPage, WorkshopItem,
     SeminarItem, FocusPage, FocusCard, FocusPositioningEntry, LanguagePage, SpokenLang,
-    ProgrammingLang, GalleryPage, ReelItem, VideoItem, BlogPage, BlogPost, GraphNode
+    ProgrammingLang, GalleryPage, ReelItem, VideoItem, BlogPage, BlogPost
 )
 
 # --- Shared Inlines ---
@@ -213,9 +213,32 @@ class NavigationItemAdmin(admin.ModelAdmin):
     list_editable = ('order',)
     inlines = [NavigationItemInline]
 
-@admin.register(GraphNode)
-class GraphNodeAdmin(admin.ModelAdmin):
-    list_display = ('node_id', 'name', 'profile', 'node_type', 'navigate_to', 'parent', 'order')
-    list_filter = ('profile', 'node_type', 'parent')
-    search_fields = ('node_id', 'name', 'description')
+# GraphNode is no longer registered: the 3D graph is generated from the content above
+# (portfolio/graph.py), so edits to jobs, projects, skills, etc. show up in it automatically.
+
+# --- Flat lists for the items edited most often ---
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    """All projects in one place, including featured ones (which have no category)."""
+    list_display = ('title', 'category', 'featured', 'order')
+    list_editable = ('featured', 'order')
+    list_filter = ('featured', 'category')
+    search_fields = ('title', 'description', 'tags')
+    fieldsets = (
+        (None, {
+            'fields': ('project_page', ('emoji', 'title'), 'category', 'description', 'tags', ('github_url', 'demo_url'), 'featured', 'order'),
+            'description': 'Leave GitHub/Demo as "#" to hide the buttons. Featured projects appear at the top of the Projects page.',
+        }),
+    )
+
+@admin.register(Job)
+class JobAdmin(admin.ModelAdmin):
+    list_display = ('title', 'company', 'period', 'section', 'order')
     list_editable = ('order',)
+    list_filter = ('section',)
+    search_fields = ('title', 'company', 'description', 'tags')
+
+
+admin.site.site_header = "Saravana's Portfolio — Admin"
+admin.site.site_title = "Portfolio Admin"
+admin.site.index_title = "Edit site content (changes show on the site and in the 3D graph immediately)"

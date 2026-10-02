@@ -133,8 +133,12 @@
             const msg = document.createElement('div');
             msg.className = `message ${role}-message`;
             
-            // Format line breaks
-            msg.innerHTML = text.replace(/\n/g, '<br>');
+            // Escape HTML (replies are model-generated), then format line breaks
+            const escaped = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            msg.innerHTML = escaped.replace(/\n/g, '<br>');
             
             messages.appendChild(msg);
             messages.scrollTop = messages.scrollHeight;
