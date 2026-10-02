@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load portfolio_extras %}
 
 {% block title %}Education & Certifications — {{ config.site_title }}{% endblock %}
 {% block description %}Academic background and certifications of {{ config.site_title }}.{% endblock %}
@@ -8,11 +9,11 @@
     <h1 class="page-title">{{ education.page_title }}</h1>
     <p class="page-sub">{{ education.page_sub }}</p>
 
-    <div class="section-heading">🎓 Academic Degrees</div>
+    <div class="section-heading">Academic Degrees</div>
 
     {% for ed in education.degrees %}
     <div class="edu-card">
-        <div class="edu-icon">{{ ed.icon }}</div>
+        <div class="edu-icon icon-box">{{ ed.icon|icon }}</div>
         <div class="edu-body">
             <div class="edu-degree">{{ ed.degree }}</div>
             <div class="edu-school">{{ ed.school }}</div>
@@ -22,11 +23,11 @@
     </div>
     {% endfor %}
 
-    <div class="section-heading">🏆 Certifications & Qualifications</div>
+    <div class="section-heading">Certifications & Qualifications</div>
 
     {% for cert in education.certifications %}
     <div class="cert-card">
-        <div class="cert-badge">{{ cert.badge }}</div>
+        <div class="cert-badge icon-box">{{ cert.badge|icon }}</div>
         <div>
             <div class="cert-name">{{ cert.name }}</div>
             <div class="cert-body">{{ cert.detail }}</div>

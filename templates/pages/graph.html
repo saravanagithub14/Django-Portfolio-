@@ -112,7 +112,7 @@
             <div class="strengths">
                 {% for item in bio.strengths.entries %}
                 <div class="strength-item">
-                    <div class="si-title">{{ item.icon }} {{ item.title }}</div>
+                    <div class="si-title"><span class="si-icon">{{ item.icon|icon }}</span>{{ item.title }}</div>
                     <div class="si-desc">{{ item.description }}</div>
                 </div>
                 {% endfor %}
@@ -143,7 +143,7 @@
             <div class="nav-grid">
                 {% for item in bio.explore_grid %}
                 <a href="{{ item.url }}" class="nav-grid-btn">
-                    <span class="icon">{{ item.icon }}</span>
+                    <span class="icon">{{ item.icon|icon }}</span>
                     <span class="title">{{ item.title }}</span>
                     <span class="desc">{{ item.desc }}</span>
                 </a>

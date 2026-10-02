@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .icons import ICON_NAMES
+
+# Icon fields hold a line-icon name (portfolio/icons.py), picked from a dropdown in admin
+ICON_CHOICES = [(name, name) for name in ICON_NAMES]
+
+
+def icon_field(default, **kwargs):
+    return models.CharField(max_length=40, choices=ICON_CHOICES, default=default, **kwargs)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     site_title = models.CharField(max_length=255, default="My Portfolio")
@@ -99,7 +108,7 @@ class JourneyParagraph(models.Model):
 
 class Strength(models.Model):
     bio_section = models.ForeignKey(BioSection, on_delete=models.CASCADE, related_name='strengths')
-    icon = models.CharField(max_length=10, default="🧪")
+    icon = icon_field("flask-conical")
     title = models.CharField(max_length=100)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -125,7 +134,7 @@ class SpokenLanguage(models.Model):
 
 class ExploreGridItem(models.Model):
     bio_section = models.ForeignKey(BioSection, on_delete=models.CASCADE, related_name='explore_grid')
-    icon = models.CharField(max_length=10, default="🕸️")
+    icon = icon_field("network")
     title = models.CharField(max_length=100)
     desc = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
@@ -192,7 +201,7 @@ class ProjectCategory(models.Model):
 class Project(models.Model):
     project_page = models.ForeignKey(ProjectPage, on_delete=models.CASCADE, related_name='projects')
     category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name='projects')
-    emoji = models.CharField(max_length=10, default="🧠")
+    emoji = icon_field("cpu", verbose_name="icon")
     title = models.CharField(max_length=255)
     description = models.TextField()
     tags = models.CharField(max_length=255, blank=True, default="") # Comma-separated tags
@@ -267,7 +276,7 @@ class EducationPage(models.Model):
 
 class Degree(models.Model):
     education_page = models.ForeignKey(EducationPage, on_delete=models.CASCADE, related_name='degrees')
-    icon = models.CharField(max_length=10, default="🎓")
+    icon = icon_field("graduation-cap")
     degree = models.CharField(max_length=255)
     school = models.CharField(max_length=255)
     year = models.CharField(max_length=100)
@@ -282,7 +291,7 @@ class Degree(models.Model):
 
 class Certification(models.Model):
     education_page = models.ForeignKey(EducationPage, on_delete=models.CASCADE, related_name='certifications')
-    badge = models.CharField(max_length=10, default="🎖")
+    badge = icon_field("award", verbose_name="icon")
     name = models.CharField(max_length=255)
     detail = models.TextField()
     order = models.IntegerField(default=0)
@@ -329,7 +338,7 @@ class ResearchArticle(models.Model):
 
 class Achievement(models.Model):
     publications_page = models.ForeignKey(PublicationsPage, on_delete=models.CASCADE, related_name='achievements')
-    icon = models.CharField(max_length=10, default="🎖")
+    icon = icon_field("award")
     title = models.CharField(max_length=255)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -352,7 +361,7 @@ class WorkshopsPage(models.Model):
 
 class WorkshopItem(models.Model):
     workshops_page = models.ForeignKey(WorkshopsPage, on_delete=models.CASCADE, related_name='workshops')
-    icon = models.CharField(max_length=10, default="⚙️")
+    icon = icon_field("settings")
     title = models.CharField(max_length=255)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -365,7 +374,7 @@ class WorkshopItem(models.Model):
 
 class SeminarItem(models.Model):
     workshops_page = models.ForeignKey(WorkshopsPage, on_delete=models.CASCADE, related_name='seminars')
-    icon = models.CharField(max_length=10, default="🤖")
+    icon = icon_field("presentation")
     title = models.CharField(max_length=255)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -389,7 +398,7 @@ class FocusPage(models.Model):
 
 class FocusCard(models.Model):
     focus_page = models.ForeignKey(FocusPage, on_delete=models.CASCADE, related_name='cards')
-    icon = models.CharField(max_length=10, default="🤖")
+    icon = icon_field("target")
     title = models.CharField(max_length=100)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -510,7 +519,7 @@ class BlogPost(models.Model):
     category = models.CharField(max_length=100)
     date = models.CharField(max_length=50) # e.g. "2026", "2024"
     read_time = models.CharField(max_length=100)
-    emoji = models.CharField(max_length=10, default="📝")
+    emoji = icon_field("notebook-pen", verbose_name="icon")
     tags = models.CharField(max_length=255, blank=True, default="") # Comma-separated
     medium_url = models.CharField(max_length=255)
     order = models.IntegerField(default=0)

@@ -26,21 +26,21 @@
             <div class="bs-lbl">Blog Posts</div>
         </div>
         <div class="blog-stat">
-            <div class="bs-num">✍️</div>
+            <div class="bs-num bs-icon">{% icon "pen-line" %}</div>
             <div class="bs-lbl">{{ blogs.stats.platform }}</div>
         </div>
         <div class="blog-stat">
-            <div class="bs-num">🧠</div>
+            <div class="bs-num bs-icon">{% icon "brain" %}</div>
             <div class="bs-lbl">{{ blogs.stats.topics }}</div>
         </div>
     </div>
 
     <!-- Blog Cards -->
-    <div class="section-heading">📝 Latest Posts</div>
+    <div class="section-heading">Latest Posts</div>
     <div class="blog-grid">
         {% for post in blogs.posts %}
         <a href="{{ post.medium_url }}" target="_blank" class="blog-card" id="blog-card-{{ forloop.counter }}">
-            <div class="bc-icon">{{ post.emoji }}</div>
+            <div class="bc-icon icon-box">{{ post.emoji|icon }}</div>
             <div class="bc-body">
                 <div class="bc-meta">
                     <span class="bc-category">{{ post.category }}</span>

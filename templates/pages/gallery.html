@@ -26,11 +26,11 @@
         </div>
         {% endif %}
         <div class="gallery-stat">
-            <div class="gs-num">🎥</div>
+            <div class="gs-num gs-icon">{% icon "video" %}</div>
             <div class="gs-lbl">YouTube / IG</div>
         </div>
         <div class="gallery-stat">
-            <div class="gs-num">🧠</div>
+            <div class="gs-num gs-icon">{% icon "brain" %}</div>
             <div class="gs-lbl">AI / ML / Python</div>
         </div>
     </div>
@@ -40,7 +40,7 @@
     <!-- ===== Instagram Reels Carousel ===== -->
     {% if gallery.reels %}
     <div class="reels-section" id="reels-section">
-        <div class="section-heading">📸 Instagram Reels</div>
+        <div class="section-heading">Instagram Reels</div>
         <div class="reels-header">
             <div class="reels-header-left">
                 <div class="reels-ig-icon">
@@ -90,7 +90,7 @@
     {% endif %}
 
     <!-- More Videos Grid -->
-    <div class="section-heading" style="margin-top: 50px;">🎬 More Videos</div>
+    <div class="section-heading" style="margin-top: 50px;">More Videos</div>
     <div class="video-grid">
         {% for video in gallery.videos %}
         <div class="vid-card" id="vid-card-{{ forloop.counter }}">

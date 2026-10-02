@@ -761,19 +761,9 @@ body {
     transform: translateY(-3px);
 }
 
-.social-link svg {
-    width: 18px;
-    height: 18px;
-    stroke: var(--border);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.social-link:hover svg {
-    stroke: var(--border);
-}
+.social-link { color: var(--muted); }
+.social-link:hover { color: var(--primary); }
+.social-link .ico { width: 24px; height: 24px; }
 
 /* About sections */
 .section-block {
@@ -1649,3 +1639,53 @@ body {
     animation: fadeInDown 0.5s ease-out;
     cursor: pointer;
 }
+
+/* ===== Pixel icons (portfolio/icons.py) =====
+   One icon language for the whole site: Pixelarticons (filled 2-unit "pixels" on a 24 grid) in
+   the lime text colour. Pixel art stays sharp only at whole multiples of its grid, so every icon
+   renders at 24px (font-size: an icon is 1em square). They replace emoji, so the old emoji glow
+   filters and emoji font sizes are reset here. */
+.ico {
+    display: block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+}
+/* .content prefix: beats the older single-class emoji rules in the page stylesheets, which load later */
+.content .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;            /* icon size: keep at a multiple of 24 for crisp pixels */
+    line-height: 1;
+    color: var(--primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    filter: none;
+    box-shadow: none;
+}
+.fc-icon-box.icon-box,
+.edu-icon.icon-box { width: 56px; height: 56px; border-radius: 14px; }
+.focus-icon.icon-box { margin-bottom: 16px; }
+.achieve-icon.icon-box { width: 44px; height: 44px; margin-bottom: 4px; }
+.cert-badge.icon-box { width: 44px; height: 44px; }
+.talk-icon.icon-box { min-width: 52px; width: 52px; height: 52px; align-self: flex-start; }
+.content .focus-icon.icon-box,
+.content .achieve-icon.icon-box,
+.content .talk-icon.icon-box { filter: none; align-items: center; }
+
+/* Stat rows on Blogs / Gallery: the icon stands where a number would */
+.bs-icon,
+.gs-icon { display: flex; justify-content: center; color: var(--primary); font-size: 24px; }
+
+/* Strength cards: small icon before the title */
+.si-title { display: flex; align-items: center; gap: 8px; }
+.si-icon { color: var(--primary); font-size: 24px; display: inline-flex; }
+
+/* "Explore more" grid on the bio / graph pages */
+.nav-grid-btn .icon { display: flex; justify-content: center; color: var(--primary); font-size: 24px; }
+.nav-burger .ico { width: 24px; height: 24px; }

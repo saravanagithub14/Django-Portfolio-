@@ -34,7 +34,7 @@
     </div>
 
     <!-- Research Articles -->
-    <div class="section-heading">📄 Research Articles</div>
+    <div class="section-heading">Research Articles</div>
     <div class="pub-list">
         {% for pub in publications.research_articles %}
         <div class="pub-card type-article-card">
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Book Chapters -->
-    <div class="section-heading">📖 Book Chapters</div>
+    <div class="section-heading">Book Chapters</div>
     <div class="pub-list">
         {% for pub in publications.book_chapters %}
         <div class="pub-card type-book-card">
@@ -62,11 +62,11 @@
     </div>
 
     <!-- Achievements -->
-    <div class="section-heading">🏆 Professional Achievements</div>
+    <div class="section-heading">Professional Achievements</div>
     <div class="achieve-grid">
         {% for ach in publications.achievements %}
         <div class="achieve-item">
-            <div class="achieve-icon">{{ ach.icon }}</div>
+            <div class="achieve-icon icon-box">{{ ach.icon|icon }}</div>
             <div class="achieve-title">{{ ach.title }}</div>
             <div class="achieve-desc">{{ ach.description }}</div>
         </div>

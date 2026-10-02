@@ -23,59 +23,57 @@ conversations.{% endblock %}
 <!-- Contact Cards Grid -->
 <div class="contact-grid">
     <a href="mailto:{{ config.social.email }}" class="cg-card">
-        <div class="cg-icon">📧</div>
+        <div class="cg-icon icon-box">{% icon "mail" %}</div>
         <div class="cg-label">Email</div>
         <div class="cg-val">{{ config.social.email }}</div>
     </a>
     <a href="{{ config.social.linkedin }}" target="_blank" class="cg-card">
-        <div class="cg-icon">💼</div>
+        <div class="cg-icon icon-box">{% icon "linkedin" %}</div>
         <div class="cg-label">LinkedIn</div>
         <div class="cg-val">{{ config.social.linkedin_handle }}</div>
     </a>
     <a href="{{ config.social.github }}" target="_blank" class="cg-card">
-        <div class="cg-icon">💻</div>
+        <div class="cg-icon icon-box">{% icon "github" %}</div>
         <div class="cg-label">GitHub</div>
         <div class="cg-val">{{ config.social.github_handle }}</div>
     </a>
     {% if config.social.medium %}
     <a href="{{ config.social.medium }}" target="_blank" class="cg-card">
-        <div class="cg-icon">✍️</div>
+        <div class="cg-icon icon-box">{% icon "medium" %}</div>
         <div class="cg-label">Medium</div>
         <div class="cg-val">{{ config.social.medium_handle }}</div>
     </a>
     {% endif %}
     {% if config.social.whatsapp %}
     <a href="{{ config.social.whatsapp }}" target="_blank" class="cg-card">
-        <div class="cg-icon">💬</div>
+        <div class="cg-icon icon-box">{% icon "message-circle" %}</div>
         <div class="cg-label">WhatsApp</div>
         <div class="cg-val">Message Me</div>
     </a>
     {% endif %}
     {% if config.social.instagram %}
     <a href="{{ config.social.instagram }}" target="_blank" class="cg-card">
-        <div class="cg-icon">📸</div>
+        <div class="cg-icon icon-box">{% icon "instagram" %}</div>
         <div class="cg-label">Instagram</div>
         <div class="cg-val">{{ config.social.instagram_handle }}</div>
     </a>
     {% endif %}
     {% if config.social.orcid %}
     <a id="cy-effective-orcid-url" href="{{ config.social.orcid }}" target="orcid.widget" rel="me noopener noreferrer" class="cg-card">
-        <div class="cg-icon">
-            <img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width: 24px; height: 24px;" alt="ORCID iD icon"/>
-        </div>
+        <div class="cg-icon icon-box">{% icon "id-card" %}</div>
         <div class="cg-label">ORCID</div>
         <div class="cg-val">0000-0002-6492-1103</div>
     </a>
     {% endif %}
     {% if config.social.researchgate %}
     <a href="{{ config.social.researchgate }}" target="_blank" class="cg-card">
-        <div class="cg-icon">🔬</div>
+        <div class="cg-icon icon-box">{% icon "microscope" %}</div>
         <div class="cg-label">ResearchGate</div>
         <div class="cg-val">Saravana_Perumal_R</div>
     </a>
     {% endif %}
     <div class="cg-card" style="cursor: default;">
-        <div class="cg-icon">📍</div>
+        <div class="cg-icon icon-box">{% icon "map-pin" %}</div>
         <div class="cg-label">Location</div>
         <div class="cg-val">{{ config.social.location }}</div>
     </div>

@@ -25,12 +25,12 @@
     <h1 class="page-title">{{ projects.page_title }}</h1>
     <p class="page-sub">{{ projects.page_sub }}</p>
 
-    <!-- ★ Featured Projects -->
+    <!-- Featured Projects -->
     <div class="section-heading">{{ projects.featured.heading }}</div>
     <div class="featured-grid">
         {% for item in projects.featured.entries %}
         <div class="feat-card">
-            <div class="fc-icon-box">{{ item.emoji }}</div>
+            <div class="fc-icon-box icon-box">{{ item.emoji|icon }}</div>
             <div class="fc-body">
                 <div class="fc-meta">
                     <span class="fc-badge">Featured</span>
