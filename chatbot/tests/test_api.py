@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.urls import reverse
 
 from chatbot import views
+from chatbot.fallback import CONCEPT_ANSWERS
 from chatbot.models import ChatMessage
 
 pytestmark = pytest.mark.django_db
@@ -69,7 +70,7 @@ def test_keyword_fallback_when_llm_chain_fails(client, monkeypatch):
     monkeypatch.setattr(views, "generate_llm_response", lambda *a: (None, {"fallback": False}))
     response = post(client, {"message": "what is machine learning"})
     assert response.status_code == 200
-    assert response.json()["response"] == views.CONCEPT_ANSWERS["machine learning"]
+    assert response.json()["response"] == CONCEPT_ANSWERS["machine learning"]
 
 
 def test_update_context_requires_token(client, monkeypatch):
@@ -98,5 +99,5 @@ def test_update_context_saves_snippet_and_updates_live_index(client, monkeypatch
 def test_mock_provider_skips_the_pipeline(client, monkeypatch, fake_generate):
     monkeypatch.setenv("CHATBOT_PROVIDER", "mock")
     response = post(client, {"message": "what is deep learning"})
-    assert response.json()["response"] == views.CONCEPT_ANSWERS["deep learning"]
+    assert response.json()["response"] == CONCEPT_ANSWERS["deep learning"]
     assert fake_generate == []

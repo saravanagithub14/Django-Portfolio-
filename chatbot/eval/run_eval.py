@@ -35,7 +35,7 @@ from chatbot.rag import index as rag_index  # noqa: E402
 from chatbot.rag import pipeline  # noqa: E402
 from chatbot.rag.prompts import CONTACT_EMAIL, FALLBACK_MESSAGE  # noqa: E402
 from chatbot.rag.retrieve import hybrid_search  # noqa: E402
-from chatbot.views import make_llm  # noqa: E402
+from chatbot.llm import make_llm  # noqa: E402
 
 GOLDEN_SET = Path(__file__).with_name("golden_set.json")
 REPORT_DIR = Path(__file__).with_name("reports")

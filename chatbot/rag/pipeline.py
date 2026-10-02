@@ -13,6 +13,7 @@ import os
 import re
 import time
 
+from chatbot.formatting import strip_markdown
 from chatbot.rag import index as rag_index
 from chatbot.rag.prompts import (
     CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, NO_SOURCES_CONTEXT, SYSTEM_PROMPT_TEMPLATE,
@@ -137,8 +138,6 @@ def run(message, history, llm, *, store=None, use_reranker=None):
         results     retrieved chunks
         meta        what gets logged to ChatMessage.retrieval_meta
     """
-    from chatbot.views import strip_markdown  # views owns the reply post-processing
-
     started = time.perf_counter()
     timings = {}
 
