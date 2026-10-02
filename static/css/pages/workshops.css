@@ -1,0 +1,74 @@
+/* Workshops page styles (moved from templates/pages/workshops.html) */
+.talk-card {
+    display: flex;
+    gap: 24px;
+    padding: 28px;
+    background: rgba(20, 14, 40, 0.6);
+    border: 1px solid rgba(140, 100, 255, 0.12);
+    border-radius: 18px;
+    margin-bottom: 24px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+}
+.talk-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.talk-card:hover {
+    border-color: rgba(160, 120, 255, 0.4);
+    box-shadow: 0 12px 40px rgba(100, 60, 220, 0.2);
+    transform: translateY(-4px);
+}
+.talk-icon {
+    font-size: 3rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 60px;
+    filter: drop-shadow(0 0 12px rgba(160, 120, 255, 0.4));
+}
+.talk-body {
+    display: flex;
+    flex-direction: column;
+}
+.talk-type {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    width: fit-content;
+}
+.type-w {
+    color: #ff9a9e;
+    background: rgba(255, 154, 158, 0.15);
+    border: 1px solid rgba(255, 154, 158, 0.3);
+}
+.type-s {
+    color: #a1c4fd;
+    background: rgba(161, 196, 253, 0.15);
+    border: 1px solid rgba(161, 196, 253, 0.3);
+}
+.talk-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+}
+.talk-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(200, 192, 232, 0.7);
+}
+@media (max-width: 600px) {
+    .talk-card {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+    }
+}
