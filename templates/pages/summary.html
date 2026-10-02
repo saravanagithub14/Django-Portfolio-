@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load portfolio_extras %}
 
 {% block title %}Current Focus — {{ config.site_title }}{% endblock %}
 {% block description %}What {{ config.site_title }} is currently building and thinking about in AI.{% endblock %}
@@ -11,7 +12,7 @@
     <div class="focus-grid">
         {% for card in focus.cards %}
         <div class="focus-card">
-            <div class="focus-icon">{{ card.icon }}</div>
+            <div class="focus-icon icon-box">{{ card.icon|icon }}</div>
             <div class="focus-title">{{ card.title }}</div>
             <div class="focus-desc">{{ card.description }}</div>
         </div>

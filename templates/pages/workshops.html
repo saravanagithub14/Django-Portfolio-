@@ -13,10 +13,10 @@
     <h1 class="page-title">{{ workshops.page_title }}</h1>
     <p class="page-sub">{{ workshops.page_sub }}</p>
 
-    <div class="section-heading">🛠 Workshops Conducted</div>
+    <div class="section-heading">Workshops Conducted</div>
     {% for w in workshops.workshops %}
     <div class="talk-card">
-        <div class="talk-icon icon-workshop">{{ w.icon }}</div>
+        <div class="talk-icon icon-workshop icon-box">{{ w.icon|icon }}</div>
         <div class="talk-body">
             <span class="talk-type type-w">Workshop</span>
             <div class="talk-title">{{ w.title }}</div>
@@ -25,10 +25,10 @@
     </div>
     {% endfor %}
 
-    <div class="section-heading">🎤 Seminars & Talks</div>
+    <div class="section-heading">Seminars & Talks</div>
     {% for s in workshops.seminars %}
     <div class="talk-card">
-        <div class="talk-icon icon-seminar">{{ s.icon }}</div>
+        <div class="talk-icon icon-seminar icon-box">{{ s.icon|icon }}</div>
         <div class="talk-body">
             <span class="talk-type type-s">Seminar</span>
             <div class="talk-title">{{ s.title }}</div>

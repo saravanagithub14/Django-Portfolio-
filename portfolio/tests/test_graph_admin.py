@@ -70,7 +70,7 @@ def test_admin_edits_show_up_in_graph(client, content):
 
     # Add a featured project through the admin add form
     response = client.post("/admin/portfolio/project/add/", {
-        "project_page": content["page"].pk, "emoji": "🧠", "title": "Agentic Tutor", "category": "",
+        "project_page": content["page"].pk, "emoji": "brain", "title": "Agentic Tutor", "category": "",
         "description": "New project", "tags": "", "github_url": "#", "demo_url": "#", "featured": "on", "order": 0,
     })
     assert response.status_code == 302, response.content[:500]

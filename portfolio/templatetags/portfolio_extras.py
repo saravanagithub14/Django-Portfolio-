@@ -72,3 +72,17 @@ def asset(path):
             import os
             url += f"?v={int(os.path.getmtime(found))}"
     return url
+
+
+@register.filter(name="icon")
+def icon_filter(value, css_class=""):
+    """{{ item.icon|icon }}: the line icon for an icon name (or a legacy emoji). See portfolio/icons.py."""
+    from portfolio.icons import render_icon
+    return render_icon(value, css_class)
+
+
+@register.simple_tag(name="icon")
+def icon_tag(name, css_class=""):
+    """{% icon "mail" %}: a fixed line icon in a template."""
+    from portfolio.icons import render_icon
+    return render_icon(name, css_class)
