@@ -1,4 +1,4 @@
-{% load static %}
+{% load static portfolio_extras %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,8 +37,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     </noscript>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% include 'components/theme_head.html' %}
+    <link href="{% asset 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% asset 'css/style.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     {% block jsonld %}
 <script type="application/ld+json">
@@ -57,31 +58,28 @@
 </script>
 {% endblock %}
     {% block extra_css %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
+    <link rel="stylesheet" href="{% asset 'css/chat_widget.css' %}">
     {% block head_extra %}{% endblock %}
 </head>
 
 <body>
     {% block body_start %}{% endblock %}
-    <canvas id="particle-bg"></canvas>
+    {% if graph_data %}{% include 'components/graph_background.html' %}{% endif %}
     {% include 'components/navbar.html' %}
     <div class="content{% block content_class %}{% endblock %}" {% block content_attrs %}{% endblock %}>
         {% block content %}{% endblock %}
     </div>
     {% block after_content %}{% endblock %}
 
-    <!-- Particle animation -->
-    <script>
-        (function () { const c = document.getElementById('particle-bg'), x = c.getContext('2d'); let W, H; function r() { W = c.width = innerWidth; H = c.height = innerHeight } r(); addEventListener('resize', r); const p = []; for (let i = 0; i < 50; i++)p.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() + .3, vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2, a: Math.random() * .12 + .02 }); (function d() { x.clearRect(0, 0, W, H); for (const q of p) { q.x += q.vx; q.y += q.vy; if (q.x < 0) q.x = W; if (q.x > W) q.x = 0; if (q.y < 0) q.y = H; if (q.y > H) q.y = 0; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fillStyle = `rgba(160,120,255,${q.a})`; x.fill() } requestAnimationFrame(d) })() })();
-    </script>
 
+    <script src="{% asset 'js/theme.js' %}"></script>
     {% block scripts %}{% endblock %}
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% asset 'js/bootstrap.bundle.min.js' %}"></script>
 
-    <script src="{% static 'js/snowfall.js' %}"></script>
+    <script src="{% asset 'js/snowfall.js' %}"></script>
     {% if config.chat_widget.enabled %}
-    <div id="chat-widget-container"></div>
-    <script src="{% static 'js/chat_widget.js' %}"></script>
+    <div id="chat-widget-container" data-bot-name="{{ config.chat_widget.bot_name }}" data-welcome="{{ config.chat_widget.welcome_message }}"></div>
+    <script src="{% asset 'js/chat_widget.js' %}"></script>
     {% endif %}
 </body>
 

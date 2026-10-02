@@ -1,221 +1,246 @@
-/* Chat Widget Styles */
+/* ===== V.E.R.A. chat widget =====
+   Follows the V.E.R.A. brand kit: no colours of its own (site theme tokens only), the Node V mark,
+   Space Grotesk wordmark with lime dots, Inter chat text at 14-15px. Lime is only for the send
+   button, links, the user's bubble and the mark's lit node, never for body text. */
+
 #chat-widget-container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 24px;
+    right: 24px;
     z-index: 9999;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Floating Action Button (FAB) */
+/* ----- The mark (Node V) and its states ----- */
+.vera-mark { display: block; flex-shrink: 0; }
+.vera-listening .vera-mark .core { animation: vera-pulse 1.6s ease-in-out infinite; transform-origin: 32px 45px; }
+.vera-thinking .vera-mark .halo { animation: vera-halo 1.1s ease-in-out infinite; transform-origin: 32px 45px; }
+.vera-thinking .vera-mark .n1 { animation: vera-blink 1.1s ease-in-out infinite; }
+.vera-thinking .vera-mark .n2 { animation: vera-blink 1.1s ease-in-out .35s infinite; }
+@keyframes vera-pulse { 50% { transform: scale(1.25); } }
+@keyframes vera-halo { 50% { transform: scale(1.5); opacity: .1; } }
+@keyframes vera-blink { 50% { opacity: .25; } }
+
+/* ----- Wordmark ----- */
+.vera-wordmark {
+    font-family: 'Space Grotesk', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+.vera-wordmark i { font-style: normal; color: var(--primary); }
+
+/* ----- Launcher: "Ask V.E.R.A." pill ----- */
 #chat-fab {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #7755ee, #5533cc);
-    box-shadow: 0 4px 20px rgba(100, 60, 220, 0.4);
-    border: none;
-    cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: white;
+    gap: 10px;
+    border: 0;
+    border-radius: 999px;
+    padding: 7px 18px 7px 7px;
+    background: var(--primary-bg);
+    color: var(--on-primary);
+    font: 700 0.9rem 'Inter', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .25);
+    transition: transform .2s ease, box-shadow .2s ease;
 }
+#chat-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 0, 0, .3); }
+#chat-fab:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+#chat-fab .vera-mark { border-radius: 50%; }
+#chat-fab .vera-wordmark i { color: inherit; }  /* lime dots would vanish on the lime pill */
 
-#chat-fab:hover {
-    transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 6px 28px rgba(120, 80, 255, 0.6);
-}
-
-#chat-fab svg {
-    width: 28px;
-    height: 28px;
-}
-
-/* Chat Window */
+/* ----- Window ----- */
 #chat-window {
     position: absolute;
-    bottom: 80px;
+    bottom: 64px;
     right: 0;
-    width: 360px;
-    height: 500px;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(140, 100, 255, 0.2);
-    border-radius: 16px;
+    width: 380px;
+    height: 560px;
+    max-height: calc(100vh - 110px);
     display: none;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
-    animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+    animation: vera-open .3s cubic-bezier(.165, .84, .44, 1);
+}
+#chat-window.active { display: flex; }
+@keyframes vera-open {
+    from { opacity: 0; transform: translateY(14px) scale(.97); }
+    to { opacity: 1; transform: none; }
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-#chat-window.active {
-    display: flex;
-}
-
-/* Header */
 .chat-header {
-    background: linear-gradient(90deg, #1a152e, #0d0b1a);
-    padding: 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(140, 100, 255, 0.15);
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
 }
-
-.chat-header-info {
+.chat-header-text { flex: 1; min-width: 0; }
+.chat-header-text .vera-wordmark { display: block; color: var(--text); font-size: 1rem; line-height: 1.3; }
+.chat-header-text small {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 12px;
 }
-
-.chat-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #7c6aff, #ff6a9a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 14px;
-    color: white;
+.chat-header-text small::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ADE80;  /* online dot, as in the brand kit */
 }
-
-.chat-header-info h4 {
-    margin: 0;
-    font-size: 14px;
-    color: #e8e0ff;
-    letter-spacing: 0.5px;
-}
-
-.chat-header-info p {
-    margin: 0;
-    font-size: 10px;
-    color: #7a7a9a;
-}
-
 .close-chat {
+    border: 0;
     background: transparent;
-    border: none;
-    color: #7a7a9a;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 20px;
-    padding: 4px;
-    transition: color 0.2s;
 }
+.close-chat:hover { color: var(--text); background: var(--bg); }
 
-.close-chat:hover {
-    color: #e8e0ff;
-}
-
-/* Messages Area */
+/* ----- Messages ----- */
 #chat-messages {
     flex: 1;
     overflow-y: auto;
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(140, 100, 255, 0.2) transparent;
+    scrollbar-color: var(--border) transparent;
 }
-
-#chat-messages::-webkit-scrollbar { width: 4px; }
-#chat-messages::-webkit-scrollbar-thumb { background: rgba(140, 100, 255, 0.2); border-radius: 4px; }
-
 .message {
-    max-width: 85%;
+    max-width: 86%;
     padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 13px;
+    border-radius: 14px;
+    font-size: 14.5px;
     line-height: 1.5;
+    overflow-wrap: anywhere;
 }
-
 .bot-message {
     align-self: flex-start;
-    background: rgba(30, 30, 45, 0.8);
-    color: #c8c0e8;
-    border: 1px solid rgba(140, 100, 255, 0.1);
-    border-bottom-left-radius: 2px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-top-left-radius: 4px;
+    box-shadow: var(--card-shadow);
 }
-
 .user-message {
     align-self: flex-end;
-    background: #5533cc;
-    color: white;
-    border-bottom-right-radius: 2px;
-    box-shadow: 0 4px 12px rgba(85, 51, 204, 0.3);
+    background: var(--primary-bg);
+    color: var(--on-primary);
+    border-top-right-radius: 4px;
+    font-weight: 500;
 }
+.bot-message.thinking { color: var(--muted); font-style: italic; }
 
-/* Typing Indicator */
-.typing {
-    font-style: italic;
-    font-size: 11px;
-    color: #7a7a9a;
-    margin-bottom: 8px;
+/* "See experience" link and the source chips (the graph nodes an answer used) */
+.vera-link {
+    display: inline-block;
+    margin-top: 6px;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
 }
-
-/* Input Area */
-.chat-input-area {
-    padding: 12px;
-    background: #0d0b1a;
-    border-top: 1px solid rgba(140, 100, 255, 0.1);
-}
-
-.chat-input-wrap {
+.vera-link:hover { text-decoration: underline; }
+.vera-sources {
     display: flex;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(140, 100, 255, 0.2);
-    border-radius: 24px;
-    padding: 4px 4px 4px 12px;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+.vera-sources span {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
 }
 
+/* ----- Suggestion chips ----- */
+.vera-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 12px;
+}
+.vera-chips:empty { display: none; }
+.vera-chips button {
+    font: 12.5px 'Inter', sans-serif;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+}
+.vera-chips button:hover,
+.vera-chips button:focus-visible { border-color: var(--primary); color: var(--primary); outline: none; }
+
+/* ----- Input ----- */
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--border);
+}
 #chat-input {
     flex: 1;
-    background: transparent;
-    border: none;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    color: var(--text);
+    font: 14px 'Inter', sans-serif;
     outline: none;
-    color: #e8e0ff;
-    padding: 8px 0;
-    font-size: 13px;
+    transition: border-color .2s, box-shadow .2s;
 }
-
+#chat-input::placeholder { color: var(--muted); }
+#chat-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
 #chat-send {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #7755ee;
-    border: none;
-    color: white;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: var(--primary-bg);
+    color: var(--on-primary);
+    font: 700 14px 'Inter', sans-serif;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
 }
+#chat-send:hover { filter: brightness(1.06); }
+#chat-send:disabled { opacity: .55; cursor: default; }
 
-#chat-send:hover {
-    background: #8e70ff;
-}
-
-#chat-send svg {
-    width: 14px;
-    height: 14px;
-}
-
-/* Responsive */
+/* ----- Small screens ----- */
 @media (max-width: 480px) {
+    #chat-widget-container { bottom: 16px; right: 16px; }
+    #chat-fab { padding: 6px; }
+    #chat-fab .fab-label { display: none; }
     #chat-window {
-        width: calc(100vw - 40px);
-        height: 450px;
-        right: -10px;
+        position: fixed;
+        inset: auto 8px 76px 8px;
+        width: auto;
+        height: min(560px, calc(100vh - 100px));
     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vera-listening .vera-mark .core,
+    .vera-thinking .vera-mark .halo,
+    .vera-thinking .vera-mark .n1,
+    .vera-thinking .vera-mark .n2,
+    #chat-window { animation: none; }
 }

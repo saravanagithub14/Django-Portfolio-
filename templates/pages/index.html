@@ -1,4 +1,4 @@
-{% load static %}
+{% load static portfolio_extras %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,14 +14,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     </noscript>
-    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+    {% include 'components/theme_head.html' %}
+    <link rel="stylesheet" href="{% asset 'css/landing.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
-    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
+    <link rel="stylesheet" href="{% asset 'css/chat_widget.css' %}">
 </head>
 
 <body>
+    <button type="button" class="theme-toggle floating" data-theme-toggle aria-label="Switch theme">Light mode</button>
     <canvas id="particle-canvas"></canvas>
 
+    {% include 'components/graph_background.html' %}
     <div class="landing-container">
         <div class="quote-box">
             &ldquo;{{ config.landing_quote }}
@@ -40,6 +43,9 @@
             let W, H;
             function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
             resize(); window.addEventListener('resize', resize);
+            let col;
+            function readColor() { col = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim(); }
+            readColor(); document.addEventListener('themechange', readColor);
             const particles = [];
             for (let i = 0; i < 60; i++) {
                 particles.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.5 + 0.5, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, alpha: Math.random() * 0.4 + 0.1 });
@@ -51,16 +57,17 @@
                     if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
                     if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
                     ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(160,120,255,${p.alpha})`; ctx.fill();
+                    ctx.globalAlpha = p.alpha; ctx.fillStyle = col; ctx.fill();
                 }
                 requestAnimationFrame(draw);
             }
             draw();
         })();
     </script>
+    <script src="{% asset 'js/theme.js' %}"></script>
     {% if config.chat_widget.enabled %}
-    <div id="chat-widget-container"></div>
-    <script src="{% static 'js/chat_widget.js' %}"></script>
+    <div id="chat-widget-container" data-bot-name="{{ config.chat_widget.bot_name }}" data-welcome="{{ config.chat_widget.welcome_message }}"></div>
+    <script src="{% asset 'js/chat_widget.js' %}"></script>
     {% endif %}
 </body>
 

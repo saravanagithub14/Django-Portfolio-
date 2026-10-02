@@ -252,7 +252,7 @@ def saved_github_chunks(index_dir=INDEX_DIR):
 
 
 def fetch_github_chunks():
-    from github_connector import fetch_github_repos
+    from chatbot.github_connector import fetch_github_repos
     username = os.getenv("GITHUB_USERNAME", "saravanagithub14")
     repos = fetch_github_repos(username)
     if repos is None:

@@ -13,11 +13,13 @@ import os
 import re
 import time
 
+from chatbot.formatting import strip_markdown
 from chatbot.rag import index as rag_index
 from chatbot.rag.prompts import (
-    CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, NO_SOURCES_CONTEXT, SYSTEM_PROMPT_TEMPLATE,
+    CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, FIXED_LINES, NO_SOURCES_CONTEXT, SYSTEM_PROMPT_TEMPLATE,
 )
 from chatbot.rag.retrieve import filter_by_year, hybrid_search, list_by_type
+from chatbot.rag.sources import answer_sources
 
 logger = logging.getLogger(__name__)
 
@@ -135,10 +137,9 @@ def run(message, history, llm, *, store=None, use_reranker=None):
         reply       final plain-text reply, or None if every LLM provider failed
         raw_reply   the model's text before strip_markdown (for evals)
         results     retrieved chunks
+        sources     site sections / records the answer drew on, for the widget's source chips
         meta        what gets logged to ChatMessage.retrieval_meta
     """
-    from chatbot.views import strip_markdown  # views owns the reply post-processing
-
     started = time.perf_counter()
     timings = {}
 
@@ -162,7 +163,8 @@ def run(message, history, llm, *, store=None, use_reranker=None):
 
     if fallback:
         timings["total_ms"] = round((time.perf_counter() - started) * 1000, 1)
-        return {"reply": FALLBACK_MESSAGE, "raw_reply": FALLBACK_MESSAGE, "results": results, "meta": meta}
+        return {"reply": FALLBACK_MESSAGE, "raw_reply": FALLBACK_MESSAGE, "results": results, "sources": [],
+                "meta": meta}
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.replace("{context}", format_context(results))
     messages = [{"role": "system", "content": system_prompt}, *history, {"role": "user", "content": message}]
@@ -173,9 +175,19 @@ def run(message, history, llm, *, store=None, use_reranker=None):
     timings["generate_ms"] = round((time.perf_counter() - t) * 1000, 1)
     timings["total_ms"] = round((time.perf_counter() - started) * 1000, 1)
     meta["provider"] = provider
+    reranked = rag_index.reranker_enabled() if use_reranker is None else use_reranker
+    try:
+        # A fixed line (greeting, off topic, ...) didn't use the retrieved chunks, so it gets no chips
+        is_fixed_line = (raw_reply or "").strip().strip('"') in FIXED_LINES
+        sources = [] if is_fixed_line else answer_sources(
+            results, meta, threshold=fallback_threshold(reranked), store=store, use_reranker=reranked)
+    except Exception as e:  # chips are decoration; never fail an answer over them
+        logger.warning("Could not build answer sources: %s", e)
+        sources = []
     return {
         "reply": strip_markdown(raw_reply) if raw_reply else None,
         "raw_reply": raw_reply,
         "results": results,
+        "sources": sources,
         "meta": meta,
     }

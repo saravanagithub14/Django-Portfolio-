@@ -1,0 +1,101 @@
+/* ===== Theme tokens =====
+   Loaded first on every page. Dark is the default; a visitor's choice is stored as
+   <html data-theme="light|dark"> (see the inline script in each page's <head> and js/theme.js),
+   and until they choose, the system setting decides.
+
+   Use --primary for lime text, links and numbers, and --primary-bg (with --on-primary text)
+   for lime fills: in light mode --primary turns dark green but buttons stay bright lime.
+   --glow is the colour of decorative glows; it is transparent in light mode so cards stay flat. */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111418;
+  --surface: #1A1F25;
+  --border: #2B323B;
+  --text: #EEF2F6;
+  --muted: #95A0AC;
+  --primary: #B5E655;
+  --accent: #7DD3FC;
+  --primary-bg: #B5E655;
+  --on-primary: #111418;
+  --graph-bg: #0A0C0F;
+  --card-shadow: none;
+  --glow: #B5E655;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #FBFCFD;
+  --surface: #FFFFFF;
+  --border: #E6EBF0;
+  --text: #1A1F25;
+  --muted: #64707C;
+  --primary: #4D7C0F;
+  --accent: #0369A1;
+  --primary-bg: #B5E655;
+  --on-primary: #111418;
+  --graph-bg: #1A1F25;
+  --card-shadow: 0 1px 3px rgba(17, 20, 24, .06);
+  --glow: transparent;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #FBFCFD;
+    --surface: #FFFFFF;
+    --border: #E6EBF0;
+    --text: #1A1F25;
+    --muted: #64707C;
+    --primary: #4D7C0F;
+    --accent: #0369A1;
+    --graph-bg: #1A1F25;
+    --card-shadow: 0 1px 3px rgba(17, 20, 24, .06);
+    --glow: transparent;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  /* Bootstrap reads these for its own components */
+  --bs-body-bg: var(--bg);
+  --bs-body-color: var(--text);
+  --bs-border-color: var(--border);
+  --bs-link-color-rgb: initial;
+}
+
+a { color: var(--primary); }
+.muted { color: var(--muted); }
+
+/* ===== Theme toggle ===== */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font: 600 0.72rem/1 'Inter', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  color: var(--primary);
+  border-color: var(--primary);
+  outline: none;
+}
+
+/* The landing page has no navbar, so its toggle floats in the corner */
+.theme-toggle.floating {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+}

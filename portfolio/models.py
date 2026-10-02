@@ -526,20 +526,3 @@ class BlogPost(models.Model):
         if not self.tags:
             return []
         return [t.strip() for t in self.tags.split(',') if t.strip()]
-
-# --- GRAPH NODE MODEL (OBSIDIAN 3D GRAPH) ---
-class GraphNode(models.Model):
-    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='graph_nodes')
-    node_id = models.CharField(max_length=100)
-    name = models.CharField(max_length=255)
-    node_type = models.CharField(max_length=100, default="leaf") # root, category, leaf
-    navigate_to = models.CharField(max_length=255, blank=True, default="")
-    description = models.TextField(blank=True, default="")
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    order = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ['order', 'id']
-
-    def __str__(self):
-        return f"{self.node_id} ({self.name})"

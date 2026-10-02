@@ -2,7 +2,8 @@
 (function initParticles() {
     try {
         const canvas = document.getElementById('particle-canvas');
-        if (!canvas) return;
+        const host = document.getElementById('graph-container');
+        if (!canvas || (host && host.dataset.mode === 'background')) return;
         const ctx = canvas.getContext('2d');
         let W, H;
 
@@ -29,6 +30,7 @@
 
         function draw() {
             ctx.clearRect(0, 0, W, H);
+            const color = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
             for (const p of particles) {
                 p.x += p.vx;
                 p.y += p.vy;
@@ -39,7 +41,8 @@
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = color;
                 ctx.fill();
             }
             requestAnimationFrame(draw);
@@ -70,14 +73,14 @@ try {
             (targetPage && targetPage.includes(currentPage));
 
         const depthColors = [
-            '#ffffff', // Root
-            '#a078ff', // Level 1
-            '#7b6fc4', // Level 2
-            '#3d2f8f'  // Level 3
+            '#EEF2F6', // Root
+            '#B5E655', // Level 1 (lime)
+            '#86AD3E', // Level 2
+            '#56702A'  // Level 3
         ];
 
-        // Use a distinct, unique highlight color for the current page (Neon Cyan)
-        const color = isCurrentPage ? '#00f2ff' : depthColors[Math.min(depth, depthColors.length - 1)];
+        // The current page uses the accent colour so it stands out from the lime tree
+        const color = isCurrentPage ? '#7DD3FC' : depthColors[Math.min(depth, depthColors.length - 1)];
 
         const newNode = {
             id,
@@ -122,7 +125,7 @@ try {
     const ghostClusters = 8;
     for (let c = 0; c < ghostClusters; c++) {
         const clusterId = `ghost_${c}`;
-        const clusterColor = `rgba(140, 100, 255, ${0.05 + Math.random() * 0.1})`;
+        const clusterColor = `rgba(181, 230, 85, ${0.04 + Math.random() * 0.08})`;
         const center = {
             id: `${clusterId}_root`,
             name: '',
@@ -157,6 +160,11 @@ try {
 
     const gData = { nodes, links };
 
+    // The graph stays dark in both themes; --graph-bg only shifts its shade
+    function graphBg() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--graph-bg').trim() || '#0A0C0F';
+    }
+
     function initGraph() {
         console.log("Initializing 3D Graph sub-view...");
         const container = document.getElementById('graph-container');
@@ -164,25 +172,42 @@ try {
             console.warn("graph-container not found on this page.");
             return;
         }
+        // "background": a fixed, slowly orbiting, non-interactive backdrop behind the page
+        // (components/graph_background.html). setExplore(true) makes it interactive.
+        const isBackground = container.dataset.mode === 'background';
+        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let exploring = !isBackground;
+        const labelSprites = [];
+        const glowSprites = [];
+        // Additive glows show up as white halos on a light page, so the light backdrop drops them
+        const isLightPage = () => {
+            const theme = document.documentElement.dataset.theme;
+            return theme ? theme === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+        };
+        const updateGlows = () => {
+            const show = exploring || !isLightPage();
+            glowSprites.forEach(s => { s.visible = show; });
+        };
+        const TRANSPARENT = 'rgba(0,0,0,0)';
 
         const Graph = ForceGraph3D()(container)
             .graphData(gData)
-            .backgroundColor('#06040f')
+            .backgroundColor(isBackground ? TRANSPARENT : graphBg())
             .showNavInfo(false)
             .nodeColor(node => node.color)
             .nodeLabel(node => `
-            <div style="background: rgba(10, 10, 10, 0.9); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(140, 100, 255, 0.4); backdrop-filter: blur(8px); pointer-events: none; color: white; font-family: 'Inter', sans-serif;">
+            <div style="background: rgba(17, 20, 24, 0.92); padding: 8px 12px; border-radius: 6px; border: 1px solid #2B323B; backdrop-filter: blur(8px); pointer-events: none; color: #EEF2F6; font-family: 'Inter', sans-serif;">
                 <div style="font-weight: 700; font-size: 14px; margin-bottom: 2px;">${node.name}</div>
-                ${node.description ? `<div style="color: rgba(255,255,255,0.7); font-size: 11px; max-width: 250px; line-height: 1.4;">${node.description}</div>` : ''}
-                ${node.navigateTo && !node.isCurrentPage ? `<div style="color: #a078ff; font-size: 10px; margin-top: 4px; letter-spacing: 0.5px;">Click to open ↗</div>` : ''}
+                ${node.description ? `<div style="color: #95A0AC; font-size: 11px; max-width: 250px; line-height: 1.4;">${node.description}</div>` : ''}
+                ${node.navigateTo && !node.isCurrentPage ? `<div style="color: #B5E655; font-size: 10px; margin-top: 4px; letter-spacing: 0.5px;">Click to open ↗</div>` : ''}
             </div>
         `)
             .nodeRelSize(4)
             .nodeVal(node => node.val)
             .nodeOpacity(0.9)
             .linkWidth(l => l.isGhost ? 0.3 : 1.2)
-            .linkColor(l => l.isGhost ? 'rgba(100, 80, 255, 0.08)' : 'rgba(160, 130, 255, 0.4)')
-            .linkDirectionalParticles(l => l.isGhost ? 0 : 3)
+            .linkColor(l => l.isGhost ? 'rgba(181, 230, 85, 0.06)' : 'rgba(181, 230, 85, 0.35)')
+            .linkDirectionalParticles(l => (l.isGhost || !exploring) ? 0 : 3)
             .linkDirectionalParticleSpeed(0.007)
             .linkDirectionalParticleWidth(1.5)
             .onNodeHover(node => {
@@ -197,8 +222,8 @@ try {
                     return (node && (l.source.id === node.id || l.target.id === node.id)) ? 2.5 : 1.2;
                 });
                 Graph.linkColor(l => {
-                    if (l.isGhost) return 'rgba(100, 80, 255, 0.08)';
-                    return (node && (l.source.id === node.id || l.target.id === node.id)) ? 'rgba(255, 255, 255, 0.8)' : 'rgba(160, 130, 255, 0.4)';
+                    if (l.isGhost) return 'rgba(181, 230, 85, 0.06)';
+                    return (node && (l.source.id === node.id || l.target.id === node.id)) ? 'rgba(238, 242, 246, 0.85)' : 'rgba(181, 230, 85, 0.35)';
                 });
 
 
@@ -229,6 +254,11 @@ try {
                     }, 800);
                 }
             });
+
+        document.addEventListener('themechange', () => {
+            if (exploring) Graph.backgroundColor(graphBg());
+            updateGlows();
+        });
 
         // 3. Custom Rendering (Safe access to THREE)
         const THREE = window.THREE;
@@ -285,6 +315,8 @@ try {
                     });
                     const sprite = new THREE.Sprite(spriteMaterial);
                     sprite.scale.set(node.val * 3.5, node.val * 3.5, 1.0);
+                    glowSprites.push(sprite);
+                    sprite.visible = exploring || !isLightPage();
                     group.add(sprite);
 
                     // Persistent Text Labels for important nodes (Depth 0, 1, or Current Page)
@@ -301,8 +333,8 @@ try {
                         labelCanvas.height = fontSize + 40;
 
                         labelCtx.font = `Bold ${fontSize}px 'Inter', sans-serif`;
-                        labelCtx.fillStyle = node.isCurrentPage ? '#00f2ff' : '#ffffff';
-                        labelCtx.shadowColor = node.isCurrentPage ? 'rgba(0, 242, 255, 0.8)' : 'rgba(0,0,0,0.8)';
+                        labelCtx.fillStyle = node.isCurrentPage ? '#7DD3FC' : '#EEF2F6';
+                        labelCtx.shadowColor = node.isCurrentPage ? 'rgba(125, 211, 252, 0.7)' : 'rgba(0,0,0,0.8)';
                         labelCtx.shadowBlur = 12;
                         labelCtx.fillText(labelText, 20, fontSize + 20);
 
@@ -317,6 +349,9 @@ try {
                         const labelScale = (node.depth === 0 ? 15 : (node.isCurrentPage ? 20 : 10)) * (labelCanvas.width / labelCanvas.height);
                         labelSprite.scale.set(labelScale, node.depth === 0 ? 15 : (node.isCurrentPage ? 20 : 10), 1);
                         labelSprite.position.set(0, node.val + (node.isCurrentPage ? 14 : 8), 0);
+                        // White labels would vanish on a light page, so the backdrop hides them
+                        labelSprite.visible = exploring;
+                        labelSprites.push(labelSprite);
                         group.add(labelSprite);
                     }
                 }
@@ -338,6 +373,45 @@ try {
             // Pull back camera as nodes branch out
             Graph.cameraPosition({ z: 450 }, { x: 0, y: 0, z: 0 }, 3500);
         }, 1200);
+
+        if (isBackground) {
+            Graph.enableNavigationControls(false).enablePointerInteraction(false);
+            const fit = () => Graph.width(container.clientWidth).height(container.clientHeight);
+            fit();
+            window.addEventListener('resize', fit);
+
+            // Slow orbit around the centre; paused while exploring and for reduced motion
+            let angle = 0, distance = 450, orbiting = false;
+            setTimeout(() => { orbiting = true; }, 4800);  // after the opening zoom-out
+            (function orbit() {
+                if (orbiting && !exploring && !reduceMotion && !document.hidden) {
+                    angle += 0.0009;
+                    Graph.cameraPosition(
+                        { x: distance * Math.sin(angle), y: Graph.camera().position.y, z: distance * Math.cos(angle) },
+                        { x: 0, y: 0, z: 0 }
+                    );
+                }
+                requestAnimationFrame(orbit);
+            })();
+
+            window.portfolioGraph = {
+                setExplore(on) {
+                    exploring = on;
+                    Graph.enableNavigationControls(on)
+                        .enablePointerInteraction(on)
+                        .backgroundColor(on ? graphBg() : TRANSPARENT)
+                        .linkDirectionalParticles(l => (l.isGhost || !on) ? 0 : 3);
+                    labelSprites.forEach(s => { s.visible = on; });
+                    updateGlows();
+                    if (!on) {
+                        // Resume the orbit from wherever the visitor left the camera
+                        const c = Graph.camera().position;
+                        angle = Math.atan2(c.x, c.z);
+                        distance = Math.max(250, Math.min(700, Math.hypot(c.x, c.z)));
+                    }
+                }
+            };
+        }
 
         // Stop rendering while the graph is scrolled out of view (it keeps animating otherwise)
         if ('IntersectionObserver' in window) {

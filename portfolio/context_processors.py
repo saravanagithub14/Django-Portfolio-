@@ -1,26 +1,9 @@
-import os
-import json
-from pathlib import Path
-from django.conf import settings
 from portfolio.models import UserProfile
 
-BASE_DIR = Path(settings.BASE_DIR)
-
-def load_fallback_json(filename):
-    """Load JSON from the fallback files under users/default/data/."""
-    filepath = BASE_DIR / 'users' / 'default' / 'data' / filename
-    if filepath.exists():
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"Error reading fallback JSON {filename}: {e}")
-    return {}
 
 def portfolio_context(request):
     """
     Exposes 'config' and 'bio' structures to all templates.
-    Checks the database first, and falls back to JSON files if empty or not migrated.
     """
     context = {
         'config': {},
@@ -64,7 +47,8 @@ def portfolio_context(request):
             chat_widget_config = {
                 'enabled': False,
                 'api_url': '/chatbot/api/chat/',
-                'bot_name': 'Saravana\'s AI',
+                'bot_name': 'V.E.R.A.',
+                'welcome_message': '',
             }
             # Retrieve chatbot config from chatbot app dynamically if imported
             try:
@@ -73,6 +57,7 @@ def portfolio_context(request):
                 if bot:
                     chat_widget_config['enabled'] = True
                     chat_widget_config['bot_name'] = bot.bot_name
+                    chat_widget_config['welcome_message'] = bot.welcome_message
             except Exception:
                 pass
 
@@ -144,17 +129,7 @@ def portfolio_context(request):
             return context
 
     except Exception as e:
-        # DB tables don't exist yet, fallback to JSON files
-        print(f"Database error in context processor, falling back to JSON config: {e}")
+        # DB tables don't exist yet (fresh checkout before migrate): render with empty config
+        print(f"Database error in context processor: {e}")
 
-    # Fallback loading
-    fallback_config = load_fallback_json('config.json')
-    fallback_bio = load_fallback_json('bio.json')
-
-    # Fix chat widget api url to point to django chatbot endpoint if fallback is used
-    if 'chat_widget' in fallback_config:
-        fallback_config['chat_widget']['api_url'] = '/chatbot/api/chat/'
-
-    context['config'] = fallback_config
-    context['bio'] = fallback_bio
     return context

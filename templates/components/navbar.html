@@ -1,14 +1,15 @@
 {% load portfolio_extras %}
 <nav class="top-nav">
   <!-- Hamburger for mobile (visible small screens only) -->
-  <div class="d-flex d-md-none w-100 justify-content-end">
-    <button class="navbar-toggler border-0 p-2 bg-transparent" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Toggle navigation" style="outline: none; box-shadow: none;">
-      <svg viewBox="0 0 24 24" width="28" height="28" stroke="rgba(200, 192, 232, 0.8)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  <div class="d-flex d-md-none w-100 justify-content-between align-items-center">
+    <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">Light mode</button>
+    <button class="navbar-toggler nav-burger" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
   </div>
 
   <!-- Desktop navigation (visible md+ only) -->
-  <div class="d-none d-md-flex w-100 justify-content-center align-items-center" style="gap: 25px;">
+  <div class="d-none d-md-flex w-100 justify-content-center align-items-center nav-desktop">
     {% for item in config.navigation %}
       {% if item.dropdown %}
         <div class="dropdown">
@@ -25,31 +26,30 @@
         <a href="{{ item.url }}" class="nav-link{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
       {% endif %}
     {% endfor %}
+    <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">Light mode</button>
   </div>
 
 </nav>
 
 <!-- Offcanvas for mobile (visible on small screens) -->
-<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel" style="background: rgba(6, 4, 15, 0.95) !important; border-left: 1px solid rgba(140, 100, 255, 0.2); z-index: 100000;">
-  <div class="offcanvas-header border-bottom border-secondary">
-    <h5 class="offcanvas-title text-uppercase" id="mobileNavLabel" style="color: rgba(200, 192, 232, 0.8); font-size: 1rem; letter-spacing: 2px;">Menu</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<div class="offcanvas offcanvas-end mobile-nav" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title mobile-nav-title" id="mobileNavLabel">Menu</h5>
+    <button type="button" class="btn-close mobile-nav-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
     {% for item in config.navigation %}
         {% if item.dropdown %}
           <div class="mb-2">
-            <div class="text-uppercase mb-2 mt-3" style="color: rgba(200, 192, 232, 0.5); font-size: 0.75rem; letter-spacing: 2px;">
-              {{ item.label }}
-            </div>
+            <div class="mobile-nav-group">{{ item.label }}</div>
             <div class="ms-3 d-flex flex-column gap-2">
                 {% for child in item.children %}
-                    <a href="{{ child.url }}" class="text-decoration-none text-white opacity-75{% if active_page == child.id %} opacity-100 fw-bold{% endif %}">{{ child.label }}</a>
+                    <a href="{{ child.url }}" class="mobile-nav-link{% if active_page == child.id %} active{% endif %}">{{ child.label }}</a>
                 {% endfor %}
             </div>
           </div>
         {% else %}
-            <a href="{{ item.url }}" class="d-block py-2 text-decoration-none text-white text-uppercase opacity-75{% if active_page == item.id %} opacity-100 fw-bold{% endif %}" style="letter-spacing: 1px; font-size: 0.9rem;">{{ item.label }}</a>
+            <a href="{{ item.url }}" class="mobile-nav-link mobile-nav-top{% if active_page == item.id %} active{% endif %}">{{ item.label }}</a>
         {% endif %}
     {% endfor %}
   </div>

@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.urls import reverse
 
 from chatbot import views
+from chatbot.fallback import CONCEPT_ANSWERS
 from chatbot.models import ChatMessage
 
 pytestmark = pytest.mark.django_db
@@ -23,7 +24,8 @@ def fake_generate(monkeypatch):
 
     def generate(user_message, profile, session, model_cfg):
         calls.append(user_message)
-        return f"I heard: {user_message}", {"intent": "lookup", "chunks": [], "fallback": False, "provider": "fake"}
+        meta = {"intent": "lookup", "chunks": [], "fallback": False, "provider": "fake"}
+        return f"I heard: {user_message}", meta, [{"section": "Experience", "url": "/experience.html", "item": None}]
 
     monkeypatch.setattr(views, "generate_llm_response", generate)
     monkeypatch.delenv("CHATBOT_PROVIDER", raising=False)
@@ -37,7 +39,10 @@ def post(client, body, **extra):
 def test_chat_contract_and_logging(client, fake_generate):
     response = post(client, {"message": "what did you do at SCTIMST"})
     assert response.status_code == 200
-    assert response.json() == {"response": "I heard: what did you do at SCTIMST"}
+    assert response.json() == {
+        "response": "I heard: what did you do at SCTIMST",
+        "sources": [{"section": "Experience", "url": "/experience.html", "item": None}],
+    }
 
     user_msg, bot_msg = ChatMessage.objects.order_by("timestamp", "pk")
     assert (user_msg.role, user_msg.content, user_msg.retrieval_meta) == ("user", "what did you do at SCTIMST", None)
@@ -66,10 +71,11 @@ def test_rate_limit_is_ten_per_minute(client, fake_generate):
 
 
 def test_keyword_fallback_when_llm_chain_fails(client, monkeypatch):
-    monkeypatch.setattr(views, "generate_llm_response", lambda *a: (None, {"fallback": False}))
+    monkeypatch.setattr(views, "generate_llm_response", lambda *a: (None, {"fallback": False}, []))
     response = post(client, {"message": "what is machine learning"})
     assert response.status_code == 200
-    assert response.json()["response"] == views.CONCEPT_ANSWERS["machine learning"]
+    assert response.json()["response"] == CONCEPT_ANSWERS["machine learning"]
+    assert response.json()["sources"] == []
 
 
 def test_update_context_requires_token(client, monkeypatch):
@@ -98,5 +104,5 @@ def test_update_context_saves_snippet_and_updates_live_index(client, monkeypatch
 def test_mock_provider_skips_the_pipeline(client, monkeypatch, fake_generate):
     monkeypatch.setenv("CHATBOT_PROVIDER", "mock")
     response = post(client, {"message": "what is deep learning"})
-    assert response.json()["response"] == views.CONCEPT_ANSWERS["deep learning"]
+    assert response.json()["response"] == CONCEPT_ANSWERS["deep learning"]
     assert fake_generate == []

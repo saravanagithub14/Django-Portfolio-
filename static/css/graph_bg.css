@@ -1,0 +1,81 @@
+/* ===== 3D graph backdrop (components/graph_background.html) ===== */
+
+.graph-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease, background-color 0.4s ease;
+}
+.graph-bg #graph-container {
+    width: 100%;
+    height: 100%;
+}
+
+/* Fade in once the libraries have loaded; kept faint so text stays readable */
+.graph-bg-ready .graph-bg { opacity: var(--graph-bg-opacity, 0.5); }
+:root[data-theme="light"] { --graph-bg-opacity: 0.7; }
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) { --graph-bg-opacity: 0.7; }
+}
+
+/* Page content sits above the backdrop */
+.content,
+.landing-container { position: relative; z-index: 1; }
+
+/* ----- Explore mode: the graph comes to the front ----- */
+.graph-exploring .graph-bg {
+    opacity: 1;
+    z-index: 50;
+    pointer-events: auto;
+    background: var(--graph-bg);
+}
+.graph-exploring .graph-bg #graph-container { cursor: grab; }
+.graph-exploring .graph-bg #graph-container:active { cursor: grabbing; }
+.graph-exploring body { overflow: hidden; }
+.graph-exploring .content,
+.graph-exploring .landing-container {
+    opacity: 0;
+    visibility: hidden;
+}
+.content,
+.landing-container { transition: opacity 0.35s ease, visibility 0.35s; }
+
+/* The bar sits on the dark graph in both themes, so it uses fixed colours */
+.graph-explore-bar {
+    display: none;
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 60;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 8px 8px 18px;
+    border-radius: 999px;
+    background: rgba(26, 31, 37, 0.92);
+    border: 1px solid #2B323B;
+    backdrop-filter: blur(10px);
+    color: #95A0AC;
+    font: 0.75rem 'Inter', sans-serif;
+    white-space: nowrap;
+}
+.graph-exploring .graph-explore-bar { display: flex; }
+.graph-explore-close {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 16px;
+    background: #B5E655;
+    color: #111418;
+    font: 700 0.75rem 'Inter', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.graph-explore-close:hover { filter: brightness(1.08); }
+
+@media (max-width: 600px) {
+    .graph-explore-hint { display: none; }
+    .graph-explore-bar { padding: 6px; }
+}

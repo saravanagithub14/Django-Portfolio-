@@ -1,0 +1,11 @@
+{% load static portfolio_extras %}
+<script>
+    // Apply the saved theme before first paint, so there's no flash of the wrong one.
+    (function () {
+        try {
+            var t = localStorage.getItem("theme");
+            if (t) document.documentElement.dataset.theme = t;
+        } catch (e) {}
+    })();
+</script>
+<link rel="stylesheet" href="{% asset 'css/theme.css' %}">

@@ -213,8 +213,8 @@ class NavigationItemAdmin(admin.ModelAdmin):
     list_editable = ('order',)
     inlines = [NavigationItemInline]
 
-# GraphNode is no longer registered: the 3D graph is generated from the content above
-# (portfolio/graph.py), so edits to jobs, projects, skills, etc. show up in it automatically.
+# The 3D graph is generated from the content above (portfolio/graph.py), so edits to jobs,
+# projects, skills, etc. show up in it automatically; there is no separate graph model.
 
 # --- Flat lists for the items edited most often ---
 @admin.register(Project)
