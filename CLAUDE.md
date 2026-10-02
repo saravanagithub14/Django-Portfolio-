@@ -13,7 +13,6 @@ pip install -r requirements.txt               # requirements-dev.txt adds pytest
 python manage.py runserver                    # http://127.0.0.1:8000
 python manage.py check
 python manage.py makemigrations && python manage.py migrate
-python manage.py import_portfolio_data        # one-time JSON -> DB import (see caveats)
 python manage.py build_rag_index              # (re)build faiss_index/ if the manifest is stale; --force to always rebuild
 ./build.sh                                    # Render build: install, collectstatic, migrate, build_rag_index
 
@@ -46,7 +45,6 @@ Two Django apps under the `portfolio_hub` project:
 - **Performance:** the graph builds with ~16 queries; keep it prefetch-based (per-node queries once cost ~120 queries/page). `components/graph_section.html` only downloads three.js / 3d-force-graph / `graph.js` when the graph scrolls into view, and `graph.js` pauses rendering while it's off-screen.
 - Tests: `portfolio/tests/` (graph generation, admin edits → graph). The root `conftest.py` swaps in plain static storage, because tests render with `DEBUG=False`.
 - **Static files** use WhiteNoise's `CompressedManifestStaticFilesStorage` (hashed names, brotli, 1-year cache). `collectstatic` **fails if a CSS/JS file references a missing file** (e.g. a `sourceMappingURL` to an absent `.map`), and with `DEBUG=False` any `{% static %}` path not in the manifest raises. Check new static assets with `collectstatic` before deploying. Locally the setting only applies if `whitenoise` is installed.
-- **JSON fallback is effectively dead**: views, the context processor and `import_portfolio_data` read from `users/default/data/`, but that data now lives in `legacy/users/default/data/`. Fallbacks only trigger when the DB is empty/unmigrated; to re-import, point the command at the `legacy/` path.
 
 ### `chatbot/` — RAG chatbot
 - `chatbot/views.py::chat_api_endpoint` (`POST /chatbot/api/chat/`, `{"message": ...}` → `{"response": ...}`): per-IP rate limit (10/min via Django cache), 500-char limit, logs every turn to `ChatSession`/`ChatMessage` keyed by the Django session. Assistant turns store `ChatMessage.retrieval_meta` (routed question, intent, filters, chunk ids + scores, fallback, provider, per-stage latency).
@@ -71,7 +69,3 @@ Two Django apps under the `portfolio_hub` project:
 RAG settings: `RAG_INCLUDE_GITHUB` (default on), `RAG_RERANKER` (default on; `0` uses RRF order and dense-cosine fallback scoring), `RAG_FALLBACK_THRESHOLD` (overrides the default for whichever scorer is active: rerank logit or dense cosine — see `pipeline.DEFAULT_THRESHOLD_*`). `EVAL_JUDGE_MODEL` sets the DeepEval judge (default `gpt-4o-mini`).
 
 On Render the filesystem resets on each deploy: `db.sqlite3` reverts to the committed copy, so `ContextSnippet` rows and live `/update_context` additions survive index rebuilds but not redeploys.
-
-## Legacy
-
-`legacy/` holds the previous static-site version (JSON data, `theme.md`, `scripts/fetch_reels.py`). `.github/workflows/update_reels.yml` still references the pre-move paths (`scripts/fetch_reels.py`, `users/default/data/gallery.json`) and will fail until updated.

@@ -1,6 +1,5 @@
 import os
 import json
-import random
 import logging
 import re
 from functools import lru_cache
@@ -13,16 +12,6 @@ from chatbot import rag_service
 from chatbot.rag import pipeline
 
 logger = logging.getLogger(__name__)
-
-FUNNY_OBJECTIONS = [
-    "My lawyers have advised me not to answer that, lest I accidentally reveal the secret recipe for my favorite filter coffee.",
-    "I'd love to answer that, but my neural networks are currently staging a strike for better GPU cooling.",
-    "That question exists in a parallel universe, and unfortunately my interdimensional portal is currently down for maintenance.",
-    "I can neither confirm nor deny that. Mostly because my database is strictly allergic to that topic.",
-    "That information is highly classified. If I told you, I'd have to explain quantum computing from scratch, and honestly, neither of us has the time.",
-    "I'm a Data Scientist, not a wizard! (Though my model tuning can sometimes feel like magic.) I can't answer that.",
-    "Error 418: I am a teapot, and teapots do not have opinions on this matter. Let's talk about AI or my data science experience instead!"
-]
 
 # Educational concept explanations
 CONCEPT_ANSWERS = {

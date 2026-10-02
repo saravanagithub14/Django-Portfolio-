@@ -1,7 +1,6 @@
 django>=5.0,<6.0
 django-environ
 google-generativeai
-instaloader
 openai
 requests
 pyyaml

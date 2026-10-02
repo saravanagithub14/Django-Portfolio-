@@ -1,25 +1,10 @@
-import json
-from pathlib import Path
 from django.shortcuts import render
-from django.conf import settings
 from portfolio.models import (
     UserProfile, SkillCategory, ProjectPage, ExperiencePage, EducationPage,
     PublicationsPage, WorkshopsPage, FocusPage, LanguagePage, GalleryPage, BlogPage
 )
 from portfolio.graph import build_graph
 
-BASE_DIR = Path(settings.BASE_DIR)
-
-# --- Helper to load fallback JSON ---
-def load_fallback_json(filename):
-    filepath = BASE_DIR / 'users' / 'default' / 'data' / filename
-    if filepath.exists():
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {}
 
 # --- Helper to serialize Graph Nodes ---
 def get_graph_data():
@@ -30,7 +15,7 @@ def get_graph_data():
             return graph
     except Exception:
         pass
-    return load_fallback_json("graph.json")
+    return {"id": "root", "name": "Portfolio", "type": "root"}
 
 # --- Views ---
 
@@ -74,8 +59,6 @@ def skills_view(request):
     except Exception:
         pass
 
-    if not skills_context:
-        skills_context = load_fallback_json("skills.json")
 
     context = {
         'skills': skills_context,
@@ -112,8 +95,6 @@ def experience_view(request):
     except Exception:
         pass
 
-    if not exp_context:
-        exp_context = load_fallback_json("experience.json")
 
     context = {
         'experience': exp_context,
@@ -138,8 +119,6 @@ def education_view(request):
     except Exception:
         pass
 
-    if not edu_context:
-        edu_context = load_fallback_json("education.json")
 
     context = {
         'education': edu_context,
@@ -190,8 +169,6 @@ def projects_view(request):
     except Exception:
         pass
 
-    if not proj_context:
-        proj_context = load_fallback_json("projects.json")
 
     context = {
         'projects': proj_context,
@@ -218,8 +195,6 @@ def publications_view(request):
     except Exception:
         pass
 
-    if not pub_context:
-        pub_context = load_fallback_json("publications.json")
 
     context = {
         'publications': pub_context,
@@ -244,8 +219,6 @@ def workshops_view(request):
     except Exception:
         pass
 
-    if not ws_context:
-        ws_context = load_fallback_json("workshops.json")
 
     context = {
         'workshops': ws_context,
@@ -273,8 +246,6 @@ def summary_view(request):
     except Exception:
         pass
 
-    if not focus_context:
-        focus_context = load_fallback_json("focus.json")
 
     context = {
         'focus': focus_context,
@@ -302,8 +273,6 @@ def languages_view(request):
     except Exception:
         pass
 
-    if not lang_context:
-        lang_context = load_fallback_json("languages.json")
 
     context = {
         'languages': lang_context,
@@ -336,8 +305,6 @@ def gallery_view(request):
     except Exception:
         pass
 
-    if not gallery_context:
-        gallery_context = load_fallback_json("gallery.json")
 
     context = {
         'gallery': gallery_context,
@@ -376,8 +343,6 @@ def blogs_view(request):
     except Exception:
         pass
 
-    if not blogs_context:
-        blogs_context = load_fallback_json("blogs.json")
 
     context = {
         'blogs': blogs_context,
