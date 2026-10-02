@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}{{ config.site_title }} — Bio{% endblock %}
 
 {% block content_class %} bio-page-content{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/bio.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/bio.css' %}">
 {% endblock %}
 
 {% block content %}

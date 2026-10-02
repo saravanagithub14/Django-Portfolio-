@@ -69,6 +69,10 @@ MIDDLEWARE = [
 try:
     import whitenoise
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    # Let WhiteNoise serve static files under `runserver` too. In DEBUG it sends max-age=0, so the
+    # browser re-checks CSS/JS on every load; Django's own dev handler sends no Cache-Control and
+    # browsers kept stale chat_widget.js copies after edits.
+    INSTALLED_APPS.insert(INSTALLED_APPS.index('django.contrib.staticfiles'), 'whitenoise.runserver_nostatic')
 except ImportError:
     pass
 

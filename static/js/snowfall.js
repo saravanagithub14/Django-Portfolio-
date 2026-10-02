@@ -20,6 +20,16 @@
     resize();
     window.addEventListener('resize', resize);
 
+    // Snow uses the text colour (white on dark, ink on light); the slow dots use the primary colour
+    let snowColor, dotColor;
+    function readColors() {
+        const s = getComputedStyle(document.documentElement);
+        snowColor = s.getPropertyValue('--text').trim();
+        dotColor = s.getPropertyValue('--primary').trim();
+    }
+    readColors();
+    document.addEventListener('themechange', readColors);
+
     // Combined 40 particles (was 55 snow + 50 bg = 105 total)
     const COUNT = 40;
     const flakes = [];
@@ -49,13 +59,14 @@
                 if (f.y > H + 5) { f.y = -5; f.x = Math.random() * W; }
                 if (f.x < -5) f.x = W + 5;
                 if (f.x > W + 5) f.x = -5;
-                ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+                ctx.fillStyle = snowColor;
             } else {
                 f.x += f.vx; f.y += f.vy;
                 if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
                 if (f.y < 0) f.y = H; if (f.y > H) f.y = 0;
-                ctx.fillStyle = `rgba(160,120,255,${f.alpha})`;
+                ctx.fillStyle = dotColor;
             }
+            ctx.globalAlpha = f.alpha;
             ctx.beginPath();
             ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
             ctx.fill();

@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}Publications & Achievements — {{ config.site_title }}{% endblock %}
 {% block description %}Research publications, book chapters, and professional achievements by {{ config.site_title }}.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/publications.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/publications.css' %}">
 {% endblock %}
 
 {% block content %}

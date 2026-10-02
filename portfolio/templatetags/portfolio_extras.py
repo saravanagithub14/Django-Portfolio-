@@ -49,3 +49,26 @@ def is_dropdown_active(dropdown_item, active_page):
             return True
             
     return False
+
+
+@register.simple_tag
+def asset(path):
+    """
+    {% asset 'js/chat_widget.js' %}: the static URL, plus ?v=<file mtime> in DEBUG.
+
+    In production the manifest storage already puts a content hash in the file name. In
+    development the name never changes, and browsers kept running stale copies of edited CSS/JS
+    (an old chat_widget.js with the new chat_widget.css), so the query string forces a re-fetch
+    whenever the file changes.
+    """
+    from django.conf import settings
+    from django.contrib.staticfiles import finders
+    from django.templatetags.static import static
+
+    url = static(path)
+    if settings.DEBUG:
+        found = finders.find(path)
+        if found:
+            import os
+            url += f"?v={int(os.path.getmtime(found))}"
+    return url

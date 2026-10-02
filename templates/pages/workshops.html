@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}Workshops & Talks — {{ config.site_title }}{% endblock %}
 {% block description %}AI workshops conducted and seminars delivered by {{ config.site_title }}.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/workshops.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/workshops.css' %}">
 {% endblock %}
 
 {% block content %}

@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}Blog — {{ config.site_title }}{% endblock %}
 {% block description %}Technical blog posts on AI, Machine Learning, Python, and Computer Vision by {{ config.site_title }}.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/blogs.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/blogs.css' %}">
 {% endblock %}
 
 {% block content %}

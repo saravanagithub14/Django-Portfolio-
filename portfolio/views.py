@@ -20,7 +20,7 @@ def get_graph_data():
 # --- Views ---
 
 def index_view(request):
-    return render(request, 'pages/index.html')
+    return render(request, 'pages/index.html', {'graph_data': get_graph_data()})
 
 def graph_view(request):
     context = {

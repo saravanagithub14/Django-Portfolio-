@@ -8,9 +8,10 @@
     width: 100%;
     margin-bottom: 40px;
     padding: 20px 24px;
-    background: rgba(100, 60, 200, 0.05);
-    border: 1px solid rgba(140, 100, 255, 0.12);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 }
 
 .blog-stat {
@@ -19,7 +20,7 @@
     align-items: center;
     flex: 1;
     padding: 4px 0;
-    border-right: 1px solid rgba(140, 100, 255, 0.1);
+    border-right: 1px solid var(--border);
 }
 
 .blog-stat:last-child { border-right: none; }
@@ -27,7 +28,7 @@
 .bs-num {
     font-size: 1.6rem;
     font-weight: 700;
-    color: #c8b4ff;
+    color: var(--primary);
     margin-bottom: 3px;
 }
 
@@ -35,7 +36,7 @@
     font-size: 0.62rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
 }
 
 /* Medium badge */
@@ -46,18 +47,19 @@
     gap: 10px;
     margin-bottom: 40px;
     padding: 10px 22px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 30px;
     width: fit-content;
     align-self: center;
     text-decoration: none;
     transition: all 0.3s ease;
+    box-shadow: var(--card-shadow);
 }
 
 .medium-badge:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--surface);
+    border-color: var(--border);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
@@ -65,12 +67,12 @@
 .medium-badge svg {
     width: 20px;
     height: 20px;
-    fill: #e8e0ff;
+    fill: var(--text);
 }
 
 .medium-badge-text {
     font-size: 0.78rem;
-    color: rgba(232, 224, 255, 0.8);
+    color: var(--text);
     letter-spacing: 0.5px;
 }
 
@@ -84,8 +86,8 @@
 }
 
 .blog-card {
-    background: rgba(100, 60, 200, 0.05);
-    border: 1px solid rgba(140, 100, 255, 0.15);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 18px;
     padding: 28px 30px;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,6 +99,7 @@
     align-items: start;
     text-decoration: none;
     cursor: pointer;
+    box-shadow: var(--card-shadow);
 }
 
 .blog-card::before {
@@ -104,7 +107,7 @@
     position: absolute;
     top: 0; left: 0;
     width: 3px; height: 100%;
-    background: linear-gradient(180deg, rgba(140,100,255,0.8), rgba(80,40,200,0.3));
+    background: linear-gradient(180deg, var(--primary-bg), color-mix(in srgb, var(--primary-bg) 30%, transparent));
     border-radius: 18px 0 0 18px;
     opacity: 0;
     transition: opacity 0.3s;
@@ -114,17 +117,17 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 30% 40%, rgba(140,100,255,0.06), transparent 60%);
+    background: radial-gradient(circle at 30% 40%, var(--surface), transparent 60%);
     opacity: 0;
     transition: opacity 0.35s;
     pointer-events: none;
 }
 
 .blog-card:hover {
-    background: rgba(140, 100, 255, 0.09);
-    border-color: rgba(160, 120, 255, 0.4);
+    background: var(--surface);
+    border-color: var(--border);
     transform: translateX(6px);
-    box-shadow: 0 10px 45px rgba(100, 60, 220, 0.18);
+    box-shadow: 0 10px 45px color-mix(in srgb, var(--glow) 18%, transparent);
 }
 
 .blog-card:hover::before { opacity: 1; }
@@ -134,8 +137,8 @@
 .bc-icon {
     width: 64px;
     height: 64px;
-    background: rgba(140, 100, 255, 0.1);
-    border: 1px solid rgba(140, 100, 255, 0.2);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -144,11 +147,12 @@
     flex-shrink: 0;
     transition: all 0.3s;
     z-index: 1;
+    box-shadow: var(--card-shadow);
 }
 
 .blog-card:hover .bc-icon {
-    background: rgba(140, 100, 255, 0.22);
-    box-shadow: 0 0 22px rgba(140, 100, 255, 0.3);
+    background: color-mix(in srgb, var(--primary-bg) 22%, transparent);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--glow) 30%, transparent);
     transform: scale(1.06);
 }
 
@@ -170,17 +174,18 @@
     font-size: 0.58rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(160, 120, 255, 0.9);
-    background: rgba(140, 100, 255, 0.12);
-    border: 1px solid rgba(140, 100, 255, 0.25);
+    color: var(--primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 2px 10px;
     font-weight: 600;
+    box-shadow: var(--card-shadow);
 }
 
 .bc-date {
     font-size: 0.65rem;
-    color: rgba(200, 192, 232, 0.35);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     letter-spacing: 0.5px;
 }
 
@@ -188,32 +193,32 @@
     width: 3px;
     height: 3px;
     border-radius: 50%;
-    background: rgba(200, 192, 232, 0.25);
+    background: color-mix(in srgb, var(--text) 25%, transparent);
 }
 
 .bc-readtime {
     font-size: 0.65rem;
-    color: rgba(200, 192, 232, 0.35);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     letter-spacing: 0.5px;
 }
 
 .bc-title {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     line-height: 1.45;
     margin-bottom: 8px;
     transition: color 0.2s;
 }
 
 .blog-card:hover .bc-title {
-    color: #fff;
+    color: var(--text);
 }
 
 .bc-excerpt {
     font-size: 0.84rem;
     line-height: 1.7;
-    color: rgba(200, 192, 232, 0.5);
+    color: var(--muted);
     margin-bottom: 14px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -233,16 +238,17 @@
     letter-spacing: 0.5px;
     padding: 3px 10px;
     border-radius: 20px;
-    background: rgba(140, 100, 255, 0.07);
-    border: 1px solid rgba(140, 100, 255, 0.15);
-    color: rgba(200, 192, 232, 0.55);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
     transition: all 0.25s;
+    box-shadow: var(--card-shadow);
 }
 
 .blog-card:hover .bc-tag {
-    background: rgba(140, 100, 255, 0.12);
-    border-color: rgba(140, 100, 255, 0.25);
-    color: rgba(200, 192, 232, 0.7);
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--muted);
 }
 
 /* Side Action */
@@ -268,15 +274,15 @@
     letter-spacing: 0.3px;
     transition: all 0.25s;
     white-space: nowrap;
-    background: rgba(120, 80, 255, 0.18);
-    color: #c8b4ff;
-    border: 1px solid rgba(140, 100, 255, 0.35);
+    background: color-mix(in srgb, var(--primary-bg) 18%, transparent);
+    color: var(--primary);
+    border: 1px solid var(--border);
 }
 
 .bc-read-btn:hover {
-    background: rgba(140, 100, 255, 0.35);
-    color: #fff;
-    box-shadow: 0 0 20px rgba(120, 80, 255, 0.35);
+    background: color-mix(in srgb, var(--primary-bg) 35%, transparent);
+    color: var(--text);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--glow) 35%, transparent);
     transform: translateY(-2px);
 }
 
@@ -300,11 +306,11 @@
 .embed-heading {
     font-size: 1rem;
     font-weight: 700;
-    color: #c8b4ff;
+    color: var(--primary);
     letter-spacing: 0.3px;
     margin-bottom: 20px;
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(140, 100, 255, 0.12);
+    border-bottom: 1px solid var(--border);
 }
 
 .embed-grid {
@@ -314,19 +320,20 @@
 }
 
 .embed-card {
-    background: rgba(100, 60, 200, 0.04);
-    border: 1px solid rgba(140, 100, 255, 0.12);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
     transition: all 0.3s ease;
     min-height: 320px;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--card-shadow);
 }
 
 .embed-card:hover {
-    border-color: rgba(160, 120, 255, 0.3);
-    box-shadow: 0 8px 35px rgba(100, 60, 220, 0.15);
+    border-color: var(--border);
+    box-shadow: 0 8px 35px color-mix(in srgb, var(--glow) 15%, transparent);
     transform: translateY(-4px);
 }
 
@@ -343,19 +350,19 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    border-bottom: 1px solid rgba(140, 100, 255, 0.08);
+    border-bottom: 1px solid var(--border);
 }
 
 .embed-card-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(160, 120, 255, 0.4);
+    background: var(--primary-bg);
 }
 
 .embed-card-label {
     font-size: 0.7rem;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
@@ -364,8 +371,8 @@
 .blog-cta {
     width: 100%;
     padding: 30px;
-    background: linear-gradient(135deg, rgba(100, 60, 200, 0.08), rgba(80, 40, 180, 0.12));
-    border: 1px solid rgba(140, 100, 255, 0.18);
+    background: linear-gradient(135deg, var(--surface), var(--surface));
+    border: 1px solid var(--border);
     border-radius: 18px;
     text-align: center;
     margin-bottom: 50px;
@@ -374,13 +381,13 @@
 .blog-cta-title {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     margin-bottom: 8px;
 }
 
 .blog-cta-sub {
     font-size: 0.82rem;
-    color: rgba(200, 192, 232, 0.45);
+    color: var(--muted);
     margin-bottom: 18px;
 }
 
@@ -389,10 +396,10 @@
     align-items: center;
     gap: 8px;
     padding: 12px 28px;
-    background: linear-gradient(135deg, rgba(120, 80, 255, 0.7), rgba(80, 40, 200, 0.8));
-    border: 1px solid rgba(160, 120, 255, 0.5);
+    background: var(--primary-bg);
+    border: 1px solid var(--primary);
     border-radius: 10px;
-    color: #fff;
+    color: var(--on-primary);
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
@@ -402,8 +409,8 @@
 }
 
 .blog-cta-btn:hover {
-    background: linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 230, 1));
-    box-shadow: 0 0 25px rgba(120, 80, 255, 0.45);
+    background: var(--primary-bg);
+    box-shadow: 0 0 25px color-mix(in srgb, var(--glow) 45%, transparent);
     transform: translateY(-2px);
 }
 
@@ -444,7 +451,7 @@
     .blog-stat {
         flex: 1 1 40%;
         border-right: none;
-        border-bottom: 1px solid rgba(140,100,255,0.1);
+        border-bottom: 1px solid var(--border);
         padding-bottom: 12px;
     }
 }

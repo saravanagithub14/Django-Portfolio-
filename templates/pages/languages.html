@@ -16,11 +16,11 @@
             {% for lang in languages.spoken %}
             <div class="metric" style="text-align: left; padding: 25px; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 1.2rem; font-weight: 700; color: #e8e0ff;">{{ lang.name }}</span>
+                    <span style="font-size: 1.2rem; font-weight: 700; color: var(--text);">{{ lang.name }}</span>
                     <span class="role-pill" style="font-size: 0.65rem;">{{ lang.proficiency }}</span>
                 </div>
-                <div style="height: 4px; background: rgba(140, 100, 255, 0.1); border-radius: 2px; width: 100%;">
-                    <div style="height: 100%; width: {{ lang.level }}%; background: linear-gradient(90deg, #7755ee, #a078ff); border-radius: 2px; box-shadow: 0 0 10px rgba(119, 85, 238, 0.5);"></div>
+                <div style="height: 4px; background: var(--border); border-radius: 2px; width: 100%;">
+                    <div style="height: 100%; width: {{ lang.level }}%; background: var(--primary-bg); border-radius: 2px; box-shadow: 0 0 10px color-mix(in srgb, var(--glow) 50%, transparent);"></div>
                 </div>
             </div>
             {% endfor %}
@@ -35,11 +35,11 @@
             {% for lang in languages.programming %}
             <div class="strength-item" style="flex: 1 1 200px; padding: 20px; display: flex; flex-direction: column; gap: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 1.1rem; color: #c8b4ff; font-weight: 600;">{{ lang.name }}</span>
+                    <span style="font-size: 1.1rem; color: var(--primary); font-weight: 600;">{{ lang.name }}</span>
                 </div>
-                <div style="font-size: 0.8rem; color: rgba(200, 192, 232, 0.6);">{{ lang.proficiency }} Level</div>
-                <div style="height: 2px; background: rgba(140, 100, 255, 0.1); border-radius: 1px; width: 100%; margin-top: 4px;">
-                    <div style="height: 100%; width: {{ lang.level }}%; background: #7755ee; border-radius: 1px;"></div>
+                <div style="font-size: 0.8rem; color: var(--muted);">{{ lang.proficiency }} Level</div>
+                <div style="height: 2px; background: var(--border); border-radius: 1px; width: 100%; margin-top: 4px;">
+                    <div style="height: 100%; width: {{ lang.level }}%; background: var(--primary-bg); border-radius: 1px;"></div>
                 </div>
             </div>
             {% endfor %}

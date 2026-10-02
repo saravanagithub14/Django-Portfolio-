@@ -8,9 +8,10 @@
     width: 100%;
     margin-bottom: 40px;
     padding: 18px 24px;
-    background: rgba(100, 60, 200, 0.05);
-    border: 1px solid rgba(140, 100, 255, 0.12);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 }
 
 .gallery-stat {
@@ -19,7 +20,7 @@
     align-items: center;
     flex: 1;
     padding: 4px 0;
-    border-right: 1px solid rgba(140, 100, 255, 0.1);
+    border-right: 1px solid var(--border);
 }
 
 .gallery-stat:last-child { border-right: none; }
@@ -27,7 +28,7 @@
 .gs-num {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #c8b4ff;
+    color: var(--primary);
     margin-bottom: 3px;
 }
 
@@ -35,19 +36,20 @@
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
 }
 
 /* ---- Featured Hero Video ---- */
 .featured-video {
     width: 100%;
     margin-bottom: 50px;
-    background: rgba(100, 60, 200, 0.06);
-    border: 1px solid rgba(140, 100, 255, 0.2);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.35s ease;
     position: relative;
+    box-shadow: var(--card-shadow);
 }
 
 .featured-video::before {
@@ -55,13 +57,13 @@
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 4px;
-    background: linear-gradient(90deg, rgba(140,100,255,0.7), rgba(80,40,200,0.3), rgba(140,100,255,0.5));
+    background: linear-gradient(90deg, var(--primary-bg), color-mix(in srgb, var(--primary-bg) 30%, transparent), var(--primary-bg));
     z-index: 2;
 }
 
 .featured-video:hover {
-    border-color: rgba(160, 120, 255, 0.4);
-    box-shadow: 0 12px 50px rgba(100, 60, 220, 0.2);
+    border-color: var(--border);
+    box-shadow: 0 12px 50px color-mix(in srgb, var(--glow) 20%, transparent);
 }
 
 .fv-embed {
@@ -100,8 +102,8 @@
     font-size: 0.58rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #fff;
-    background: linear-gradient(135deg, rgba(140,100,255,0.6), rgba(80,40,200,0.7));
+    color: var(--on-primary);
+    background: var(--primary-bg);
     border-radius: 4px;
     padding: 3px 10px;
     font-weight: 700;
@@ -111,23 +113,24 @@
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: rgba(160, 120, 255, 0.7);
-    background: rgba(140, 100, 255, 0.1);
-    border: 1px solid rgba(140, 100, 255, 0.2);
+    color: var(--primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 2px 8px;
+    box-shadow: var(--card-shadow);
 }
 
 .fv-duration {
     font-size: 0.62rem;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     letter-spacing: 0.5px;
 }
 
 .fv-title {
     font-size: 1.15rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     line-height: 1.4;
     margin-bottom: 6px;
 }
@@ -135,7 +138,7 @@
 .fv-desc {
     font-size: 0.84rem;
     line-height: 1.7;
-    color: rgba(200, 192, 232, 0.5);
+    color: var(--muted);
 }
 
 .fv-yt-link {
@@ -174,18 +177,19 @@
 }
 
 .vid-card {
-    background: rgba(100, 60, 200, 0.05);
-    border: 1px solid rgba(140, 100, 255, 0.14);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    box-shadow: var(--card-shadow);
 }
 
 .vid-card:hover {
-    border-color: rgba(160, 120, 255, 0.38);
-    box-shadow: 0 10px 40px rgba(100, 60, 220, 0.18);
+    border-color: var(--border);
+    box-shadow: 0 10px 40px color-mix(in srgb, var(--glow) 18%, transparent);
     transform: translateY(-6px);
 }
 
@@ -222,34 +226,35 @@
     font-size: 0.55rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: rgba(160, 120, 255, 0.8);
-    background: rgba(140, 100, 255, 0.1);
-    border: 1px solid rgba(140, 100, 255, 0.2);
+    color: var(--primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 2px 8px;
     font-weight: 600;
+    box-shadow: var(--card-shadow);
 }
 
 .vc-dur {
     font-size: 0.6rem;
-    color: rgba(200, 192, 232, 0.35);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     letter-spacing: 0.5px;
 }
 
 .vc-title {
     font-size: 0.92rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     line-height: 1.35;
     transition: color 0.2s;
 }
 
-.vid-card:hover .vc-title { color: #fff; }
+.vid-card:hover .vc-title { color: var(--text); }
 
 .vc-desc {
     font-size: 0.78rem;
     line-height: 1.65;
-    color: rgba(200, 192, 232, 0.42);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -270,13 +275,13 @@
 .yt-cta-title {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     margin-bottom: 6px;
 }
 
 .yt-cta-sub {
     font-size: 0.82rem;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     margin-bottom: 18px;
 }
 
@@ -288,7 +293,7 @@
     background: linear-gradient(135deg, rgba(255, 40, 40, 0.6), rgba(200, 0, 0, 0.7));
     border: 1px solid rgba(255, 80, 80, 0.4);
     border-radius: 10px;
-    color: #fff;
+    color: var(--text);
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
@@ -341,27 +346,27 @@
 .reels-ig-icon svg {
     width: 16px;
     height: 16px;
-    fill: #fff;
+    fill: var(--text);
 }
 
 .reels-ig-label {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: rgba(200, 192, 232, 0.5);
+    color: var(--muted);
 }
 
 .reels-ig-handle {
     font-size: 0.75rem;
-    color: rgba(200, 192, 232, 0.45);
+    color: var(--muted);
     text-decoration: none;
-    border-bottom: 1px solid rgba(200, 192, 232, 0.15);
+    border-bottom: 1px solid var(--border);
     transition: all 0.2s;
 }
 
 .reels-ig-handle:hover {
-    color: #e8e0ff;
-    border-color: rgba(200, 192, 232, 0.4);
+    color: var(--text);
+    border-color: var(--border);
 }
 
 /* Carousel wrapper */
@@ -397,8 +402,8 @@
     position: relative;
     scroll-snap-align: start;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(20, 14, 40, 0.8);
-    border: 1px solid rgba(140, 100, 255, 0.14);
+    background: var(--surface);
+    border: 1px solid var(--border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -429,7 +434,7 @@
 .reel-gradient-bg {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(140, 100, 255, 0.1), rgba(80, 40, 200, 0.2));
+    background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--primary-bg) 20%, transparent));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -441,25 +446,26 @@
 .play-btn {
     width: 60px;
     height: 60px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--surface);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--card-shadow);
 }
 .play-btn svg {
     width: 24px;
     height: 24px;
-    fill: #fff;
+    fill: var(--text);
     margin-left: 4px;
 }
 .reel-card:hover .play-btn {
     transform: scale(1.15);
     background: rgba(220, 60, 120, 0.6);
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: var(--border);
     box-shadow: 0 0 20px rgba(220, 60, 120, 0.4);
 }
 
@@ -476,7 +482,7 @@
 .reel-title {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #e8e0ff;
+    color: var(--text);
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -490,13 +496,13 @@
     font-size: 0.55rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--muted);
 }
 
 .reel-badge svg {
     width: 10px;
     height: 10px;
-    fill: rgba(255, 255, 255, 0.5);
+    fill: var(--muted);
 }
 
 /* Nav arrows */
@@ -516,11 +522,11 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: rgba(30, 20, 60, 0.85);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(220, 60, 120, 0.3);
-    color: #e8e0ff;
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -550,7 +556,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(200, 192, 232, 0.2);
+    background: color-mix(in srgb, var(--text) 20%, transparent);
     transition: all 0.3s;
     cursor: pointer;
 }
@@ -576,13 +582,13 @@
 .ig-cta-title {
     font-size: 1.02rem;
     font-weight: 700;
-    color: #e8e0ff;
+    color: var(--text);
     margin-bottom: 6px;
 }
 
 .ig-cta-sub {
     font-size: 0.82rem;
-    color: rgba(200, 192, 232, 0.4);
+    color: color-mix(in srgb, var(--muted) 75%, transparent);
     margin-bottom: 16px;
 }
 
@@ -594,7 +600,7 @@
     background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     border: none;
     border-radius: 10px;
-    color: #fff;
+    color: var(--text);
     font-family: 'Inter', sans-serif;
     font-size: 0.84rem;
     font-weight: 600;
@@ -646,7 +652,7 @@
     .gallery-stat {
         flex: 1 1 40%;
         border-right: none;
-        border-bottom: 1px solid rgba(140,100,255,0.1);
+        border-bottom: 1px solid var(--border);
         padding-bottom: 10px;
     }
 

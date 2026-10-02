@@ -1,0 +1,59 @@
+{% load static portfolio_extras %}
+{# The 3D graph as a fixed backdrop behind the page. Anything with [data-graph-explore] #}
+{# brings it to the front (interactive, with labels); Esc or the bar's button returns. #}
+<link rel="stylesheet" href="{% asset 'css/graph_bg.css' %}">
+<div id="graph-bg" class="graph-bg" aria-hidden="true">
+    <div id="graph-container" data-mode="background"></div>
+</div>
+<div class="graph-explore-bar" role="region" aria-label="Graph explorer">
+    <span class="graph-explore-hint">Drag to rotate &bull; Scroll to zoom &bull; Click a node to open it</span>
+    <button type="button" class="graph-explore-close" data-graph-explore-close>&larr; Back to page</button>
+</div>
+
+<script>
+    const resumeData = {{ graph_data|tojson }};
+    const activePage = "{{ active_page }}";
+
+    (function () {
+        // Load the ~340KB of 3D libraries only after the page itself has loaded,
+        // so the backdrop never delays the content.
+        const scripts = [
+            "https://unpkg.com/three@0.160.0/build/three.min.js",
+            "https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js",
+            "{% asset 'js/graph.js' %}",
+        ];
+        function loadNext(i) {
+            if (i >= scripts.length) {
+                document.documentElement.classList.add("graph-bg-ready");
+                return;
+            }
+            const s = document.createElement("script");
+            s.src = scripts[i];
+            s.onload = () => loadNext(i + 1);
+            document.body.appendChild(s);
+        }
+        function start() {
+            (window.requestIdleCallback || setTimeout)(() => loadNext(0), { timeout: 1500 });
+        }
+        if (document.readyState === "complete") start();
+        else window.addEventListener("load", start);
+
+        // Explore mode
+        const root = document.documentElement;
+        function setExplore(on) {
+            root.classList.toggle("graph-exploring", on);
+            if (window.portfolioGraph) window.portfolioGraph.setExplore(on);
+        }
+        document.addEventListener("click", (e) => {
+            if (e.target.closest("[data-graph-explore]")) {
+                e.preventDefault();
+                setExplore(true);
+            } else if (e.target.closest("[data-graph-explore-close]")) {
+                setExplore(false);
+            }
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && root.classList.contains("graph-exploring")) setExplore(false);
+        });
+    })();
+</script>

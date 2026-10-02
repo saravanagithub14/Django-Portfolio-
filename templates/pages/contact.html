@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}Contact — {{ config.site_title }}{% endblock %}
 {% block description %}Get in touch with {{ config.site_title }} — open to collaborations, projects, and
 conversations.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/contact.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/contact.css' %}">
 {% endblock %}
 
 {% block content %}

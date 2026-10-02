@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block jsonld %}
 <script type="application/ld+json">
@@ -17,7 +17,7 @@
 {% block description %}AI, ML, Deep Learning, and Biomedical projects by {{ config.site_title }}.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/projects.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/projects.css' %}">
 {% endblock %}
 
 {% block content %}

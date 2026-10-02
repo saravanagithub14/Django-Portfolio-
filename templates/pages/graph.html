@@ -18,8 +18,9 @@
     <noscript>
     <link href="https://db.onlinewebfonts.com/c/dc0b2bf2eb1538767df118d65a2314ea?family=Trench-Thin" rel="stylesheet">
     </noscript>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% include 'components/theme_head.html' %}
+    <link href="{% asset 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% asset 'css/style.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     <script type="application/ld+json">
 {
@@ -38,7 +39,7 @@
 <!-- Vendor Scripts -->
     <script defer src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script defer src="https://unpkg.com/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
+    <link rel="stylesheet" href="{% asset 'css/chat_widget.css' %}">
 </head>
 
 <body>
@@ -153,20 +154,13 @@
 
     <div id="instructions">Drag to move &bull; Scroll to zoom &bull; Click nodes to explore</div>
 
-    <div
-        style="position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
-        <div
-            style="font-size: 0.9rem; color: #ffffff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 12px; font-family: 'Inter', sans-serif; white-space: nowrap;">
-            Prefer a traditional view?</div>
-        <a href="#bio-section"
-            style="display: inline-block; background: linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9)); border: 2px solid #a078ff; color: #ffffff; padding: 12px 30px; border-radius: 40px; text-decoration: none; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 20px rgba(140, 100, 255, 0.6); white-space: nowrap;"
-            onmouseover="this.style.background='linear-gradient(135deg, rgba(160, 120, 255, 1), rgba(120, 80, 255, 1))'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 30px rgba(160, 120, 255, 0.8)';"
-            onmouseout="this.style.background='linear-gradient(135deg, rgba(140, 100, 255, 0.9), rgba(100, 60, 200, 0.9))'; this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 0 20px rgba(140, 100, 255, 0.6)';">SKIP
-            TO WEBSITE ↓</a>
+    <div class="graph-skip">
+        <div class="graph-skip-label">Prefer a traditional view?</div>
+        <a href="#bio-section" class="graph-skip-btn">Skip to website ↓</a>
     </div>
 
     <!-- Mobile Interaction Tip Banner -->
-    <div id="mobile-tip" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: rgba(140, 100, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(140, 100, 255, 0.3); color: white; padding: 10px 20px; border-radius: 30px; font-family: 'Inter', sans-serif; font-size: 0.8rem; z-index: 10000; animation: fadeInDown 0.5s ease-out; cursor: pointer;">
+    <div id="mobile-tip" class="graph-tip">
         Tip: pinch to zoom · drag to rotate (tap to dismiss)
     </div>
 
@@ -183,21 +177,22 @@
 
         const resumeData = {{ graph_data|tojson }};
     </script>
+    <script src="{% asset 'js/theme.js' %}"></script>
     <!-- Custom Force Graph logic -->
-    <script defer src="{% static 'js/graph.js' %}"></script>
-    <script src="{% static 'js/snowfall.js' %}"></script>
+    <script defer src="{% asset 'js/graph.js' %}"></script>
+    <script src="{% asset 'js/snowfall.js' %}"></script>
 
     <!-- Chat widget -->
     {% if config.chat_widget.enabled %}
-    <div id="chat-widget-container"></div>
-    <script src="{% static 'js/chat_widget.js' %}"></script>
+    <div id="chat-widget-container" data-bot-name="{{ config.chat_widget.bot_name }}" data-welcome="{{ config.chat_widget.welcome_message }}"></div>
+    <script src="{% asset 'js/chat_widget.js' %}"></script>
     {% endif %}
     <script>
         const activePage = "graph";
     </script>
     
     <!-- Bootstrap JS bundle -->
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% asset 'js/bootstrap.bundle.min.js' %}"></script>
     
     <script>
         const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });

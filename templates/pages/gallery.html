@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static portfolio_extras %}
 
 {% block title %}Gallery — {{ config.site_title }}{% endblock %}
 {% block description %}Video content and media showcases by {{ config.site_title }}.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/gallery.css' %}">
+<link rel="stylesheet" href="{% asset 'css/pages/gallery.css' %}">
 {% endblock %}
 
 {% block content %}
