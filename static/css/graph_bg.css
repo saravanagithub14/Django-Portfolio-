@@ -6,18 +6,23 @@
     z-index: 0;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 1.2s ease, background-color 0.4s ease;
+    /* Fully blurred, so the backdrop reads as soft drifting light rather than a diagram.
+       Blur radius scales a little with the screen so phones and big monitors look alike. */
+    filter: blur(clamp(10px, 1.4vw, 22px)) saturate(1.15);
+    transform: scale(1.06);  /* hides the faded edge the blur leaves at the viewport border */
+    transition: opacity 1.2s ease, background-color 0.4s ease, filter 0.5s ease, transform 0.5s ease;
 }
 .graph-bg #graph-container {
     width: 100%;
     height: 100%;
 }
 
-/* Fade in once the libraries have loaded; kept faint so text stays readable */
-.graph-bg-ready .graph-bg { opacity: var(--graph-bg-opacity, 0.5); }
-:root[data-theme="light"] { --graph-bg-opacity: 0.7; }
+/* Fade in once the libraries have loaded. Blurring spreads the light out, so it can be a bit
+   stronger than a sharp graph would be without hurting readability. */
+.graph-bg-ready .graph-bg { opacity: var(--graph-bg-opacity, 0.75); }
+:root[data-theme="light"] { --graph-bg-opacity: 0.9; }
 @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) { --graph-bg-opacity: 0.7; }
+    :root:not([data-theme]) { --graph-bg-opacity: 0.9; }
 }
 
 /* Page content sits above the backdrop */
@@ -30,6 +35,8 @@
     z-index: 50;
     pointer-events: auto;
     background: var(--graph-bg);
+    filter: none;      /* sharp and readable while exploring */
+    transform: none;
 }
 .graph-exploring .graph-bg #graph-container { cursor: grab; }
 .graph-exploring .graph-bg #graph-container:active { cursor: grabbing; }

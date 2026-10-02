@@ -69,6 +69,51 @@ body {
 a { color: var(--primary); }
 .muted { color: var(--muted); }
 
+/* ===== Site zoom =====
+   Everything visible is shown at 150% on wide screens, like browser zoom at 150%. The zoom is
+   applied to the visible layers rather than <html>: zooming the root would push desktop layouts
+   past their breakpoints on narrower screens and offset clicks on the 3D graph's canvas. It steps
+   down on smaller screens so nothing overflows (the content column is 780px wide).
+   Inside a zoomed element, vh/vw are multiplied by the zoom too, so viewport-based sizes there
+   divide by var(--site-zoom). */
+:root { --site-zoom: 1; }
+@media (min-width: 1024px) { :root { --site-zoom: 1.25; } }
+@media (min-width: 1280px) { :root { --site-zoom: 1.5; } }
+/* The chat widget (launcher + window) is shown at 75% of the site zoom on desktop; on phones it
+   keeps full size, where the window already spans the screen. */
+:root { --chat-zoom: var(--site-zoom); }
+@media (min-width: 1024px) { :root { --chat-zoom: calc(var(--site-zoom) * .75); } }
+.top-nav,
+.content,
+.landing-container,
+.theme-toggle.floating,
+.graph-explore-bar,
+.graph-skip,
+#instructions,
+.graph-tip { zoom: var(--site-zoom); }
+#chat-widget-container { zoom: var(--chat-zoom); }
+
+/* ===== Grain =====
+   A fixed film-grain layer over the whole page: static SVG noise (no animation, so it costs
+   nothing per frame) laid over everything at low opacity. A plain layer behaves the same on
+   both themes; blend modes don't (soft-light/overlay do almost nothing on near-black or near-white).
+   pointer-events: none keeps every link and button clickable through it. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;          /* above content and the graph, below the navbar and chat widget */
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.6' intercept='-.8'/%3E%3CfeFuncG type='linear' slope='2.6' intercept='-.8'/%3E%3CfeFuncB type='linear' slope='2.6' intercept='-.8'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: var(--grain-opacity);
+}
+:root, :root[data-theme="dark"] { --grain-opacity: .05; }
+:root[data-theme="light"] { --grain-opacity: .06; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) { --grain-opacity: .06; }
+}
+
 /* ===== Theme toggle ===== */
 .theme-toggle {
   display: inline-flex;
