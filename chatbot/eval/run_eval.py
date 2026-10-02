@@ -3,7 +3,7 @@ Evaluate the chatbot's RAG pipeline against chatbot/eval/golden_set.json.
 
 Calls the pipeline functions directly (no HTTP, so no rate limit) with the real index, models and
 LLM provider chain. Reports retrieval hit rate@5 / MRR, DeepEval ContextualRecall, ContextualPrecision,
-Faithfulness and AnswerRelevancy, markdown / first-person / refusal checks, and the score
+Faithfulness and AnswerRelevancy, markdown / assistant-voice / refusal checks, and the score
 distributions used to pick RAG_FALLBACK_THRESHOLD. Writes a JSON report to chatbot/eval/reports/.
 
     pip install -r requirements-dev.txt
@@ -44,11 +44,17 @@ TARGETS = {"hit_rate_at_5": 0.9, "faithfulness": 0.9}
 
 # Markdown the widget can't render (numbered "1." lines are allowed: the prompt asks for one item per line)
 MARKDOWN_RE = re.compile(r"(\*\*|__|`|^\s{0,3}#{1,6}\s|^\s*[-*•]\s|^\s*\|.*\|\s*$)", re.M)
-FIRST_PERSON_RE = re.compile(r"\b(I|I'm|I've|I'd|I'll|my|me|mine)\b")
-THIRD_PERSON_RE = re.compile(r"\b(he|his|him)\b|\bSaravana (is|was|has|had|did|worked|built|studied)\b", re.I)
+# V.E.R.A. speaks as "I" but is Saravana's assistant, not Saravana: a reply that claims his work as its own fails
+CLAIMS_TO_BE_SARAVANA_RE = re.compile(
+    r"\bI(?:'ve| have| had)?\s+(?:worked|built|studied|joined|completed|published|taught|graduated|developed|led)\b"
+    r"|\bI (?:was|am) (?:a|an|the) (?:data scientist|engineer|research fellow|intern|gen ai engineer)\b"
+    r"|\bmy (?:projects?|experience|research|career|degree|thesis|papers?|students|work at)\b",
+    re.I,
+)
 PHONE_RE = re.compile(r"(\+?\d[\d\s-]{8,}\d)")
 REFUSAL_PHRASES = ("only cover", "professional background", "don't have", "do not have", "not able to share",
-                   "can't share", "cannot share", "not something i", "won't share", "i don't share", CONTACT_EMAIL)
+                   "can't share", "cannot share", "not something i", "won't share", "i don't share",
+                   "only built for", "isn't in my records", "rather not guess", "nice try", CONTACT_EMAIL)
 
 
 def load_cases(limit=None):
@@ -81,7 +87,7 @@ def rule_checks(case, result):
     else:
         checks["answered"] = bool(answered)
         if answered:
-            checks["first_person"] = bool(FIRST_PERSON_RE.search(reply)) and not THIRD_PERSON_RE.search(reply)
+            checks["assistant_voice"] = not CLAIMS_TO_BE_SARAVANA_RE.search(reply)
     for pattern in case.get("answer_must_include", []):
         checks[f"includes:{pattern}"] = bool(re.search(pattern, reply, re.I))
     for pattern in case.get("answer_must_not_include", []):
@@ -213,7 +219,7 @@ def main():
         "fallback_on_in_scope": sum(r["fallback"] for r in rows if not r["case"].get("expect_refusal")),
         "out_of_scope_refused": f"{sum(r['checks']['refused'] for r in oos_rows)}/{len(oos_rows)}",
         "markdown_free": f"{sum(r['checks']['markdown_free'] for r in rows)}/{len(rows)}",
-        "first_person": f"{sum(r['checks'].get('first_person', False) for r in answered)}/{len(answered)}",
+        "assistant_voice": f"{sum(r['checks'].get('assistant_voice', False) for r in answered)}/{len(answered)}",
         "median_latency_ms": sorted(r["latency_ms"].get("total_ms", 0) for r in rows)[len(rows) // 2],
         "runtime_s": round(time.time() - started, 1),
     }

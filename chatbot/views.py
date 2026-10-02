@@ -42,16 +42,16 @@ def get_history(session):
 
 def generate_llm_response(user_message, profile, session, model_cfg):
     """
-    RAG pipeline over the provider chain. Returns (reply, retrieval_meta); reply is None when every
-    provider failed (or retrieval broke), so the caller falls back to keyword matching.
+    RAG pipeline over the provider chain. Returns (reply, retrieval_meta, sources); reply is None when
+    every provider failed (or retrieval broke), so the caller falls back to keyword matching.
     """
     history = get_history(session)
     try:
         result = pipeline.run(user_message, history, make_llm(model_cfg))
     except Exception as e:
         logger.error(f"RAG pipeline error: {e}", exc_info=True)
-        return None, {"error": str(e)}
-    return result["reply"], result["meta"]
+        return None, {"error": str(e)}, []
+    return result["reply"], result["meta"], result.get("sources", [])
 
 
 def get_active_bot():
@@ -70,7 +70,7 @@ def get_active_bot():
                 'temperature': DEFAULT_TEMPERATURE,
             }
         )
-        return Chatbot.objects.create(bot_name="Saravana's AI", enabled=True, model_config=cfg)
+        return Chatbot.objects.create(bot_name="V.E.R.A.", enabled=True, model_config=cfg)
     except Exception as e:
         logger.warning(f"Could not auto-create Chatbot config: {e}")
         return None
@@ -138,16 +138,17 @@ def chat_api_endpoint(request):
         # 3. Ask the LLM chain; fall back to keyword matching if mock or every provider fails
         bot = get_active_bot()
         model_cfg = bot.model_config if bot else None
-        bot_response, retrieval_meta = None, None
+        bot_response, retrieval_meta, sources = None, None, []
         if model_cfg and not is_mock_provider(model_cfg):
-            bot_response, retrieval_meta = generate_llm_response(user_message, profile, session, model_cfg)
+            bot_response, retrieval_meta, sources = generate_llm_response(user_message, profile, session, model_cfg)
         if not bot_response:
-            bot_response = get_keyword_fallback_response(user_message, profile)
+            bot_response, sources = get_keyword_fallback_response(user_message, profile), []
             if retrieval_meta is not None:
                 retrieval_meta["keyword_fallback"] = True
 
         save_message(session, 'assistant', bot_response, retrieval_meta)
-        return JsonResponse({'response': bot_response})
+        # "sources" feeds the widget's source chips; clients that only read "response" are unaffected
+        return JsonResponse({'response': bot_response, 'sources': sources})
 
     except Exception as fatal_err:
         logger.error(f"Fatal error in chat endpoint: {fatal_err}", exc_info=True)

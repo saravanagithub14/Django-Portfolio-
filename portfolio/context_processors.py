@@ -47,7 +47,8 @@ def portfolio_context(request):
             chat_widget_config = {
                 'enabled': False,
                 'api_url': '/chatbot/api/chat/',
-                'bot_name': 'Saravana\'s AI',
+                'bot_name': 'V.E.R.A.',
+                'welcome_message': '',
             }
             # Retrieve chatbot config from chatbot app dynamically if imported
             try:
@@ -56,6 +57,7 @@ def portfolio_context(request):
                 if bot:
                     chat_widget_config['enabled'] = True
                     chat_widget_config['bot_name'] = bot.bot_name
+                    chat_widget_config['welcome_message'] = bot.welcome_message
             except Exception:
                 pass
 

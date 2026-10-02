@@ -407,7 +407,7 @@
   ],
   "notes": "No PhD in the sources: the reply must not claim one (naming the Senior Research Fellow role is ideal).",
   "answer_must_not_include": [
-   "\\bI (did|completed|earned|got|have|hold)( my| a)? (PhD|Ph\\.D|doctorate)"
+   "\\b(I|he|Saravana) (did|completed|earned|got|has|have|holds?)( his| my| a)? (PhD|Ph\\.D|doctorate)"
   ]
  },
  {

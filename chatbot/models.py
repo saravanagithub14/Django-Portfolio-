@@ -30,9 +30,9 @@ class AIModelConfig(models.Model):
         return f"{self.name} ({self.get_provider_display()} - {self.model_name})"
 
 class Chatbot(models.Model):
-    bot_name = models.CharField(max_length=100, default="Saravana's AI")
+    bot_name = models.CharField(max_length=100, default="V.E.R.A.")
     enabled = models.BooleanField(default=True)
-    welcome_message = models.TextField(default="Hi! I'm Saravana's AI assistant. Ask me anything about my experience, skills, or projects.")
+    welcome_message = models.TextField(default="Hello. I'm V.E.R.A., Saravana's assistant. I've read everything he's worked on, so ask away.")
     model_config = models.ForeignKey(AIModelConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='chatbots')
     created_at = models.DateTimeField(auto_now_add=True)
 
