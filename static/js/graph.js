@@ -184,9 +184,14 @@ try {
             const theme = document.documentElement.dataset.theme;
             return theme ? theme === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
         };
+        // The root node is big and white; blurred behind the page it became a bright blob behind the
+        // headings, so the backdrop keeps it faint and without a glow
+        const rootParts = { material: null, glow: null };
         const updateGlows = () => {
             const show = exploring || !isLightPage();
-            glowSprites.forEach(s => { s.visible = show; });
+            glowSprites.forEach(s => { s.visible = show && s !== rootParts.glow; });
+            if (rootParts.glow) rootParts.glow.visible = exploring;
+            if (rootParts.material) rootParts.material.opacity = exploring ? 0.85 : 0.18;
         };
         const TRANSPARENT = 'rgba(0,0,0,0)';
 
@@ -291,6 +296,10 @@ try {
                 });
                 const sphere = new THREE.Mesh(sphereGeom, sphereMat);
                 group.add(sphere);
+                if (node.depth === 0) {
+                    rootParts.material = sphereMat;
+                    if (!exploring) sphereMat.opacity = 0.18;
+                }
 
                 // Glow sprite
                 if (!node.isGhost) {
@@ -316,7 +325,8 @@ try {
                     const sprite = new THREE.Sprite(spriteMaterial);
                     sprite.scale.set(node.val * 3.5, node.val * 3.5, 1.0);
                     glowSprites.push(sprite);
-                    sprite.visible = exploring || !isLightPage();
+                    if (node.depth === 0) rootParts.glow = sprite;
+                    sprite.visible = node.depth === 0 ? exploring : (exploring || !isLightPage());
                     group.add(sprite);
 
                     // Persistent Text Labels for important nodes (Depth 0, 1, or Current Page)
@@ -378,6 +388,12 @@ try {
             Graph.enableNavigationControls(false).enablePointerInteraction(false);
             const fit = () => Graph.width(container.clientWidth).height(container.clientHeight);
             fit();
+            // The backdrop is heavily blurred (graph_bg.css), so drawing it at full resolution is wasted
+            // work: render at half resolution until the visitor opens it.
+            const renderer = Graph.renderer();
+            const fullRatio = window.devicePixelRatio || 1;
+            const setSharp = (sharp) => renderer.setPixelRatio(sharp ? fullRatio : Math.min(fullRatio, 1) * 0.5);
+            setSharp(false);
             window.addEventListener('resize', fit);
 
             // Slow orbit around the centre; paused while exploring and for reduced motion
@@ -397,6 +413,8 @@ try {
             window.portfolioGraph = {
                 setExplore(on) {
                     exploring = on;
+                    setSharp(on);
+                    fit();
                     Graph.enableNavigationControls(on)
                         .enablePointerInteraction(on)
                         .backgroundColor(on ? graphBg() : TRANSPARENT)

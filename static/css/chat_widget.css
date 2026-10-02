@@ -56,7 +56,7 @@
     right: 0;
     width: 380px;
     height: 560px;
-    max-height: calc(100vh - 110px);
+    max-height: calc(100vh / var(--chat-zoom, 1) - 110px);  /* the widget is zoomed (theme.css) */
     display: none;
     flex-direction: column;
     overflow: hidden;
