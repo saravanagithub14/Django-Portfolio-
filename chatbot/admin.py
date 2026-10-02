@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chatbot.models import AIModelConfig, Chatbot, ChatSession, ChatMessage
+from chatbot.models import AIModelConfig, Chatbot, ChatSession, ChatMessage, ContextSnippet
 
 class ChatMessageInline(admin.TabularInline):
     model = ChatMessage
@@ -39,10 +39,15 @@ class ChatSessionAdmin(admin.ModelAdmin):
     inlines = [ChatMessageInline]
     search_fields = ('session_id', 'user_ip')
 
+@admin.register(ContextSnippet)
+class ContextSnippetAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'created_at')
+    search_fields = ('text',)
+
 @admin.register(ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('session', 'role', 'content_summary', 'timestamp')
-    readonly_fields = ('session', 'role', 'content', 'timestamp')
+    readonly_fields = ('session', 'role', 'content', 'timestamp', 'retrieval_meta')
     list_filter = ('role', 'timestamp')
     search_fields = ('content',)
 

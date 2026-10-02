@@ -4,8 +4,9 @@ from django.shortcuts import render
 from django.conf import settings
 from portfolio.models import (
     UserProfile, SkillCategory, ProjectPage, ExperiencePage, EducationPage,
-    PublicationsPage, WorkshopsPage, FocusPage, LanguagePage, GalleryPage, BlogPage, GraphNode
+    PublicationsPage, WorkshopsPage, FocusPage, LanguagePage, GalleryPage, BlogPage
 )
+from portfolio.graph import build_graph
 
 BASE_DIR = Path(settings.BASE_DIR)
 
@@ -22,25 +23,11 @@ def load_fallback_json(filename):
 
 # --- Helper to serialize Graph Nodes ---
 def get_graph_data():
+    # Built from the content models on each request, so admin edits show up in the graph immediately
     try:
-        root_node = GraphNode.objects.filter(parent=None).first()
-        if root_node:
-            def serialize_node(node):
-                data = {
-                    "id": node.node_id,
-                    "name": node.name,
-                    "type": node.node_type,
-                }
-                if node.navigate_to:
-                    data["navigateTo"] = node.navigate_to
-                if node.description:
-                    data["description"] = node.description
-                
-                children = node.children.all()
-                if children.exists():
-                    data["children"] = [serialize_node(c) for c in children]
-                return data
-            return serialize_node(root_node)
+        graph = build_graph()
+        if graph:
+            return graph
     except Exception:
         pass
     return load_fallback_json("graph.json")

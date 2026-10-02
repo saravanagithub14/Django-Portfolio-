@@ -83,7 +83,9 @@ try {
             id,
             name: node.name,
             description: node.description,
-            navigateTo: node.navigateTo,
+            // End nodes have no page of their own: open the nearest ancestor's page instead
+            // (e.g. a project opens Projects). The current-page highlight above uses only the node's own link.
+            navigateTo: node.navigateTo || (parent && parent.depth > 0 ? parent.navigateTo : undefined),
             link: node.link,
             depth: depth,
             color: color,
@@ -172,6 +174,7 @@ try {
             <div style="background: rgba(10, 10, 10, 0.9); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(140, 100, 255, 0.4); backdrop-filter: blur(8px); pointer-events: none; color: white; font-family: 'Inter', sans-serif;">
                 <div style="font-weight: 700; font-size: 14px; margin-bottom: 2px;">${node.name}</div>
                 ${node.description ? `<div style="color: rgba(255,255,255,0.7); font-size: 11px; max-width: 250px; line-height: 1.4;">${node.description}</div>` : ''}
+                ${node.navigateTo && !node.isCurrentPage ? `<div style="color: #a078ff; font-size: 10px; margin-top: 4px; letter-spacing: 0.5px;">Click to open ↗</div>` : ''}
             </div>
         `)
             .nodeRelSize(4)
@@ -211,13 +214,18 @@ try {
                 );
 
                 if (node.navigateTo) {
+                    // Links like "projects.html" are relative to the site root; resolving them against the
+                    // current URL would turn /graph/ + projects.html into /graph/projects.html (a 404).
+                    const target = node.navigateTo.startsWith('#')
+                        ? node.navigateTo
+                        : new URL(node.navigateTo, window.location.origin + '/').href;
                     setTimeout(() => {
                         const loader = document.getElementById('loader');
                         if (loader) {
                             loader.style.display = 'flex';
                             loader.classList.remove('fade-out');
                         }
-                        window.location.href = node.navigateTo;
+                        window.location.href = target;
                     }, 800);
                 }
             });
@@ -240,7 +248,8 @@ try {
                 const opacity = node.isGhost ? 0.2 : 0.85;
 
                 // Sphere (Glass Orb)
-                const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 64, 64);
+                // 16 segments looks the same at this size; 64 made ~100 nodes cost ~800k triangles per frame
+                const sphereGeom = new THREE.SphereGeometry(node.val * 0.8, 16, 16);
                 const sphereMat = new THREE.MeshStandardMaterial({
                     color: node.color,
                     transparent: true,
@@ -330,6 +339,15 @@ try {
             Graph.cameraPosition({ z: 450 }, { x: 0, y: 0, z: 0 }, 3500);
         }, 1200);
 
+        // Stop rendering while the graph is scrolled out of view (it keeps animating otherwise)
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(entries => {
+                for (const entry of entries) {
+                    entry.isIntersecting ? Graph.resumeAnimation() : Graph.pauseAnimation();
+                }
+            }).observe(container);
+        }
+
         // 5. Dismiss Loader
         console.log("Graph setup complete. Removing loader...");
         setTimeout(() => {
@@ -338,7 +356,7 @@ try {
                 loader.classList.add('fade-out');
                 setTimeout(() => loader.remove(), 800);
             }
-        }, 1500);
+        }, 300);
 
     }
 
