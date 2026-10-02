@@ -64,7 +64,7 @@ Two Django apps under the `portfolio_hub` project:
 
 ## Configuration
 
-`portfolio_hub/settings.py` loads `.env` with django-environ (`KEY=value`, no spaces around `=`; the file must end with a newline before appending lines). Keys used: `OPENAI_API_KEY`, `OPENAI_MODEL`, `GROQ_API_KEY`, `GROQ_MODEL`, `GEMINI_API_KEY`, `CHATBOT_PROVIDER`, `UPDATE_TOKEN`, `GITHUB_USERNAME`, `GITHUB_TOKEN`, plus `SECRET_KEY`/`DEBUG`/`ALLOWED_HOSTS` (insecure dev defaults otherwise). `RENDER_EXTERNAL_HOSTNAME` is added to allowed hosts/CSRF origins on Render.
+`portfolio_hub/settings.py` loads `.env` with django-environ (`KEY=value`, no spaces around `=`; the file must end with a newline before appending lines). Keys used: `OPENAI_API_KEY`, `OPENAI_MODEL`, `GROQ_API_KEY`, `GROQ_MODEL`, `GEMINI_API_KEY`, `CHATBOT_PROVIDER`, `UPDATE_TOKEN`, `GITHUB_USERNAME`, `GITHUB_TOKEN`, plus `SECRET_KEY`/`DEBUG`/`ALLOWED_HOSTS` (insecure dev defaults otherwise). `RENDER_EXTERNAL_HOSTNAME` is added to allowed hosts/CSRF origins on Render. `SQLITE_PATH` moves the database outside the checkout (EC2), `CSRF_TRUSTED_ORIGINS` (comma-separated) adds origins for a custom domain, and `SECURE_PROXY_SSL_HEADER` trusts the proxy's `X-Forwarded-Proto`. EC2 deployment: `aws.md`.
 
 RAG settings: `RAG_INCLUDE_GITHUB` (default on), `RAG_RERANKER` (default on; `0` uses RRF order and dense-cosine fallback scoring), `RAG_FALLBACK_THRESHOLD` (overrides the default for whichever scorer is active: rerank logit or dense cosine — see `pipeline.DEFAULT_THRESHOLD_*`). `EVAL_JUDGE_MODEL` sets the DeepEval judge (default `gpt-4o-mini`).
 

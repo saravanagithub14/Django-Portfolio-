@@ -29,7 +29,13 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-]
+] + [o for o in env.list('CSRF_TRUSTED_ORIGINS', default=[]) if o]  # e.g. https://your-domain.com on EC2
+
+# Behind a proxy that terminates HTTPS (nginx on EC2, Render's router), trust its
+# X-Forwarded-Proto header so Django knows the request was secure. Without this the CSRF
+# origin check sees "http" and rejects admin logins over HTTPS. Only safe while gunicorn
+# is reachable through the proxy alone (EC2: bound to 127.0.0.1).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -94,7 +100,9 @@ ASGI_APPLICATION = 'portfolio_hub.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # SQLITE_PATH lets a server keep its live database outside the git checkout (EC2:
+        # /home/ubuntu/data/db.sqlite3), so `git pull` never overwrites admin edits.
+        'NAME': env('SQLITE_PATH', default='') or str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
