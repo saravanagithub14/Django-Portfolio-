@@ -312,7 +312,29 @@ class PublicationsPage(models.Model):
     def __str__(self):
         return f"Publications Page for {self.profile.site_title}"
 
-class BookChapter(models.Model):
+class PublicationDetails(models.Model):
+    """Fields shared by research articles and book chapters, for the publications list layout."""
+    label = models.CharField(max_length=60, blank=True, default="",
+                             help_text="Type shown above the title, e.g. Journal Article, Preprint. Blank uses the default.")
+    year = models.PositiveIntegerField(null=True, blank=True, help_text="Sorts the list, newest first.")
+    summary = models.TextField(blank=True, default="", help_text="One or two plain-English sentences.")
+    tags = models.CharField(max_length=255, blank=True, default="",
+                            help_text="Comma-separated topics; they also become the page's filter buttons.")
+    image = models.CharField(max_length=500, blank=True, default="",
+                             help_text="Figure or cover: a full URL, or a static path like img/publications/x.jpg.")
+    doi = models.CharField(max_length=255, blank=True, default="", help_text="e.g. 10.1016/j.jddst.2022.103446")
+    paper_url = models.CharField(max_length=500, blank=True, default="", help_text="Blank links View Paper to the DOI.")
+    pdf_url = models.CharField(max_length=500, blank=True, default="")
+
+    class Meta:
+        abstract = True
+
+    @property
+    def tag_list(self):
+        return [t.strip() for t in self.tags.split(',') if t.strip()]
+
+
+class BookChapter(PublicationDetails):
     publications_page = models.ForeignKey(PublicationsPage, on_delete=models.CASCADE, related_name='book_chapters')
     title = models.CharField(max_length=255)
     meta = models.TextField() # allows HTML like <em> or links
@@ -324,7 +346,7 @@ class BookChapter(models.Model):
     def __str__(self):
         return self.title
 
-class ResearchArticle(models.Model):
+class ResearchArticle(PublicationDetails):
     publications_page = models.ForeignKey(PublicationsPage, on_delete=models.CASCADE, related_name='research_articles')
     title = models.CharField(max_length=255)
     meta = models.TextField() # allows HTML
