@@ -1,4 +1,6 @@
+from django.contrib.staticfiles import finders
 from django.shortcuts import render
+from django.templatetags.static import static
 from portfolio.models import (
     UserProfile, SkillCategory, ProjectPage, ExperiencePage, EducationPage,
     PublicationsPage, WorkshopsPage, FocusPage, LanguagePage, GalleryPage, BlogPage
@@ -176,13 +178,40 @@ def projects_view(request):
     }
     return render(request, 'pages/projects.html', context)
 
+def _publication_dict(pub, default_label, icon):
+    image = pub.image
+    if image and not image.startswith(('http://', 'https://', '/')):
+        # A static path; a missing file would raise under the manifest storage, so it's dropped instead
+        image = static(image) if finders.find(image) else ''
+    doi_url = f'https://doi.org/{pub.doi}' if pub.doi else ''
+    return {
+        'title': pub.title,
+        'meta': pub.meta,
+        'label': pub.label or default_label,
+        'year': pub.year,
+        'summary': pub.summary,
+        'tags': pub.tag_list,
+        'image': image,
+        'icon': icon,
+        'doi': pub.doi,
+        'doi_url': doi_url,
+        'paper_url': pub.paper_url or doi_url,
+        'pdf_url': pub.pdf_url,
+    }
+
+
 def publications_view(request):
     pub_context = {}
     try:
         page = PublicationsPage.objects.first()
         if page:
-            chapters = [{'title': c.title, 'meta': c.meta} for c in page.book_chapters.all()]
-            articles = [{'title': a.title, 'meta': a.meta} for a in page.research_articles.all()]
+            chapters = [_publication_dict(c, 'Book Chapter', 'book-open') for c in page.book_chapters.all()]
+            articles = [_publication_dict(a, 'Research Article', 'flask-conical') for a in page.research_articles.all()]
+            # One list, newest first; publications without a year go last
+            items = sorted(articles + chapters, key=lambda p: -(p['year'] or 0))
+            topics = []
+            for item in items:
+                topics += [t for t in item['tags'] if t not in topics]
             achievements = [{'icon': ac.icon, 'title': ac.title, 'description': ac.description} for ac in page.achievements.all()]
             pub_context = {
                 'page_label': page.page_label,
@@ -190,6 +219,8 @@ def publications_view(request):
                 'page_sub': page.page_sub,
                 'book_chapters': chapters,
                 'research_articles': articles,
+                'items': items,
+                'topics': topics,
                 'achievements': achievements
             }
     except Exception:
@@ -280,26 +311,42 @@ def languages_view(request):
     }
     return render(request, 'pages/languages.html', context)
 
+def _video_dict(title, description, embed_url, category, duration):
+    # YouTube embed URLs look like https://www.youtube.com/embed/<id>?start=...; the id gives the thumbnail
+    video_id = embed_url.split('/embed/')[-1].split('?')[0] if '/embed/' in embed_url else ''
+    return {
+        'title': title,
+        'description': description,
+        'embed_url': embed_url,
+        'category': category,
+        'duration': duration,
+        'thumbnail': f'https://i.ytimg.com/vi/{video_id}/mqdefault.jpg' if video_id else '',
+        'watch_url': f'https://www.youtube.com/watch?v={video_id}' if video_id else embed_url,
+    }
+
+
 def gallery_view(request):
     gallery_context = {}
     try:
         page = GalleryPage.objects.first()
         if page:
-            reels = [{'title': r.title, 'reel_url': r.reel_url, 'reel_id': r.reel_id} for r in page.reels.all()]
-            videos = [{'title': v.title, 'description': v.description, 'embed_url': v.embed_url, 'category': v.category, 'duration': v.duration} for v in page.videos.all()]
-            featured = {
-                'title': page.featured_title,
-                'description': page.featured_description,
-                'embed_url': page.featured_embed_url,
-                'category': page.featured_category,
-                'duration': page.featured_duration
-            }
+            # Covers come from `manage.py fetch_reel_thumbnails`; a reel without one falls back to the bare embed
+            reels = [{
+                'title': r.title, 'reel_url': r.reel_url, 'reel_id': r.reel_id,
+                'thumbnail': f'img/reels/{r.reel_id}.jpg' if finders.find(f'img/reels/{r.reel_id}.jpg') else '',
+            } for r in page.reels.all()]
+            videos = [_video_dict(v.title, v.description, v.embed_url, v.category, v.duration) for v in page.videos.all()]
+            # The featured video leads the playlist; the template plays the first entry
+            if page.featured_embed_url:
+                videos.insert(0, _video_dict(
+                    page.featured_title, page.featured_description, page.featured_embed_url,
+                    page.featured_category, page.featured_duration,
+                ))
             gallery_context = {
                 'page_label': page.page_label,
                 'page_title': page.page_title,
                 'page_sub': page.page_sub,
                 'reels': reels,
-                'featured': featured,
                 'videos': videos
             }
     except Exception:

@@ -5,7 +5,8 @@ from chatbot.rag.prompts import FALLBACK_MESSAGE
 from chatbot.tests.conftest import make_fake_store
 
 MESSAGE = "u used agents?"
-DEFAULT = {"standalone_question": MESSAGE, "intent": "lookup", "type_filter": None, "year": None}
+DEFAULT = {"standalone_question": MESSAGE, "intent": "lookup", "type_filter": None, "year": None,
+           "concept_term": None}
 
 
 @pytest.mark.parametrize("raw", [
@@ -30,7 +31,7 @@ def test_route_inside_code_fence_is_parsed():
           '"type_filter": "project", "year": "2024"}\n```'
     assert pipeline.parse_route(raw, MESSAGE) == {
         "standalone_question": "Has Saravana built AI agents?", "intent": "lookup",
-        "type_filter": "project", "year": 2024,
+        "type_filter": "project", "year": 2024, "concept_term": None,
     }
 
 

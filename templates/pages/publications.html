@@ -33,31 +33,43 @@
         </div>
     </div>
 
-    <!-- Research Articles -->
-    <div class="section-heading">Research Articles</div>
-    <div class="pub-list">
-        {% for pub in publications.research_articles %}
-        <div class="pub-card type-article-card">
-            <div class="pub-top">
-                <div class="pub-title">{{ pub.title }}</div>
-                <span class="pub-type type-article">Research Article</span>
-            </div>
-            <div class="pub-meta">{{ pub.meta | safe }}</div>
-        </div>
+    <!-- Publications: topic filters, then one list (articles + chapters), newest first -->
+    {% if publications.topics %}
+    <div class="pub-filters" role="group" aria-label="Filter publications by topic">
+        <button type="button" class="pub-filter is-active" data-topic="" aria-pressed="true">All Publications</button>
+        {% for topic in publications.topics %}
+        <button type="button" class="pub-filter" data-topic="{{ topic }}" aria-pressed="false">{{ topic }}</button>
         {% endfor %}
     </div>
+    {% endif %}
 
-    <!-- Book Chapters -->
-    <div class="section-heading">Book Chapters</div>
     <div class="pub-list">
-        {% for pub in publications.book_chapters %}
-        <div class="pub-card type-book-card">
-            <div class="pub-top">
-                <div class="pub-title">{{ pub.title }}</div>
-                <span class="pub-type type-book">Book Chapter</span>
+        {% for pub in publications.items %}
+        <article class="pub-card" data-topics="{{ pub.tags|join:'|' }}">
+            <div class="pub-figure">
+                {% if pub.image %}
+                <img src="{{ pub.image }}" alt="" loading="lazy">
+                {% else %}
+                <div class="pub-figure-empty">{{ pub.icon|icon }}</div>
+                {% endif %}
             </div>
-            <div class="pub-meta">{{ pub.meta | safe }}</div>
-        </div>
+            <div class="pub-body">
+                <div class="pub-type">{{ pub.label }}{% if pub.year %} · {{ pub.year }}{% endif %}</div>
+                <h2 class="pub-title">{% if pub.paper_url %}<a href="{{ pub.paper_url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}</h2>
+                <div class="pub-meta">{{ pub.meta|safe }}</div>
+                {% if pub.summary %}<p class="pub-summary">{{ pub.summary }}</p>{% endif %}
+                {% if pub.tags %}
+                <div class="pub-tags">{% for tag in pub.tags %}<span class="pub-tag">{{ tag }}</span>{% endfor %}</div>
+                {% endif %}
+                {% if pub.paper_url or pub.pdf_url or pub.doi %}
+                <div class="pub-links">
+                    {% if pub.paper_url %}<a href="{{ pub.paper_url }}" target="_blank" rel="noopener">View Paper {% icon "arrow-up-right" %}</a>{% endif %}
+                    {% if pub.pdf_url %}<a href="{{ pub.pdf_url }}" target="_blank" rel="noopener">PDF {% icon "arrow-up-right" %}</a>{% endif %}
+                    {% if pub.doi %}<a href="{{ pub.doi_url }}" target="_blank" rel="noopener" class="pub-doi">DOI {{ pub.doi }}</a>{% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </article>
         {% endfor %}
     </div>
 
@@ -84,5 +96,18 @@
             if (i.isIntersecting) i.target.classList.add('visible');
         }), { threshold: 0.08 });
         document.querySelectorAll('.pub-card, .achieve-item').forEach(el => obs.observe(el));
+
+        // Topic filters: show cards tagged with the topic ("" = all)
+        const filters = document.querySelectorAll('.pub-filter');
+        filters.forEach(btn => btn.addEventListener('click', () => {
+            const topic = btn.dataset.topic;
+            filters.forEach(b => {
+                b.classList.toggle('is-active', b === btn);
+                b.setAttribute('aria-pressed', b === btn);
+            });
+            document.querySelectorAll('.pub-card').forEach(card => {
+                card.hidden = topic && !card.dataset.topics.split('|').includes(topic);
+            });
+        }));
     </script>
 {% endblock %}

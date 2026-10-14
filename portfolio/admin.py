@@ -122,13 +122,20 @@ class EducationPageAdmin(admin.ModelAdmin):
     inlines = [DegreeInline, CertificationInline]
 
 # --- Publications Admin ---
-class BookChapterInline(admin.TabularInline):
-    model = BookChapter
-    extra = 1
+# Stacked: each publication has too many fields for a table row
+PUBLICATION_FIELDS = (
+    'title', 'meta', ('label', 'year', 'order'), 'summary', 'tags', 'image', ('doi', 'paper_url', 'pdf_url'),
+)
 
-class ResearchArticleInline(admin.TabularInline):
+class BookChapterInline(admin.StackedInline):
+    model = BookChapter
+    extra = 0
+    fields = PUBLICATION_FIELDS
+
+class ResearchArticleInline(admin.StackedInline):
     model = ResearchArticle
-    extra = 1
+    extra = 0
+    fields = PUBLICATION_FIELDS
 
 class AchievementInline(admin.TabularInline):
     model = Achievement

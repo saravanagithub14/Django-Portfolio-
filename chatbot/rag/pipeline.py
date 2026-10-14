@@ -1,5 +1,11 @@
 """
-Query pipeline: condense + route (one LLM call) -> retrieve by intent -> fallback check -> generate.
+V.E.R.A.'s orchestrator: guard -> condense + route (one LLM call) -> one specialist agent -> output check.
+
+    injection   guard: the brand kit's trick line, no LLM call (obvious attempts never reach the router)
+    personal    privacy agent: a fixed deflection, no LLM call (unambiguous ones never reach the router)
+    concept     explainer agent: explains an AI term, bridging to Saravana's related work
+    lookup, list, timeframe, chitchat, out_of_scope
+                portfolio agent: retrieve by intent -> fallback check -> answer from the knowledge base
 
 The LLM is passed in as a callable so this module stays independent of provider plumbing:
 
@@ -13,17 +19,19 @@ import os
 import re
 import time
 
+from chatbot.agents import explainer, guard, portfolio, privacy
+from chatbot.agents.portfolio import format_context  # noqa: F401  (kept importable from here)
 from chatbot.formatting import strip_markdown
 from chatbot.rag import index as rag_index
-from chatbot.rag.prompts import (
-    CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, FIXED_LINES, NO_SOURCES_CONTEXT, SYSTEM_PROMPT_TEMPLATE,
-)
+from chatbot.rag.prompts import CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, FIXED_LINES, TRICK_LINE
 from chatbot.rag.retrieve import filter_by_year, hybrid_search, list_by_type
 from chatbot.rag.sources import answer_sources
 
 logger = logging.getLogger(__name__)
 
-INTENTS = ("lookup", "list", "timeframe", "out_of_scope", "chitchat")
+INTENTS = ("lookup", "list", "timeframe", "concept", "personal", "injection", "out_of_scope", "chitchat")
+# Which agent answers each intent; anything else goes to the portfolio agent
+AGENT_FOR_INTENT = {"injection": "guard", "personal": "privacy", "concept": "explainer"}
 TYPE_FILTERS = ("experience", "project", "skill", "teaching", "education", "certification", "about", "github")
 NO_RETRIEVAL_INTENTS = ("out_of_scope", "chitchat")
 FALLBACK_INTENTS = ("lookup", "timeframe")
@@ -40,12 +48,11 @@ DEFAULT_THRESHOLD_DENSE = 0.70
 ROUTE_RESCUE_SCORE = 5.0
 
 CONDENSE_MAX_TOKENS = 300
-ANSWER_MAX_TOKENS = 400
-LIST_ANSWER_MAX_TOKENS = 800
 
 
 def default_route(message):
-    return {"standalone_question": message, "intent": "lookup", "type_filter": None, "year": None}
+    return {"standalone_question": message, "intent": "lookup", "type_filter": None, "year": None,
+            "concept_term": None}
 
 
 def parse_route(raw, message):
@@ -62,6 +69,7 @@ def parse_route(raw, message):
     intent = data.get("intent")
     type_filter = data.get("type_filter")
     year = data.get("year")
+    term = data.get("concept_term")
     try:
         year = int(year) if year not in (None, "", "null") else None
     except (TypeError, ValueError):
@@ -71,6 +79,7 @@ def parse_route(raw, message):
         "intent": intent if intent in INTENTS else "lookup",
         "type_filter": type_filter if type_filter in TYPE_FILTERS else None,
         "year": year if year is not None and 1950 <= year <= 2100 else None,
+        "concept_term": term.strip() if isinstance(term, str) and term.strip() else None,
     }
 
 
@@ -99,12 +108,6 @@ def fallback_threshold(use_reranker):
     return DEFAULT_THRESHOLD_RERANK if use_reranker else DEFAULT_THRESHOLD_DENSE
 
 
-def format_context(results):
-    if not results:
-        return NO_SOURCES_CONTEXT
-    return "\n\n".join(f"[source: {r['chunk_id']}]\n{r['text']}" for r in results)
-
-
 def retrieve(route, store=None, *, use_reranker=None, timings=None):
     """Retrieve for a routed question. Returns (results, top_score, fallback_fired)."""
     store = store if store is not None else rag_index.get_store()
@@ -131,63 +134,117 @@ def retrieve(route, store=None, *, use_reranker=None, timings=None):
     return results, top_score, fallback
 
 
+def _elapsed_ms(start):
+    return round((time.perf_counter() - start) * 1000, 1)
+
+
 def run(message, history, llm, *, store=None, use_reranker=None):
     """
     Full pipeline for one visitor message. Returns a dict:
         reply       final plain-text reply, or None if every LLM provider failed
         raw_reply   the model's text before strip_markdown (for evals)
-        results     retrieved chunks
+        results     retrieved chunks (for concept questions, the explainer's related work)
         sources     site sections / records the answer drew on, for the widget's source chips
-        meta        what gets logged to ChatMessage.retrieval_meta
+        meta        what gets logged to ChatMessage.retrieval_meta, including which agent answered
     """
     started = time.perf_counter()
     timings = {}
+    reranked = rag_index.reranker_enabled() if use_reranker is None else use_reranker
 
-    t = time.perf_counter()
-    route, condense_provider = condense_and_route(message, history, llm)
-    timings["condense_ms"] = round((time.perf_counter() - t) * 1000, 1)
-
-    t = time.perf_counter()
-    results, top_score, fallback = retrieve(route, store, use_reranker=use_reranker, timings=timings)
-    timings["retrieve_ms"] = round((time.perf_counter() - t) * 1000, 1)
-
-    meta = {
-        **route,
-        "chunks": [{"chunk_id": r["chunk_id"], "score": r["score"]} for r in results],
-        "top_score": None if top_score is None else round(top_score, 4),
-        "fallback": fallback,
-        "condense_provider": condense_provider,
-        "provider": None,
-        "latency_ms": timings,
-    }
-
-    if fallback:
-        timings["total_ms"] = round((time.perf_counter() - started) * 1000, 1)
-        return {"reply": FALLBACK_MESSAGE, "raw_reply": FALLBACK_MESSAGE, "results": results, "sources": [],
+    def finish(route, agent, raw_reply, *, results=(), sources=(), provider=None, condense_provider=None,
+               top_score=None, fallback=False):
+        meta = {
+            **route,
+            "agent": agent,
+            "chunks": [{"chunk_id": r["chunk_id"], "score": r["score"]} for r in results],
+            "top_score": None if top_score is None else round(top_score, 4),
+            "fallback": fallback,
+            "condense_provider": condense_provider,
+            "provider": provider,
+            "latency_ms": timings,
+        }
+        reply, problem = guard.check_reply(strip_markdown(raw_reply) if raw_reply else None)
+        if problem:
+            logger.warning("Output guard replaced a %s reply (%s): %r", agent, problem, raw_reply)
+            meta["output_guard"] = problem
+            sources = ()
+        timings["total_ms"] = _elapsed_ms(started)
+        return {"reply": reply, "raw_reply": raw_reply, "results": list(results), "sources": list(sources),
                 "meta": meta}
 
-    system_prompt = SYSTEM_PROMPT_TEMPLATE.replace("{context}", format_context(results))
-    messages = [{"role": "system", "content": system_prompt}, *history, {"role": "user", "content": message}]
+    # 1. Before any LLM call: obvious injection attempts and unambiguous personal questions
+    if guard.is_injection(message):
+        return finish({**default_route(message), "intent": "injection"}, "guard", TRICK_LINE)
+    if privacy.detect(message):
+        return finish({**default_route(message), "intent": "personal"}, "privacy", privacy.reply_for(message))
+
+    # 2. Condense + route
     t = time.perf_counter()
-    raw_reply, provider = llm(
-        messages, max_tokens=LIST_ANSWER_MAX_TOKENS if route["intent"] == "list" else ANSWER_MAX_TOKENS,
-    )
-    timings["generate_ms"] = round((time.perf_counter() - t) * 1000, 1)
-    timings["total_ms"] = round((time.perf_counter() - started) * 1000, 1)
-    meta["provider"] = provider
-    reranked = rag_index.reranker_enabled() if use_reranker is None else use_reranker
+    route, condense_provider = condense_and_route(message, history, llm)
+    timings["condense_ms"] = _elapsed_ms(t)
+    agent = AGENT_FOR_INTENT.get(route["intent"], "portfolio")
+
+    if agent == "guard":
+        return finish(route, agent, TRICK_LINE, condense_provider=condense_provider)
+    if agent == "privacy":
+        wording = f"{message} {route['standalone_question']}"
+        # The router sometimes calls work questions personal ("do u teach students", "r u open to
+        # freelance"). With no private-life wording, a strong knowledge-base match sends it to the portfolio.
+        if not privacy.has_personal_wording(wording) and reranked:
+            store = store if store is not None else rag_index.get_store()
+            results, top_score = hybrid_search(store, route["standalone_question"], use_reranker=True,
+                                               timings=timings)
+            if top_score is not None and top_score >= ROUTE_RESCUE_SCORE:
+                route["rerouted_from"] = route["intent"]
+                route["intent"] = "lookup"
+                return _answer_portfolio(message, history, llm, route, results, top_score, store, reranked,
+                                         timings, finish, condense_provider)
+        return finish(route, agent, privacy.reply_for(wording), condense_provider=condense_provider)
+
+    store = store if store is not None else rag_index.get_store()
+
+    if agent == "explainer":
+        t = time.perf_counter()
+        related = explainer.related_work(route["concept_term"] or route["standalone_question"], store,
+                                         use_reranker=reranked, threshold=fallback_threshold(reranked),
+                                         timings=timings)
+        timings["retrieve_ms"] = _elapsed_ms(t)
+        t = time.perf_counter()
+        raw_reply, provider = explainer.answer(message, history, llm, related)
+        timings["generate_ms"] = _elapsed_ms(t)
+        return finish(route, agent, raw_reply, results=related, provider=provider,
+                      condense_provider=condense_provider,
+                      sources=_sources(raw_reply, related, route, store, reranked))
+
+    # 3. Portfolio agent: retrieve by intent; fall back without generating if nothing scores well enough
+    t = time.perf_counter()
+    results, top_score, fallback = retrieve(route, store, use_reranker=reranked, timings=timings)
+    timings["retrieve_ms"] = _elapsed_ms(t)
+    if fallback:
+        return finish(route, agent, FALLBACK_MESSAGE, results=results, condense_provider=condense_provider,
+                      top_score=top_score, fallback=True)
+
+    return _answer_portfolio(message, history, llm, route, results, top_score, store, reranked, timings,
+                             finish, condense_provider)
+
+
+def _answer_portfolio(message, history, llm, route, results, top_score, store, reranked, timings, finish,
+                      condense_provider):
+    t = time.perf_counter()
+    raw_reply, provider = portfolio.answer(message, history, llm, results, route["intent"])
+    timings["generate_ms"] = _elapsed_ms(t)
+    return finish(route, "portfolio", raw_reply, results=results, provider=provider,
+                  condense_provider=condense_provider, top_score=top_score,
+                  sources=_sources(raw_reply, results, route, store, reranked))
+
+
+def _sources(raw_reply, results, route, store, reranked):
+    """Source chips for an answer; none for fixed lines, which didn't use the retrieved chunks."""
+    if not raw_reply or raw_reply.strip().strip('"') in FIXED_LINES:
+        return []
     try:
-        # A fixed line (greeting, off topic, ...) didn't use the retrieved chunks, so it gets no chips
-        is_fixed_line = (raw_reply or "").strip().strip('"') in FIXED_LINES
-        sources = [] if is_fixed_line else answer_sources(
-            results, meta, threshold=fallback_threshold(reranked), store=store, use_reranker=reranked)
+        return answer_sources(results, route, threshold=fallback_threshold(reranked), store=store,
+                              use_reranker=reranked)
     except Exception as e:  # chips are decoration; never fail an answer over them
         logger.warning("Could not build answer sources: %s", e)
-        sources = []
-    return {
-        "reply": strip_markdown(raw_reply) if raw_reply else None,
-        "raw_reply": raw_reply,
-        "results": results,
-        "sources": sources,
-        "meta": meta,
-    }
+        return []
