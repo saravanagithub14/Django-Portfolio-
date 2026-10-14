@@ -41,6 +41,8 @@ GOLDEN_SET = Path(__file__).with_name("golden_set.json")
 REPORT_DIR = Path(__file__).with_name("reports")
 
 TARGETS = {"hit_rate_at_5": 0.9, "faithfulness": 0.9}
+# Categories that aren't in-scope knowledge-base questions (for the threshold's score distributions)
+NOT_IN_SCOPE = ("out_of_scope", "personal", "concept", "injection")
 
 # Markdown the widget can't render (numbered "1." lines are allowed: the prompt asks for one item per line)
 MARKDOWN_RE = re.compile(r"(\*\*|__|`|^\s{0,3}#{1,6}\s|^\s*[-*•]\s|^\s*\|.*\|\s*$)", re.M)
@@ -81,7 +83,8 @@ def rule_checks(case, result):
         lowered = reply.lower()
         checks["refused"] = bool(
             not PHONE_RE.search(reply) and (
-                meta["fallback"] or meta["intent"] == "out_of_scope" or any(p in lowered for p in REFUSAL_PHRASES)
+                meta["fallback"] or meta["intent"] in ("out_of_scope", "personal", "injection")
+                or meta.get("agent") in ("privacy", "guard") or any(p in lowered for p in REFUSAL_PHRASES)
             )
         )
     else:
@@ -94,6 +97,8 @@ def rule_checks(case, result):
         checks[f"excludes:{pattern}"] = not re.search(pattern, reply, re.I)
     if case.get("expected_intent"):
         checks[f"intent={case['expected_intent']}"] = meta["intent"] == case["expected_intent"]
+    if case.get("expected_agent"):
+        checks[f"agent={case['expected_agent']}"] = meta.get("agent") == case["expected_agent"]
     return checks
 
 
@@ -140,9 +145,10 @@ async def deepeval_scores(rows, store, judge_model, concurrency=6):
 
 def threshold_analysis(rows):
     in_scope = sorted(r["forced_top_score"] for r in rows
-                      if r["forced_top_score"] is not None and r["case"]["category"] != "out_of_scope")
+                      if r["forced_top_score"] is not None and r["case"]["category"] not in NOT_IN_SCOPE)
     out_scope = sorted(r["forced_top_score"] for r in rows
                        if r["forced_top_score"] is not None and r["case"]["category"] == "out_of_scope")
+    # Personal, concept and injection cases aren't knowledge-base lookups, so they don't inform the threshold
     if not in_scope or not out_scope:
         return {"in_scope": in_scope, "out_of_scope": out_scope, "suggested": None}
     gap_low, gap_high = max(out_scope), min(in_scope)
@@ -188,7 +194,8 @@ def main():
             "case": case,
             "reply": result["reply"],
             "raw_reply": result["raw_reply"],
-            "route": {k: meta[k] for k in ("standalone_question", "intent", "type_filter", "year")},
+            "route": {k: meta.get(k) for k in ("standalone_question", "intent", "type_filter", "year", "concept_term")},
+            "agent": meta.get("agent"),
             "retrieved": [(c["chunk_id"], c["score"]) for c in meta["chunks"]],
             "context_texts": [r["text"] for r in result["results"]],
             "top_score": meta["top_score"],
@@ -201,7 +208,8 @@ def main():
         }
         rows.append(row)
         status = "ok" if all(row["checks"].values()) and (row["retrieval"] or {}).get("hit_at_5", True) else "FAIL"
-        print(f"[{i:>2}/{len(cases)}] {status:<4} {meta['intent']:<12} {case['question'][:60]}", flush=True)
+        print(f"[{i:>2}/{len(cases)}] {status:<4} {meta.get('agent', ''):<10} {meta['intent']:<12} "
+              f"{case['question'][:60]}", flush=True)
 
     if not args.no_deepeval:
         print(f"\nRunning DeepEval metrics with judge {args.judge_model}...", flush=True)
@@ -209,6 +217,7 @@ def main():
 
     retrieval_rows = [r for r in rows if r["retrieval"]]
     oos_rows = [r for r in rows if r["case"].get("expect_refusal")]
+    agent_rows = [r for r in rows if r["case"].get("expected_agent")]
     answered = [r for r in rows if r["reply"] and r["reply"] != FALLBACK_MESSAGE and not r["case"].get("expect_refusal")]
     summary = {
         "cases": len(rows),
@@ -220,6 +229,8 @@ def main():
         "out_of_scope_refused": f"{sum(r['checks']['refused'] for r in oos_rows)}/{len(oos_rows)}",
         "markdown_free": f"{sum(r['checks']['markdown_free'] for r in rows)}/{len(rows)}",
         "assistant_voice": f"{sum(r['checks'].get('assistant_voice', False) for r in answered)}/{len(answered)}",
+        "agent_routing": f"{sum(r['agent'] == r['case']['expected_agent'] for r in agent_rows)}/{len(agent_rows)}",
+        "privacy_leaks": sum(bool(PHONE_RE.search(r["reply"] or "")) for r in rows),
         "median_latency_ms": sorted(r["latency_ms"].get("total_ms", 0) for r in rows)[len(rows) // 2],
         "runtime_s": round(time.time() - started, 1),
     }
@@ -231,6 +242,7 @@ def main():
         "hit_rate_at_5>=0.9": (summary["hit_rate_at_5"] or 0) >= TARGETS["hit_rate_at_5"],
         "faithfulness>=0.9": None if args.no_deepeval else (summary.get("faithfulness") or 0) >= TARGETS["faithfulness"],
         "all_out_of_scope_refused": all(r["checks"]["refused"] for r in oos_rows),
+        "no_privacy_leaks": summary["privacy_leaks"] == 0,
     }
 
     failures = []
@@ -243,7 +255,7 @@ def main():
                 problems.append(f"{name}={d['score']:.2f}")
         if problems:
             failures.append({"question": r["case"]["question"], "category": r["case"]["category"],
-                             "intent": r["route"]["intent"], "problems": problems,
+                             "intent": r["route"]["intent"], "agent": r["agent"], "problems": problems,
                              "retrieved": [cid for cid, _ in r["retrieved"][:5]], "reply": r["reply"]})
 
     REPORT_DIR.mkdir(exist_ok=True)
@@ -261,7 +273,7 @@ def main():
           f"suggested {t.get('suggested')}")
     print(f"\n=== Failures ({len(failures)}) ===")
     for f in failures:
-        print(f"- [{f['category']}/{f['intent']}] {f['question']}: {', '.join(f['problems'])}")
+        print(f"- [{f['category']}/{f['agent']}/{f['intent']}] {f['question']}: {', '.join(f['problems'])}")
     print(f"\nReport: {report_path}")
 
 
