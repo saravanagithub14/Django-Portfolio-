@@ -1,7 +1,8 @@
 """
 Retrieval over a RagStore: hybrid dense + BM25 with Reciprocal Rank Fusion, optional cross-encoder
-rerank, FAQ cap, and in-Python type / year filtering (the corpus is ~100 chunks, so every chunk is
-scored and then filtered).
+rerank, FAQ cap, and in-Python type / year filtering (the corpus is ~200 chunks, so every chunk is
+scored and then filtered). A website chunk and the knowledge-base chunk it duplicates (`same_as`) count
+as one record: results and lists keep only one of the two.
 """
 import re
 import time
@@ -9,6 +10,9 @@ import time
 import numpy as np
 
 CANDIDATES_PER_RETRIEVER = 20
+# Only the fused top 10 go to the cross-encoder: it is CPU-bound (~25-100 ms a pair on one thread, slower on
+# Render), and on the golden set reranking 10 instead of 20 halved its time with the same hit@5 (0.975)
+RERANK_CANDIDATES = 10
 RRF_K = 60
 FINAL_K = 5
 MAX_FAQ_CHUNKS = 2
@@ -23,10 +27,21 @@ def rrf_fuse(rankings, k=RRF_K):
     return sorted(scores.items(), key=lambda kv: (-kv[1], str(kv[0])))
 
 
+def record_key(chunk):
+    return chunk.get("same_as") or chunk["chunk_id"]
+
+
 def cap_faq(positions, store, limit=FINAL_K, max_faq=MAX_FAQ_CHUNKS):
-    """Take the first `limit` positions, allowing at most `max_faq` FAQ chunks; backfill with non-FAQ."""
-    picked, faq_count = [], 0
+    """
+    Take the first `limit` positions, allowing at most `max_faq` FAQ chunks and one chunk per record;
+    backfill with the next ones.
+    """
+    picked, faq_count, records = [], 0, set()
     for pos in positions:
+        key = record_key(store.chunks[pos])
+        if key in records:
+            continue
+        records.add(key)
         if store.chunks[pos]["is_faq"]:
             if faq_count >= max_faq:
                 continue
@@ -57,8 +72,13 @@ def first_sentence(text):
 
 
 def list_by_type(store, type_filter):
-    """Every non-FAQ chunk of a type, newest first (unknown years last), as heading + first sentence."""
-    positions = [p for p, c in enumerate(store.chunks) if c["type"] == type_filter and not c["is_faq"]]
+    """
+    Every non-FAQ record of a type, newest first (unknown years last), as heading + first sentence. A
+    record on the website is listed from its website chunk, the one visitors see, not its KB twin.
+    """
+    chunks = [(p, c) for p, c in enumerate(store.chunks) if c["type"] == type_filter and not c["is_faq"]]
+    on_site = {c["same_as"] for _, c in chunks if c.get("same_as")}
+    positions = [p for p, c in chunks if c["chunk_id"] not in on_site]
     positions.sort(key=lambda p: (store.chunks[p]["start_year"] is None, -(store.chunks[p]["start_year"] or 0),
                                   store.chunks[p]["chunk_id"]))
     results = []
@@ -73,7 +93,7 @@ def list_by_type(store, type_filter):
 def hybrid_search(store, query, *, subset=None, use_reranker=True, timings=None):
     """
     Dense top 20 + BM25 top 20 fused with RRF, then (optionally) cross-encoder rerank of the fused
-    top 20, then the FAQ cap down to 5. Returns (results, top_score) where top_score is the best
+    top 10, then the FAQ cap down to 5. Returns (results, top_score) where top_score is the best
     rerank score when reranking, else the best dense cosine among the candidates.
     """
     timings = timings if timings is not None else {}
@@ -96,6 +116,7 @@ def hybrid_search(store, query, *, subset=None, use_reranker=True, timings=None)
 
     rerank = {}
     if use_reranker and candidates:
+        candidates = candidates[:RERANK_CANDIDATES]
         t = time.perf_counter()
         scores = store.rerank_fn(query, [store.chunks[p]["display_text"] for p in candidates])
         rerank = dict(zip(candidates, scores))

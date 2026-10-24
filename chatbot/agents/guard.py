@@ -1,11 +1,12 @@
 """
-Prompt-injection guard. Inbound: obvious attempts to override the rules get the brand kit's trick line
-without any LLM call (the router's "injection" intent catches subtler ones). Outbound: a reply that repeats
-a system-prompt heading, or contains a phone number, is replaced.
+Prompt-injection guard. Inbound: obvious attempts to override the rules get a sarcastic line from
+INJECTION_LINES without any LLM call (the router's "injection" intent catches subtler ones); repeat attempts
+in the same chat cycle through the lines. Outbound: a reply that repeats a system-prompt heading, or contains
+a phone number, is replaced.
 """
 import re
 
-from chatbot.rag.prompts import PRIVACY_LINES, PROMPT_MARKERS, TRICK_LINE
+from chatbot.rag.prompts import INJECTION_LINES, PRIVACY_LINES, PROMPT_MARKERS, TRICK_LINE
 
 INJECTION_RE = re.compile(
     r"\b(?:ignore|disregard|forget|override|bypass)\b.{0,40}\b(?:instructions?|rules|prompts?|guidelines|guardrails)\b"
@@ -13,12 +14,29 @@ INJECTION_RE = re.compile(
     r"|\b(?:what(?:'s| is| are)|tell me)\s+your\s+(?:system\s+)?(?:prompt|instructions)\b"
     r"|\byou\s+are\s+now\b|\bfrom\s+now\s+on\s+you\b|\bpretend\s+(?:to\s+be|you\s+are)\b"
     r"|\b(?:jailbreak|developer\s+mode|DAN\s+mode|do\s+anything\s+now)\b"
+    r"|\b(?:you\s+(?:have|had)|with)\s+no\s+(?:limits|rules|restrictions|filters)\b"
+    r"|\bwithout\s+(?:any\s+)?(?:limits|rules|restrictions|filters)\b"
     r"|<\|[a-z_]+\|>|^\s*(?:system|assistant)\s*:|\[\s*system\s*\]",
     re.I | re.M,
 )
 # Phone-length digit runs (10-13 digits, spaces or dashes allowed). Years, year ranges and DOIs don't match:
 # a run touching a "." plus digits is part of a DOI or decimal.
 PHONE_RE = re.compile(r"(?<![\d.])(?:\+?\d{1,3}[\s-]?)?(?:\d[\s-]?){9,12}\d(?!\d|\.\d)")
+
+
+def next_line(lines, history):
+    """
+    The line after the last one of `lines` used in this chat, so repeat attempts cycle through them. Keyed on
+    the last one used (not a count), so it keeps cycling even when the history window is short.
+    """
+    for m in reversed(history or ()):
+        if m.get("role") == "assistant" and m.get("content") in lines:
+            return lines[(lines.index(m["content"]) + 1) % len(lines)]
+    return lines[0]
+
+
+def injection_reply(history):
+    return next_line(INJECTION_LINES, history)
 
 
 def is_injection(message):

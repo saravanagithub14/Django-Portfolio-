@@ -5,8 +5,8 @@ from chatbot.rag.ingest import KnowledgeBaseError
 
 
 class Command(BaseCommand):
-    help = ("Builds the chatbot's FAISS index from knowledge_base/, GitHub repos (RAG_INCLUDE_GITHUB) and "
-            "ContextSnippet rows. Skips the build when faiss_index/manifest.json already matches.")
+    help = ("Builds the chatbot's FAISS index from knowledge_base/, the website content in the database, "
+            "GitHub repos (RAG_INCLUDE_GITHUB) and ContextSnippet rows. Skips the build when faiss_index/manifest.json already matches.")
 
     def add_arguments(self, parser):
         parser.add_argument("--force", action="store_true", help="Rebuild even if the manifest matches.")
@@ -42,7 +42,8 @@ class Command(BaseCommand):
         if old and not same_model:
             self.stdout.write(f"Embedding model changed: {old.get('embedding_model')} -> {new['embedding_model']}")
         self.stdout.write(f"Building index for {len(chunks)} chunks ({counts})...")
-        store = rag_index.build_store(chunks)
+        # --force re-embeds everything; otherwise unchanged chunks keep their saved vectors
+        store = rag_index.build_store(chunks, reuse=None if force else rag_index.load_reusable_index())
         rag_index.save_index(store)
         self.stdout.write(self.style.SUCCESS(
             f"Built {rag_index.INDEX_DIR / 'index.faiss'}: {len(store)} chunks; {counts}"))

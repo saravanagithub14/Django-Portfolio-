@@ -3,7 +3,7 @@ import logging
 import os
 
 from django.core.cache import cache
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from chatbot import rag_service
@@ -40,18 +40,33 @@ def get_history(session):
     return [{'role': role, 'content': content} for role, content in reversed(recent)]
 
 
-def generate_llm_response(user_message, profile, session, model_cfg):
+def drain(steps):
+    """Run a step generator to the end and return its return value."""
+    while True:
+        try:
+            next(steps)
+        except StopIteration as done:
+            return done.value
+
+
+def llm_response_steps(user_message, session, model_cfg):
     """
-    RAG pipeline over the provider chain. Returns (reply, retrieval_meta, sources); reply is None when
-    every provider failed (or retrieval broke), so the caller falls back to keyword matching.
+    RAG pipeline over the provider chain, as a generator of agent progress events. Returns (reply,
+    retrieval_meta, sources); reply is None when every provider failed (or retrieval broke), so the caller
+    falls back to keyword matching.
     """
     history = get_history(session)
     try:
-        result = pipeline.run(user_message, history, make_llm(model_cfg))
+        result = yield from pipeline.run_steps(user_message, history, make_llm(model_cfg))
     except Exception as e:
         logger.error(f"RAG pipeline error: {e}", exc_info=True)
         return None, {"error": str(e)}, []
     return result["reply"], result["meta"], result.get("sources", [])
+
+
+def generate_llm_response(user_message, profile, session, model_cfg):
+    """llm_response_steps without the progress events."""
+    return drain(llm_response_steps(user_message, session, model_cfg))
 
 
 def get_active_bot():
@@ -135,24 +150,63 @@ def chat_api_endpoint(request):
             session = None
         save_message(session, 'user', user_message)
 
-        # 3. Ask the LLM chain; fall back to keyword matching if mock or every provider fails
-        bot = get_active_bot()
-        model_cfg = bot.model_config if bot else None
-        bot_response, retrieval_meta, sources = None, None, []
-        if model_cfg and not is_mock_provider(model_cfg):
-            bot_response, retrieval_meta, sources = generate_llm_response(user_message, profile, session, model_cfg)
-        if not bot_response:
-            bot_response, sources = get_keyword_fallback_response(user_message, profile), []
-            if retrieval_meta is not None:
-                retrieval_meta["keyword_fallback"] = True
+        # The widget asks for NDJSON so it can show which agent is working; other clients get plain JSON
+        streaming = "application/x-ndjson" in request.headers.get("Accept", "")
 
-        save_message(session, 'assistant', bot_response, retrieval_meta)
+        def answer_steps():
+            # 3. Ask the LLM chain; fall back to keyword matching if mock or every provider fails
+            bot = get_active_bot()
+            model_cfg = bot.model_config if bot else None
+            bot_response, retrieval_meta, sources = None, None, []
+            if model_cfg and not is_mock_provider(model_cfg):
+                if streaming:
+                    bot_response, retrieval_meta, sources = yield from llm_response_steps(user_message, session,
+                                                                                          model_cfg)
+                else:
+                    bot_response, retrieval_meta, sources = generate_llm_response(user_message, profile, session,
+                                                                                  model_cfg)
+            if not bot_response:
+                bot_response, sources = get_keyword_fallback_response(user_message, profile), []
+                if retrieval_meta is not None:
+                    retrieval_meta["keyword_fallback"] = True
+            save_message(session, 'assistant', bot_response, retrieval_meta)
+            return bot_response, sources, retrieval_meta
+
+        if streaming:
+            return stream_answer(answer_steps(), user_message, profile)
+        bot_response, sources, _ = drain(answer_steps())
         # "sources" feeds the widget's source chips; clients that only read "response" are unaffected
         return JsonResponse({'response': bot_response, 'sources': sources})
 
     except Exception as fatal_err:
         logger.error(f"Fatal error in chat endpoint: {fatal_err}", exc_info=True)
         return JsonResponse({'response': get_keyword_fallback_response(user_message, profile)})
+
+
+def stream_answer(steps, user_message, profile):
+    """
+    NDJSON stream: one {"type": "step", "agent", "stage"} line as each agent starts work, then one
+    {"type": "answer", "response", "sources", "agent"} line.
+    """
+    def lines():
+        try:
+            while True:
+                try:
+                    event = next(steps)
+                except StopIteration as done:
+                    bot_response, sources, meta = done.value
+                    break
+                yield json.dumps({"type": "step", **event}) + "\n"
+            answer = {"response": bot_response, "sources": sources, "agent": (meta or {}).get("agent")}
+        except Exception as e:  # headers are already sent, so the error has to travel as an answer line
+            logger.error(f"Fatal error in chat stream: {e}", exc_info=True)
+            answer = {"response": get_keyword_fallback_response(user_message, profile), "sources": [], "agent": None}
+        yield json.dumps({"type": "answer", **answer}) + "\n"
+
+    response = StreamingHttpResponse(lines(), content_type="application/x-ndjson")
+    response["Cache-Control"] = "no-cache"
+    response["X-Accel-Buffering"] = "no"  # nginx (EC2) would otherwise hold the events until the end
+    return response
 
 
 def health_view(request):
