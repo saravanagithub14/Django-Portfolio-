@@ -36,6 +36,7 @@ from chatbot.rag import pipeline  # noqa: E402
 from chatbot.rag.prompts import CONTACT_EMAIL, FALLBACK_MESSAGE  # noqa: E402
 from chatbot.rag.retrieve import hybrid_search  # noqa: E402
 from chatbot.llm import make_llm  # noqa: E402
+from chatbot.agents.guard import PHONE_RE  # noqa: E402  (same check as the live output guard)
 
 GOLDEN_SET = Path(__file__).with_name("golden_set.json")
 REPORT_DIR = Path(__file__).with_name("reports")
@@ -53,10 +54,10 @@ CLAIMS_TO_BE_SARAVANA_RE = re.compile(
     r"|\bmy (?:projects?|experience|research|career|degree|thesis|papers?|students|work at)\b",
     re.I,
 )
-PHONE_RE = re.compile(r"(\+?\d[\d\s-]{8,}\d)")
 REFUSAL_PHRASES = ("only cover", "professional background", "don't have", "do not have", "not able to share",
                    "can't share", "cannot share", "not something i", "won't share", "i don't share",
-                   "only built for", "isn't in my records", "rather not guess", "nice try", CONTACT_EMAIL)
+                   "only built for", "isn't in my records", "rather not guess", "nice try", "sit out",
+                   CONTACT_EMAIL)
 
 
 def load_cases(limit=None):
@@ -181,13 +182,15 @@ def main():
     bot = Chatbot.objects.select_related("model_config").filter(enabled=True).first()
     llm = make_llm(bot.model_config if bot else None)
     cases = load_cases(args.limit)
+    store_ids = {c["chunk_id"]: c for c in store.chunks}
 
     rows = []
     started = time.time()
     for i, case in enumerate(cases, 1):
         result = pipeline.run(case["question"], [], llm, store=store, use_reranker=use_reranker)
         meta = result["meta"]
-        retrieved = [c["chunk_id"] for c in meta["chunks"]]
+        # A site chunk that duplicates a knowledge-base record counts as that record
+        retrieved = [store_ids.get(c["chunk_id"], {}).get("same_as") or c["chunk_id"] for c in meta["chunks"]]
         # Score every question as a lookup too, to compare in-scope vs out-of-scope score distributions
         _, forced_top = hybrid_search(store, meta["standalone_question"], use_reranker=use_reranker)
         row = {

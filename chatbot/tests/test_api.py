@@ -106,3 +106,36 @@ def test_mock_provider_skips_the_pipeline(client, monkeypatch, fake_generate):
     response = post(client, {"message": "what is deep learning"})
     assert response.json()["response"] == CONCEPT_ANSWERS["deep learning"]
     assert fake_generate == []
+
+
+def test_widget_gets_agent_steps_then_the_answer_as_ndjson(client, monkeypatch):
+    monkeypatch.delenv("CHATBOT_PROVIDER", raising=False)
+
+    def steps(user_message, session, model_cfg):
+        yield {"agent": "router", "stage": "routing"}
+        yield {"agent": "tutor", "stage": "writing"}
+        return "Plants turn light into sugar.", {"agent": "tutor"}, []
+
+    monkeypatch.setattr(views, "llm_response_steps", steps)
+    response = post(client, {"message": "how does photosynthesis work"}, HTTP_ACCEPT="application/x-ndjson")
+    assert response["Content-Type"] == "application/x-ndjson" and response["X-Accel-Buffering"] == "no"
+    events = [json.loads(line) for line in b"".join(response.streaming_content).decode().splitlines()]
+    assert events == [
+        {"type": "step", "agent": "router", "stage": "routing"},
+        {"type": "step", "agent": "tutor", "stage": "writing"},
+        {"type": "answer", "response": "Plants turn light into sugar.", "sources": [], "agent": "tutor"},
+    ]
+    assert ChatMessage.objects.filter(role="assistant", content="Plants turn light into sugar.").exists()
+
+
+def test_stream_falls_back_to_keywords_when_the_pipeline_returns_nothing(client, monkeypatch):
+    monkeypatch.delenv("CHATBOT_PROVIDER", raising=False)
+
+    def steps(user_message, session, model_cfg):
+        yield {"agent": "router", "stage": "routing"}
+        return None, {"error": "all providers down"}, []
+
+    monkeypatch.setattr(views, "llm_response_steps", steps)
+    response = post(client, {"message": "what is rag"}, HTTP_ACCEPT="application/x-ndjson")
+    answer = json.loads(b"".join(response.streaming_content).decode().splitlines()[-1])
+    assert answer["type"] == "answer" and answer["response"]

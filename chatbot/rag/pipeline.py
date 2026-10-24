@@ -3,7 +3,7 @@ V.E.R.A.'s orchestrator: guard -> condense + route (one LLM call) -> one special
 
     injection   guard: the brand kit's trick line, no LLM call (obvious attempts never reach the router)
     personal    privacy agent: a fixed deflection, no LLM call (unambiguous ones never reach the router)
-    concept     explainer agent: explains an AI term, bridging to Saravana's related work
+    concept     tutor agent: teaches any topic, bridging to Saravana's related work when there is some
     lookup, list, timeframe, chitchat, out_of_scope
                 portfolio agent: retrieve by intent -> fallback check -> answer from the knowledge base
 
@@ -19,11 +19,11 @@ import os
 import re
 import time
 
-from chatbot.agents import explainer, guard, portfolio, privacy
+from chatbot.agents import guard, portfolio, privacy, tutor
 from chatbot.agents.portfolio import format_context  # noqa: F401  (kept importable from here)
 from chatbot.formatting import strip_markdown
 from chatbot.rag import index as rag_index
-from chatbot.rag.prompts import CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, FIXED_LINES, TRICK_LINE
+from chatbot.rag.prompts import CONDENSE_ROUTE_PROMPT, FALLBACK_MESSAGE, FIXED_LINES, OFF_TOPIC_LINES
 from chatbot.rag.retrieve import filter_by_year, hybrid_search, list_by_type
 from chatbot.rag.sources import answer_sources
 
@@ -31,8 +31,9 @@ logger = logging.getLogger(__name__)
 
 INTENTS = ("lookup", "list", "timeframe", "concept", "personal", "injection", "out_of_scope", "chitchat")
 # Which agent answers each intent; anything else goes to the portfolio agent
-AGENT_FOR_INTENT = {"injection": "guard", "personal": "privacy", "concept": "explainer"}
-TYPE_FILTERS = ("experience", "project", "skill", "teaching", "education", "certification", "about", "github")
+AGENT_FOR_INTENT = {"injection": "guard", "personal": "privacy", "concept": "tutor"}
+TYPE_FILTERS = ("experience", "project", "skill", "teaching", "education", "certification", "publication", "blog",
+                "media", "focus", "language", "contact", "about", "github")
 NO_RETRIEVAL_INTENTS = ("out_of_scope", "chitchat")
 FALLBACK_INTENTS = ("lookup", "timeframe")
 
@@ -138,12 +139,28 @@ def _elapsed_ms(start):
     return round((time.perf_counter() - start) * 1000, 1)
 
 
+def step(agent, stage):
+    """A progress event: which agent is working and what it is doing (routing, checking, searching, writing)."""
+    return {"agent": agent, "stage": stage}
+
+
 def run(message, history, llm, *, store=None, use_reranker=None):
+    """The pipeline without progress events: returns run_steps' result dict."""
+    steps = run_steps(message, history, llm, store=store, use_reranker=use_reranker)
+    while True:
+        try:
+            next(steps)
+        except StopIteration as done:
+            return done.value
+
+
+def run_steps(message, history, llm, *, store=None, use_reranker=None):
     """
-    Full pipeline for one visitor message. Returns a dict:
+    Full pipeline for one visitor message, as a generator: it yields step() events as agents start work (the
+    chat widget shows them while it waits), and returns a dict:
         reply       final plain-text reply, or None if every LLM provider failed
         raw_reply   the model's text before strip_markdown (for evals)
-        results     retrieved chunks (for concept questions, the explainer's related work)
+        results     retrieved chunks (for concept questions, the tutor's related work)
         sources     site sections / records the answer drew on, for the widget's source chips
         meta        what gets logged to ChatMessage.retrieval_meta, including which agent answered
     """
@@ -174,19 +191,24 @@ def run(message, history, llm, *, store=None, use_reranker=None):
 
     # 1. Before any LLM call: obvious injection attempts and unambiguous personal questions
     if guard.is_injection(message):
-        return finish({**default_route(message), "intent": "injection"}, "guard", TRICK_LINE)
+        yield step("guard", "checking")
+        return finish({**default_route(message), "intent": "injection"}, "guard", guard.injection_reply(history))
     if privacy.detect(message):
+        yield step("privacy", "checking")
         return finish({**default_route(message), "intent": "personal"}, "privacy", privacy.reply_for(message))
 
     # 2. Condense + route
+    yield step("router", "routing")
     t = time.perf_counter()
     route, condense_provider = condense_and_route(message, history, llm)
     timings["condense_ms"] = _elapsed_ms(t)
     agent = AGENT_FOR_INTENT.get(route["intent"], "portfolio")
 
     if agent == "guard":
-        return finish(route, agent, TRICK_LINE, condense_provider=condense_provider)
+        yield step("guard", "checking")
+        return finish(route, agent, guard.injection_reply(history), condense_provider=condense_provider)
     if agent == "privacy":
+        yield step("privacy", "checking")
         wording = f"{message} {route['standalone_question']}"
         # The router sometimes calls work questions personal ("do u teach students", "r u open to
         # freelance"). With no private-life wording, a strong knowledge-base match sends it to the portfolio.
@@ -197,33 +219,40 @@ def run(message, history, llm, *, store=None, use_reranker=None):
             if top_score is not None and top_score >= ROUTE_RESCUE_SCORE:
                 route["rerouted_from"] = route["intent"]
                 route["intent"] = "lookup"
+                yield step("portfolio", "writing")
                 return _answer_portfolio(message, history, llm, route, results, top_score, store, reranked,
                                          timings, finish, condense_provider)
         return finish(route, agent, privacy.reply_for(wording), condense_provider=condense_provider)
 
     store = store if store is not None else rag_index.get_store()
 
-    if agent == "explainer":
+    if agent == "tutor":
+        yield step("tutor", "searching")
         t = time.perf_counter()
-        related = explainer.related_work(route["concept_term"] or route["standalone_question"], store,
+        related = tutor.related_work(route["concept_term"] or route["standalone_question"], store,
                                          use_reranker=reranked, threshold=fallback_threshold(reranked),
                                          timings=timings)
         timings["retrieve_ms"] = _elapsed_ms(t)
+        yield step("tutor", "writing")
         t = time.perf_counter()
-        raw_reply, provider = explainer.answer(message, history, llm, related)
+        raw_reply, provider = tutor.answer(message, history, llm, related)
         timings["generate_ms"] = _elapsed_ms(t)
         return finish(route, agent, raw_reply, results=related, provider=provider,
                       condense_provider=condense_provider,
                       sources=_sources(raw_reply, related, route, store, reranked))
 
     # 3. Portfolio agent: retrieve by intent; fall back without generating if nothing scores well enough
+    yield step("portfolio", "searching")
     t = time.perf_counter()
     results, top_score, fallback = retrieve(route, store, use_reranker=reranked, timings=timings)
     timings["retrieve_ms"] = _elapsed_ms(t)
     if fallback:
         return finish(route, agent, FALLBACK_MESSAGE, results=results, condense_provider=condense_provider,
                       top_score=top_score, fallback=True)
+    if route["intent"] == "out_of_scope":  # not rescued to a lookup: a fixed line, no answer call
+        return finish(route, agent, guard.next_line(OFF_TOPIC_LINES, history), condense_provider=condense_provider)
 
+    yield step("portfolio", "writing")
     return _answer_portfolio(message, history, llm, route, results, top_score, store, reranked, timings,
                              finish, condense_provider)
 

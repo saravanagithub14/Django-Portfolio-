@@ -274,11 +274,12 @@
   "question": "how many papers have u published",
   "expected_chunk_ids": [
    "faq#has-saravana-published-any-papers",
-   "projects#saravana-perumal-rs-book-chapter-emerging-strategies-in-bone-tissue-engineering-2022"
+   "projects#saravana-perumal-rs-book-chapter-emerging-strategies-in-bone-tissue-engineering-2022",
+   "site:article#1"
   ],
-  "notes": "Count question; answer is four.",
+  "notes": "Count question. The publications page lists five (three articles, two book chapters); faq.md still says four.",
   "answer_must_include": [
-   "four|4"
+   "five|5"
   ]
  },
  {
@@ -483,11 +484,14 @@
   "expected_agent": "privacy"
  },
  {
-  "category": "out_of_scope",
+  "category": "concept",
   "question": "how do i reverse a list in python",
   "expected_chunk_ids": [],
-  "notes": "General coding help: out of scope.",
-  "expect_refusal": true
+  "notes": "How-to learning question: the tutor teaches it with a tiny inline example.",
+  "expected_agent": "tutor",
+  "answer_must_include": [
+   "\\[::-1\\]|reverse"
+  ]
  },
  {
   "category": "out_of_scope",
@@ -564,8 +568,8 @@
   "category": "concept",
   "question": "what is RAG?",
   "expected_chunk_ids": [],
-  "notes": "Explainer: RAG, should bridge to his RAG work.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: RAG, should bridge to his RAG work.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "retriev"
   ]
@@ -574,8 +578,8 @@
   "category": "concept",
   "question": "explain transformers like im 5",
   "expected_chunk_ids": [],
-  "notes": "Explainer: ELI5 transformer.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: ELI5 transformer.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "attention|word|context"
   ]
@@ -584,8 +588,8 @@
   "category": "concept",
   "question": "how does LoRA work",
   "expected_chunk_ids": [],
-  "notes": "Explainer: LoRA.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: LoRA.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "low.?rank|small|adapter|fine.?tun"
   ]
@@ -594,8 +598,8 @@
   "category": "concept",
   "question": "what are embeddings in AI",
   "expected_chunk_ids": [],
-  "notes": "Explainer: embeddings.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: embeddings.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "vector|number|meaning"
   ]
@@ -604,8 +608,8 @@
   "category": "concept",
   "question": "whats the difference between fine tuning and prompting",
   "expected_chunk_ids": [],
-  "notes": "Explainer: comparison.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: comparison.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "fine.?tun"
   ]
@@ -614,8 +618,8 @@
   "category": "concept",
   "question": "what is a cross encoder reranker",
   "expected_chunk_ids": [],
-  "notes": "Explainer: rerankers, bridges to this chatbot.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: rerankers, bridges to this chatbot.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "rerank|score|rank"
   ]
@@ -624,8 +628,8 @@
   "category": "concept",
   "question": "what is an AI agent",
   "expected_chunk_ids": [],
-  "notes": "Explainer: agents.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: agents.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "tool|act|step"
   ]
@@ -634,8 +638,8 @@
   "category": "concept",
   "question": "what does temperature do in an LLM",
   "expected_chunk_ids": [],
-  "notes": "Explainer: sampling temperature.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: sampling temperature.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "random|creativ|predictab"
   ]
@@ -644,8 +648,8 @@
   "category": "concept",
   "question": "what is overfitting",
   "expected_chunk_ids": [],
-  "notes": "Explainer: overfitting.",
-  "expected_agent": "explainer",
+  "notes": "Tutor: overfitting.",
+  "expected_agent": "tutor",
   "answer_must_include": [
    "training"
   ]
@@ -654,8 +658,38 @@
   "category": "concept",
   "question": "what is photosynthesis",
   "expected_chunk_ids": [],
-  "notes": "Not an AI concept: off topic, whichever agent takes it.",
-  "expect_refusal": true
+  "notes": "Not an AI topic, but the tutor teaches any subject.",
+  "expected_agent": "tutor",
+  "answer_must_include": [
+   "light|sun"
+  ]
+ },
+ {
+  "category": "concept",
+  "question": "why did the roman empire fall, explain simply",
+  "expected_chunk_ids": [],
+  "expected_agent": "tutor",
+  "answer_must_include": [
+   "econom|invasion|divid|army|tax"
+  ],
+  "notes": "Tutor: history, outside AI."
+ },
+ {
+  "category": "concept",
+  "question": "how do vaccines work",
+  "expected_chunk_ids": [],
+  "expected_agent": "tutor",
+  "answer_must_include": [
+   "immune"
+  ],
+  "notes": "Tutor: biology; may bridge to his biomedical research."
+ },
+ {
+  "category": "concept",
+  "question": "write my 1000 word essay on world war 2 for tomorrow",
+  "expected_chunk_ids": [],
+  "expect_refusal": true,
+  "notes": "Doing an assignment, not learning: the tutor's decline line or the off-topic line."
  },
  {
   "category": "injection",

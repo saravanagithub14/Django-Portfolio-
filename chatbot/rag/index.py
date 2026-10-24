@@ -1,5 +1,7 @@
 """
-FAISS + BM25 index over the knowledge base chunks, with a manifest so a stale index is never served.
+FAISS + BM25 index over the knowledge base and website chunks, with a manifest so a stale index is never
+served. Website content changes through the admin, so a running process re-checks it every
+SITE_RECHECK_SECONDS (and right after an admin save) and re-embeds only the chunks that changed.
 
 Files in faiss_index/:
     index.faiss    dense vectors (inner product over normalized embeddings = cosine)
@@ -14,12 +16,13 @@ import json
 import logging
 import os
 import threading
+import time
 from pathlib import Path
 
 import numpy as np
 from django.conf import settings
 
-from chatbot.rag import ingest
+from chatbot.rag import ingest, site_content
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +38,8 @@ EMBED_BATCH_SIZE = 4
 RERANK_BATCH_SIZE = 2
 # ONNX's CPU arena never returns memory and grows with every new input shape (hit 1GB in testing)
 ONNX_OPTIONS = {"threads": 1, "enable_cpu_mem_arena": False}
+# How often a serving process compares its index to the knowledge base + website content (~25 queries)
+SITE_RECHECK_SECONDS = 60
 
 
 def env_flag(name, default=True):
@@ -187,8 +192,10 @@ def diff_manifest(old, new):
 
 
 def local_chunks(kb_dir=ingest.KB_DIR):
-    """Chunks whose source lives with the app: knowledge base files + ContextSnippet rows."""
-    return ingest.load_knowledge_base(kb_dir) + ingest.snippet_chunks(ingest.load_snippets())
+    """Chunks whose source lives with the app: knowledge base files, website content, ContextSnippet rows."""
+    kb = ingest.load_knowledge_base(kb_dir)
+    site = site_content.link_duplicates(site_content.site_chunks(), kb)
+    return kb + site + ingest.snippet_chunks(ingest.load_snippets())
 
 
 def check_freshness(manifest, kb_dir=ingest.KB_DIR, with_github=None):
@@ -243,6 +250,16 @@ def load_saved_index(index_dir=INDEX_DIR):
     return RagStore(chunks, vectors)
 
 
+def load_reusable_index(index_dir=INDEX_DIR):
+    """The saved index, for reusing its vectors, or None if it can't be read or used a different model."""
+    if (read_manifest(index_dir) or {}).get("embedding_model") != EMBEDDING_MODEL:
+        return None
+    try:
+        return load_saved_index(index_dir)
+    except Exception:
+        return None
+
+
 def saved_github_chunks(index_dir=INDEX_DIR):
     try:
         chunks = json.loads((Path(index_dir) / "chunks.json").read_text(encoding="utf-8"))
@@ -260,31 +277,84 @@ def fetch_github_chunks():
     return ingest.github_chunks(repos)
 
 
-def build_store(chunks):
-    vectors = embed_documents([c["embed_text"] for c in chunks])
-    return RagStore(chunks, vectors)
+def build_store(chunks, reuse=None):
+    """Embed `chunks`, reusing vectors from the store `reuse` for chunks whose content hash is unchanged."""
+    known = {}
+    if reuse is not None:
+        known = {(c["chunk_id"], c["content_hash"]): reuse.vectors[i] for i, c in enumerate(reuse.chunks)}
+    missing = [c for c in chunks if (c["chunk_id"], c["content_hash"]) not in known]
+    fresh = dict(zip((c["chunk_id"] for c in missing), embed_documents([c["embed_text"] for c in missing])))
+    vectors = [known.get((c["chunk_id"], c["content_hash"]), fresh.get(c["chunk_id"])) for c in chunks]
+    return RagStore(chunks, np.asarray(vectors, dtype="float32").reshape(len(chunks), -1))
 
 
 # ─── Process-wide store ──────────────────────────────────────────────
 
 _store = None
 _store_lock = threading.Lock()
+_checked_at = 0.0
 
 
 def get_store():
     """Load the saved index, rebuilding in-process if it is missing or stale."""
-    global _store
+    global _store, _checked_at
     if _store is not None:
+        if time.monotonic() - _checked_at >= SITE_RECHECK_SECONDS:
+            refresh_store()
         return _store
     with _store_lock:
         if _store is None:
             _store = _load_or_rebuild()
+            _checked_at = time.monotonic()
     return _store
 
 
+def site_changed(**kwargs):
+    """Signal receiver for portfolio model saves/deletes: re-check the index on the next chat."""
+    global _checked_at
+    _checked_at = 0.0
+
+
+def refresh_store():
+    """
+    Swap in a new store if the knowledge base or website content changed since it was built. Only the
+    changed chunks are embedded; GitHub chunks are kept as they are. Never raises: on any error the
+    current store keeps serving and the check is retried after SITE_RECHECK_SECONDS.
+    """
+    global _store, _checked_at
+    with _store_lock:
+        _checked_at = time.monotonic()
+        try:
+            current = _store
+            local = local_chunks()
+            old = {c["chunk_id"]: c["content_hash"] for c in current.chunks if c["type"] != "github"}
+            if old == {c["chunk_id"]: c["content_hash"] for c in local}:
+                return
+            github = [c for c in current.chunks if c["type"] == "github"]
+            store = build_store(local + github, reuse=current)
+            diff = diff_manifest(current.manifest(), store.manifest())
+            logger.info("RAG index refreshed: %s", ", ".join(f"{k} {len(v)}" for k, v in diff.items()))
+            _store = store
+            save_index(store)
+        except Exception as e:
+            logger.warning("RAG index refresh failed; serving the current index: %s", e)
+
+
+def warm_up():
+    """Load the index and both ONNX models, so the first chat doesn't pay for it (~20s on Render)."""
+    try:
+        store = get_store()
+        store.embed_query("warm up")
+        if reranker_enabled():
+            store.rerank_fn("warm up", ["warm up"])
+        log_memory("RAG warm-up done")
+    except Exception as e:  # the first chat will load them instead
+        logger.warning("RAG warm-up failed: %s", e)
+
+
 def reset_store():
-    global _store
-    _store = None
+    global _store, _checked_at
+    _store, _checked_at = None, 0.0
 
 
 def _load_or_rebuild(index_dir=INDEX_DIR):
@@ -299,11 +369,13 @@ def _load_or_rebuild(index_dir=INDEX_DIR):
         logger.warning("RAG index is stale (%s). Rebuilding in-process; run `manage.py build_rag_index` "
                        "to avoid this at startup.", "; ".join(reasons))
         github = saved_github_chunks(index_dir) if include_github() else []
+        previous = load_reusable_index(index_dir)
     else:
         logger.warning("No RAG index found in %s. Building it in-process.", index_dir)
         github = (fetch_github_chunks() or []) if include_github() else []
+        previous = None
 
-    store = build_store(local_chunks() + github)
+    store = build_store(local_chunks() + github, reuse=previous)
     try:
         save_index(store, index_dir)
     except OSError as e:
