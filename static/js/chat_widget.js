@@ -195,17 +195,22 @@
         const loader = addLoader();
         setState("thinking");
 
-        let data = null;
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept": "application/x-ndjson, application/json" },
-                body: JSON.stringify({ message: text }),
-            });
-            data = await readAnswer(response, (agent, stage) => loader.step(agent, stage));
-        } catch (e) {
-            console.error("V.E.R.A. connection error:", e);
-        }
+        const send = async (accept) => {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": accept },
+                    body: JSON.stringify({ message: text }),
+                });
+                return await readAnswer(response, (agent, stage) => loader.step(agent, stage));
+            } catch (e) {
+                console.error("V.E.R.A. connection error:", e);
+                return null;
+            }
+        };
+        // A stream cut off before its answer (a restarted worker, a proxy) gets one plain JSON retry
+        let data = await send("application/x-ndjson, application/json");
+        if (!data) data = await send("application/json");
         await loader.settle();
         loader.el.remove();
 

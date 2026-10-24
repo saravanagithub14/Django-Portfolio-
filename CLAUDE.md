@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal portfolio site for Saravana Perumal R. (Django 5, SQLite), with an AI chatbot (V.E.R.A., "Virtual Engine for Retrieval and Answers") that answers visitor questions about Saravana using RAG over the portfolio content. V.E.R.A. speaks as "I" but is his assistant: it refers to him as "Saravana"/"he" and never claims his work as its own. Its voice, fixed lines, logo and widget design come from the V.E.R.A. brand kit (kept outside the repo). Deployed on Render (`build.sh` is the build command; WhiteNoise serves static files).
+Personal portfolio site for Saravana Perumal R. (Django 5, SQLite), with an AI chatbot (V.E.R.A., "Virtual Engine for Retrieval and Answers") that answers visitor questions about Saravana using RAG over the portfolio content. V.E.R.A. speaks as "I" but is his assistant: it refers to him as "Saravana"/"he" and never claims his work as its own. Its voice, fixed lines, logo and widget design come from the V.E.R.A. brand kit (kept outside the repo). Deployed on Render (`build.sh` is the build command; WhiteNoise serves static files). `gunicorn.conf.py` (read automatically; CLI flags win) runs one gthread worker with 4 threads and a 120s timeout: each worker process loads the ~375MB models, so two don't fit in 512MB, and sync workers were killed by the 30s default on cold chats.
 
 ## Commands
 
