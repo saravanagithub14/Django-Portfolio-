@@ -34,7 +34,12 @@ OPENAI_COMPATIBLE_BASE_URLS = {
 }
 
 
-LLM_TIMEOUT = 30.0
+# Seconds per request. A stuck provider used to hold a chat for up to a minute (30s plus a retry) before the
+# next one was tried; Groq calls from here have taken 7s and once hung for minutes.
+LLM_TIMEOUT = 20.0
+# Router calls are small JSON tasks that normally take ~1s: past this, the next provider in the chain is faster
+# than waiting, so no retry either
+ROUTER_TIMEOUT = float(os.getenv('ROUTER_TIMEOUT', '4'))
 
 # Router calls: provider and model tried first ("chain" = the normal order). Groq's gpt-oss-20b with low
 # reasoning effort routed the eval's questions correctly; without it, it sometimes broke the JSON format.
@@ -71,8 +76,11 @@ def get_openai_client(api_key, base_url=None):
     return OpenAI(api_key=api_key, base_url=base_url, timeout=LLM_TIMEOUT, max_retries=1)
 
 
-def call_openai_compatible(api_key, model_name, temperature, base_url, messages, max_tokens, json_mode=False):
+def call_openai_compatible(api_key, model_name, temperature, base_url, messages, max_tokens, json_mode=False,
+                           fast=False):
     client = get_openai_client(api_key, base_url)
+    if fast:
+        client = client.with_options(timeout=ROUTER_TIMEOUT, max_retries=0)
     extra = {'response_format': {'type': 'json_object'}} if json_mode else {}
     if 'gpt-oss' in model_name:
         # Reasoning model: low effort halves its latency, and the default can spend max_tokens on reasoning
@@ -153,7 +161,9 @@ def make_llm(model_cfg):
             temp = default_temperature if temperature is None else temperature
             try:
                 if provider in OPENAI_COMPATIBLE_BASE_URLS:
-                    text = call_openai_compatible(api_key, model_name, temp, base_url, messages, max_tokens, json_mode)
+                    # Only the router provider gets the short timeout; the fallback must still be able to answer
+                    text = call_openai_compatible(api_key, model_name, temp, base_url, messages, max_tokens, json_mode,
+                                                  fast=fast and provider == router)
                 elif provider == 'gemini':
                     text = call_gemini(api_key, model_name, temp, messages, max_tokens, json_mode)
                 else:
