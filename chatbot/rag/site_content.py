@@ -299,6 +299,8 @@ def link_duplicates(site, kb):
     Set `same_as` on each site project / job / degree to the knowledge-base chunk describing the same
     record: the one whose heading contains most of the site title's words (ties go to the closer heading).
     """
+    headings = [(c, _title_tokens(c["display_text"].split("\n", 1)[0])) for c in kb
+                if c["type"] in ("project", "experience", "education") and not c["is_faq"]]
     for chunk in site:
         if chunk["type"] not in ("project", "experience", "education"):
             continue
@@ -306,10 +308,9 @@ def link_duplicates(site, kb):
         if not title:
             continue
         best, best_key = None, (0, 0)
-        for candidate in kb:
-            if candidate["type"] != chunk["type"] or candidate["is_faq"]:
+        for candidate, heading in headings:
+            if candidate["type"] != chunk["type"]:
                 continue
-            heading = _title_tokens(candidate["display_text"].split("\n", 1)[0])
             key = (len(title & heading) / len(title), len(title & heading) / len(title | heading))
             if key > best_key:
                 best, best_key = candidate, key

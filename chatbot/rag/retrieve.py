@@ -4,15 +4,20 @@ rerank, FAQ cap, and in-Python type / year filtering (the corpus is ~200 chunks,
 scored and then filtered). A website chunk and the knowledge-base chunk it duplicates (`same_as`) count
 as one record: results and lists keep only one of the two.
 """
+import os
 import re
 import time
 
 import numpy as np
 
 CANDIDATES_PER_RETRIEVER = 20
-# Only the fused top 10 go to the cross-encoder: it is CPU-bound (~25-100 ms a pair on one thread, slower on
-# Render), and on the golden set reranking 10 instead of 20 halved its time with the same hit@5 (0.975)
-RERANK_CANDIDATES = 10
+# Only the fused top N go to the cross-encoder. It is the slowest CPU step (~25-100 ms a pair on one thread,
+# several times that on Render's free CPU) and its cost is linear in N: 20 -> 10 halved it with the same
+# hit@5 (0.975), and 10 -> 6 cut another ~35%.
+RERANK_CANDIDATES = int(os.getenv("RAG_RERANK_CANDIDATES", "6"))
+# Passages are cut to this many words for the cross-encoder only (cost grows with length; the heading and
+# first paragraph carry the match). Median chunk is ~40 words, so this only shortens the long ones (~13% faster).
+RERANK_MAX_WORDS = 100
 RRF_K = 60
 FINAL_K = 5
 MAX_FAQ_CHUNKS = 2
@@ -90,10 +95,15 @@ def list_by_type(store, type_filter):
     return results
 
 
-def hybrid_search(store, query, *, subset=None, use_reranker=True, timings=None):
+def rerank_text(text):
+    words = text.split()
+    return text if len(words) <= RERANK_MAX_WORDS else " ".join(words[:RERANK_MAX_WORDS])
+
+
+def hybrid_search(store, query, *, subset=None, use_reranker=True, timings=None, rerank_candidates=None):
     """
     Dense top 20 + BM25 top 20 fused with RRF, then (optionally) cross-encoder rerank of the fused
-    top 10, then the FAQ cap down to 5. Returns (results, top_score) where top_score is the best
+    top RERANK_CANDIDATES (or `rerank_candidates`), then the FAQ cap down to 5. Returns (results, top_score) where top_score is the best
     rerank score when reranking, else the best dense cosine among the candidates.
     """
     timings = timings if timings is not None else {}
@@ -116,9 +126,9 @@ def hybrid_search(store, query, *, subset=None, use_reranker=True, timings=None)
 
     rerank = {}
     if use_reranker and candidates:
-        candidates = candidates[:RERANK_CANDIDATES]
+        candidates = candidates[:rerank_candidates or RERANK_CANDIDATES]
         t = time.perf_counter()
-        scores = store.rerank_fn(query, [store.chunks[p]["display_text"] for p in candidates])
+        scores = store.rerank_fn(query, [rerank_text(store.chunks[p]["display_text"]) for p in candidates])
         rerank = dict(zip(candidates, scores))
         candidates.sort(key=lambda p: -rerank[p])
         timings["rerank_ms"] = round((time.perf_counter() - t) * 1000, 1)

@@ -1,7 +1,8 @@
 """
 FAISS + BM25 index over the knowledge base and website chunks, with a manifest so a stale index is never
-served. Website content changes through the admin, so a running process re-checks it every
-SITE_RECHECK_SECONDS (and right after an admin save) and re-embeds only the chunks that changed.
+served. Website content changes through the admin: an admin save starts a background refresh, and a
+background re-check also runs every SITE_RECHECK_SECONDS (for edits made outside this process). Either one
+re-embeds only the chunks that changed, and no chat request waits for it.
 
 Files in faiss_index/:
     index.faiss    dense vectors (inner product over normalized embeddings = cosine)
@@ -12,6 +13,7 @@ Models run on ONNX via fastembed (no PyTorch) so the whole process fits Render's
 """
 import collections
 import datetime
+import itertools
 import json
 import logging
 import os
@@ -38,8 +40,10 @@ EMBED_BATCH_SIZE = 4
 RERANK_BATCH_SIZE = 2
 # ONNX's CPU arena never returns memory and grows with every new input shape (hit 1GB in testing)
 ONNX_OPTIONS = {"threads": 1, "enable_cpu_mem_arena": False}
-# How often a serving process compares its index to the knowledge base + website content (~25 queries)
-SITE_RECHECK_SECONDS = 60
+# How often a serving process re-checks the knowledge base + website content in the background. Rebuilding
+# every chunk to compare takes seconds on Render's free CPU; saves in this process trigger a refresh anyway
+# (gunicorn.conf.py runs a single worker), so this only catches edits made elsewhere (a shell, a 2nd worker).
+SITE_RECHECK_SECONDS = int(os.getenv("RAG_RECHECK_SECONDS", "600"))
 
 
 def env_flag(name, default=True):
@@ -122,8 +126,12 @@ def rerank_scores(query, texts):
 
 # ─── Store ───────────────────────────────────────────────────────────
 
+_store_versions = itertools.count(1)
+
+
 class RagStore:
-    """Chunks + FAISS index + BM25. Embedding/rerank functions are injectable for tests."""
+    """Chunks + FAISS index + BM25. Embedding/rerank functions are injectable for tests. `version` changes
+    whenever the content does (a new store, or a live snippet added), so caches can key on it."""
 
     def __init__(self, chunks, vectors, *, embed_query_fn=embed_query, rerank_fn=rerank_scores,
                  embedding_model=EMBEDDING_MODEL):
@@ -140,6 +148,7 @@ class RagStore:
             self.faiss_index.add(self.vectors)
         self.bm25 = BM25Okapi([ingest.tokenize(c["bm25_text"]) or ["_"] for c in self.chunks]) if self.chunks else None
         self.lock = threading.Lock()
+        self.version = next(_store_versions)
 
     def __len__(self):
         return len(self.chunks)
@@ -169,6 +178,7 @@ class RagStore:
             self.faiss_index.add(np.asarray([vector], dtype="float32"))
             from rank_bm25 import BM25Okapi
             self.bm25 = BM25Okapi([ingest.tokenize(c["bm25_text"]) or ["_"] for c in self.chunks])
+            self.version = next(_store_versions)
 
 
 # ─── Manifest ────────────────────────────────────────────────────────
@@ -293,14 +303,16 @@ def build_store(chunks, reuse=None):
 _store = None
 _store_lock = threading.Lock()
 _checked_at = 0.0
+_refresh_thread = None
 
 
 def get_store():
-    """Load the saved index, rebuilding in-process if it is missing or stale."""
+    """Load the saved index, rebuilding in-process if it is missing or stale. A due re-check runs in the
+    background; this call returns the current store straight away."""
     global _store, _checked_at
     if _store is not None:
         if time.monotonic() - _checked_at >= SITE_RECHECK_SECONDS:
-            refresh_store()
+            refresh_in_background()
         return _store
     with _store_lock:
         if _store is None:
@@ -309,10 +321,27 @@ def get_store():
     return _store
 
 
+def loaded_store():
+    """The store if this process has loaded it, else None (never loads or refreshes)."""
+    return _store
+
+
+def refresh_in_background():
+    """Start refresh_store() in a daemon thread unless one is already running. Returns the thread."""
+    global _refresh_thread, _checked_at
+    with _store_lock:
+        if _store is None or (_refresh_thread is not None and _refresh_thread.is_alive()):
+            return _refresh_thread
+        _checked_at = time.monotonic()  # don't start another one while this one runs
+        _refresh_thread = threading.Thread(target=refresh_store, name="rag-refresh", daemon=True)
+        _refresh_thread.start()
+        return _refresh_thread
+
+
 def site_changed(**kwargs):
-    """Signal receiver for portfolio model saves/deletes: re-check the index on the next chat."""
-    global _checked_at
-    _checked_at = 0.0
+    """Signal receiver for portfolio model saves/deletes: refresh the index once the save is committed."""
+    from django.db import transaction
+    transaction.on_commit(refresh_in_background)
 
 
 def refresh_store():
@@ -353,8 +382,8 @@ def warm_up():
 
 
 def reset_store():
-    global _store, _checked_at
-    _store, _checked_at = None, 0.0
+    global _store, _checked_at, _refresh_thread
+    _store, _checked_at, _refresh_thread = None, 0.0, None
 
 
 def _load_or_rebuild(index_dir=INDEX_DIR):
