@@ -90,12 +90,19 @@ def parse_route(raw, message):
         year = int(year) if year not in (None, "", "null") else None
     except (TypeError, ValueError):
         year = None
+    term = term.strip() if isinstance(term, str) and term.strip() else None
+    intent = intent if intent in INTENTS else "lookup"
+    if intent == "concept" and not term:
+        # A teaching request always names its topic. Without one it is a question about Saravana that the
+        # router mislabelled ("how'd u go from bio to AI" came back as a concept), and the tutor would then
+        # answer about his career from general knowledge, in the first person.
+        intent = "lookup"
     return {
         "standalone_question": question.strip() if isinstance(question, str) and question.strip() else message,
-        "intent": intent if intent in INTENTS else "lookup",
+        "intent": intent,
         "type_filter": type_filter if type_filter in TYPE_FILTERS else None,
         "year": year if year is not None and 1950 <= year <= 2100 else None,
-        "concept_term": term.strip() if isinstance(term, str) and term.strip() else None,
+        "concept_term": term,
     }
 
 
@@ -110,7 +117,7 @@ def format_history(history):
 def condense_and_route(message, history, llm):
     prompt = CONDENSE_ROUTE_PROMPT.format(history=format_history(history), question=message)
     text, provider = llm([{"role": "user", "content": prompt}], temperature=0,
-                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True, fast=True)
+                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True)
     return parse_route(text, message), provider
 
 

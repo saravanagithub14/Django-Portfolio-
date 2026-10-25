@@ -75,7 +75,7 @@ def get_active_bot():
     if bot:
         return bot
     try:
-        provider = 'openai' if os.getenv('OPENAI_API_KEY') else 'groq'
+        provider = 'openai'
         cfg, _ = AIModelConfig.objects.get_or_create(
             name=f"{provider.title()} Default",
             defaults={

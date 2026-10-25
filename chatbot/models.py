@@ -4,7 +4,6 @@ class AIModelConfig(models.Model):
     PROVIDER_CHOICES = [
         ('gemini', 'Google Gemini'),
         ('openai', 'OpenAI GPT'),
-        ('groq', 'Groq (Llama 3)'),
         ('ollama', 'Ollama (Local LLM)'),
         ('mock', 'Mock / Keyword Matching Only'),
     ]
