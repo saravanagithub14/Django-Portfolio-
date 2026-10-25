@@ -52,9 +52,7 @@ DEFAULT_THRESHOLD_DENSE = 0.70
 # Misrouted in-scope questions scored 5.5-10.9; true off-topic questions scored <= 1.45.
 ROUTE_RESCUE_SCORE = 5.0
 
-# Room for the reasoning tokens of a reasoning router model (Groq gpt-oss used up to ~240 before writing the
-# JSON; at 300 it sometimes ran out and returned nothing). Unused room costs nothing.
-CONDENSE_MAX_TOKENS = 600
+CONDENSE_MAX_TOKENS = 300
 
 # First-turn answers are cached per index version (the suggestion chips are the most common questions), so a
 # repeat costs no LLM call or rerank. Follow-ups aren't cached: their answer depends on the history.
@@ -96,7 +94,7 @@ def parse_route(raw, message):
     intent = intent if intent in INTENTS else "lookup"
     if intent == "concept" and not term:
         # A teaching request always names its topic. Without one it is a question about Saravana that the
-        # router mislabelled (Groq called "how'd u go from bio to AI" a concept), and the tutor would then
+        # router mislabelled ("how'd u go from bio to AI" came back as a concept), and the tutor would then
         # answer about his career from general knowledge, in the first person.
         intent = "lookup"
     return {
@@ -119,7 +117,7 @@ def format_history(history):
 def condense_and_route(message, history, llm):
     prompt = CONDENSE_ROUTE_PROMPT.format(history=format_history(history), question=message)
     text, provider = llm([{"role": "user", "content": prompt}], temperature=0,
-                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True, fast=True)
+                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True)
     return parse_route(text, message), provider
 
 

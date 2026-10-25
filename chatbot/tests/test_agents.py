@@ -333,42 +333,15 @@ def test_greetings_skip_the_rescue_rerank(kb_chunks):
     assert reranked == []
 
 
-def test_router_calls_try_groq_first_when_it_has_a_key(monkeypatch):
+def test_the_chain_is_openai_then_gemini(monkeypatch):
     from chatbot import llm as llm_module
-    monkeypatch.setenv("GROQ_API_KEY", "g")
-    monkeypatch.setenv("OPENAI_API_KEY", "o")
     monkeypatch.setenv("CHATBOT_PROVIDER", "openai")
-    monkeypatch.delenv("ROUTER_PROVIDER", raising=False)
-    assert llm_module.provider_order(None, fast=True)[:2] == ["groq", "openai"]
-    assert llm_module.provider_order(None)[:2] == ["openai", "groq"]
-    monkeypatch.setenv("ROUTER_PROVIDER", "chain")
-    assert llm_module.provider_order(None, fast=True)[0] == "openai"
-    monkeypatch.delenv("ROUTER_PROVIDER")
-    monkeypatch.delenv("GROQ_API_KEY")
-    assert llm_module.provider_order(None, fast=True)[0] == "openai", "no Groq key: the normal chain"
+    assert llm_module.provider_order(None) == ["openai", "gemini"]
+    monkeypatch.setenv("CHATBOT_PROVIDER", "groq")  # an old setting: tried, unsupported, then the chain
+    assert llm_module.provider_order(None)[1:] == ["openai", "gemini"]
 
 
 def test_concept_without_a_topic_is_a_lookup():
     route = pipeline.parse_route(route_json("concept", "How did Saravana transition from biology to AI?", None),
                                  "how'd u go from bio to AI")
     assert route["intent"] == "lookup" and route["concept_term"] is None
-
-
-def test_only_the_router_provider_gets_the_short_timeout(monkeypatch):
-    from chatbot import llm as llm_module
-    monkeypatch.setenv("GROQ_API_KEY", "g")
-    monkeypatch.setenv("OPENAI_API_KEY", "o")
-    monkeypatch.setenv("CHATBOT_PROVIDER", "openai")
-    monkeypatch.delenv("ROUTER_PROVIDER", raising=False)
-    calls = []
-
-    def fake_call(api_key, model, temp, base_url, messages, max_tokens, json_mode=False, fast=False):
-        calls.append((api_key, fast))
-        if api_key == "g":
-            raise TimeoutError("groq is slow")
-        return "{}"
-
-    monkeypatch.setattr(llm_module, "call_openai_compatible", fake_call)
-    text, provider = llm_module.make_llm(None)([{"role": "user", "content": "q"}], json_mode=True, fast=True)
-    assert (text, provider) == ("{}", "openai")
-    assert calls == [("g", True), ("o", False)], "Groq gets the short timeout; the OpenAI fallback doesn't"

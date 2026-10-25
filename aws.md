@@ -82,8 +82,6 @@ SQLITE_PATH=/home/ubuntu/data/db.sqlite3
 
 OPENAI_API_KEY=<your key>
 CHATBOT_PROVIDER=openai
-GROQ_API_KEY=<your key>
-GROQ_MODEL=openai/gpt-oss-20b
 UPDATE_TOKEN=<another random value>
 GITHUB_USERNAME=saravanagithub14
 ```
