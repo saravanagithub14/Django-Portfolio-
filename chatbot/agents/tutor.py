@@ -14,13 +14,17 @@ logger = logging.getLogger(__name__)
 
 TEACH_MAX_TOKENS = 500
 MAX_RELATED = 2
+# The bridge uses at most 2 strong matches, so only the top 3 fused candidates are reranked (the cross-encoder
+# is the slowest CPU step, and this search only decides one sentence of the lesson)
+RELATED_RERANK_CANDIDATES = 3
 NO_RELATED = "(none)"
 
 
 def related_work(topic, store, *, use_reranker, threshold, timings=None):
     """Indexed chunks about the topic that clear the fallback threshold (at most MAX_RELATED)."""
     try:
-        results, _ = hybrid_search(store, topic, use_reranker=use_reranker, timings=timings)
+        results, _ = hybrid_search(store, topic, use_reranker=use_reranker, timings=timings,
+                                   rerank_candidates=RELATED_RERANK_CANDIDATES)
     except Exception as e:  # the bridge is a bonus; teach without it
         logger.warning("Tutor related-work search failed: %s", e)
         return []

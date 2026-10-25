@@ -89,7 +89,8 @@ def test_sources_use_the_site_chunk_page_and_label(content):
     assert sources == [{"section": "Blog", "url": "/blogs.html", "item": "AI PCs"}]
 
 
-def test_admin_edit_refreshes_the_live_index_embedding_only_changed_chunks(content, monkeypatch, tmp_path):
+def test_admin_edit_refreshes_the_live_index_embedding_only_changed_chunks(content, monkeypatch, tmp_path,
+                                                                          django_capture_on_commit_callbacks):
     embedded = []
 
     def fake_embed(texts):
@@ -99,6 +100,8 @@ def test_admin_edit_refreshes_the_live_index_embedding_only_changed_chunks(conte
     monkeypatch.setattr(rag_index, "embed_documents", fake_embed)
     monkeypatch.setattr(rag_index, "INDEX_DIR", tmp_path)
     monkeypatch.setattr(rag_index, "save_index", lambda store, index_dir=None: None)
+    # The test database is only visible to this thread's connection, so refresh in-thread here
+    monkeypatch.setattr(rag_index, "refresh_in_background", rag_index.refresh_store)
     rag_index.reset_store()
     try:
         rag_index._store = rag_index.build_store(rag_index.local_chunks())
@@ -107,10 +110,33 @@ def test_admin_edit_refreshes_the_live_index_embedding_only_changed_chunks(conte
 
         job = content["job"]
         job.title = "Lead Gen AI Engineer"
-        job.save()  # the post_save signal makes the next get_store() re-check
+        with django_capture_on_commit_callbacks(execute=True):
+            job.save()  # post_save -> refresh once the save is committed
         store = rag_index.get_store()
 
         assert by_id(store.chunks)[f"site:job#{job.pk}"]["label"] == "Lead Gen AI Engineer"
         assert len(embedded) == 1 and embedded[0].startswith("Saravana Perumal R, Lead Gen AI Engineer")
     finally:
+        rag_index.reset_store()
+
+
+def test_a_due_recheck_runs_in_the_background_without_blocking_the_chat(monkeypatch):
+    started, release = rag_index.threading.Event(), rag_index.threading.Event()
+
+    def slow_refresh():
+        started.set()
+        release.wait(5)
+
+    monkeypatch.setattr(rag_index, "refresh_store", slow_refresh)
+    rag_index.reset_store()
+    try:
+        current = rag_index._store = object()
+        rag_index._checked_at = 0.0  # overdue
+        assert rag_index.get_store() is current, "returns the current store at once"
+        assert started.wait(5)
+        assert rag_index.refresh_in_background() is rag_index._refresh_thread, "one refresh at a time"
+        release.set()
+        rag_index._refresh_thread.join(5)
+    finally:
+        release.set()
         rag_index.reset_store()

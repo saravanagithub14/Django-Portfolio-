@@ -20,6 +20,9 @@ import re
 from pathlib import Path
 
 import yaml
+
+# libyaml's C loader parses the ~100 metadata blocks several times faster than the pure-Python one
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 from django.conf import settings
 from django.utils.text import slugify
 
@@ -124,7 +127,7 @@ def parse_markdown_file(path):
             raise KnowledgeBaseError(f"{where} has no YAML metadata block (--- ... ---) right after the heading")
         raw_meta = match.group(1)
         try:
-            meta = yaml.safe_load(raw_meta) or {}
+            meta = yaml.load(raw_meta, Loader=_YAML_LOADER) or {}
         except yaml.YAMLError as e:
             raise KnowledgeBaseError(f"{where} has invalid YAML: {e}") from e
         for key in ("type", "period"):

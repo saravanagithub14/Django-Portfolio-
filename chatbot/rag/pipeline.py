@@ -13,11 +13,15 @@ The LLM is passed in as a callable so this module stays independent of provider 
 
 `temperature=None` means "use the provider's configured temperature".
 """
+import copy
+import hashlib
 import json
 import logging
 import os
 import re
 import time
+
+from django.core.cache import cache
 
 from chatbot.agents import guard, portfolio, privacy, tutor
 from chatbot.agents.portfolio import format_context  # noqa: F401  (kept importable from here)
@@ -49,6 +53,17 @@ DEFAULT_THRESHOLD_DENSE = 0.70
 ROUTE_RESCUE_SCORE = 5.0
 
 CONDENSE_MAX_TOKENS = 300
+
+# First-turn answers are cached per index version (the suggestion chips are the most common questions), so a
+# repeat costs no LLM call or rerank. Follow-ups aren't cached: their answer depends on the history.
+ANSWER_CACHE_SECONDS = 3600
+CACHED_AGENTS = ("portfolio", "tutor")
+# Pure greetings / thanks: chitchat that can't be a misrouted question, so no rescue search for them
+SMALL_TALK_RE = re.compile(
+    r"^\W*(?:hi|hii+|hello|hey|hiya|yo|good (?:morning|afternoon|evening)|thanks?|thank you|thx|ty|ok(?:ay)?|"
+    r"cool|nice|great|awesome|bye|goodbye|see you)(?:\s+(?:there|vera|v\.e\.r\.a\.?|so much|a lot))?\W*$",
+    re.I,
+)
 
 
 def default_route(message):
@@ -95,7 +110,7 @@ def format_history(history):
 def condense_and_route(message, history, llm):
     prompt = CONDENSE_ROUTE_PROMPT.format(history=format_history(history), question=message)
     text, provider = llm([{"role": "user", "content": prompt}], temperature=0,
-                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True)
+                         max_tokens=CONDENSE_MAX_TOKENS, json_mode=True, fast=True)
     return parse_route(text, message), provider
 
 
@@ -109,7 +124,11 @@ def fallback_threshold(use_reranker):
     return DEFAULT_THRESHOLD_RERANK if use_reranker else DEFAULT_THRESHOLD_DENSE
 
 
-def retrieve(route, store=None, *, use_reranker=None, timings=None):
+def is_small_talk(text):
+    return bool(SMALL_TALK_RE.match(text or ""))
+
+
+def retrieve(route, store=None, *, use_reranker=None, timings=None, message=None):
     """Retrieve for a routed question. Returns (results, top_score, fallback_fired)."""
     store = store if store is not None else rag_index.get_store()
     use_reranker = rag_index.reranker_enabled() if use_reranker is None else use_reranker
@@ -119,7 +138,7 @@ def retrieve(route, store=None, *, use_reranker=None, timings=None):
     if intent in NO_RETRIEVAL_INTENTS:
         # The router often labels short in-scope questions ("where r u based", "do u teach students")
         # as chitchat/out_of_scope. If the reranker is confident the KB answers it, treat it as a lookup.
-        if use_reranker:
+        if use_reranker and not is_small_talk(message or route["standalone_question"]):
             results, top_score = hybrid_search(store, question, use_reranker=True, timings=timings)
             if top_score is not None and top_score >= ROUTE_RESCUE_SCORE:
                 route["rerouted_from"] = intent
@@ -197,7 +216,33 @@ def run_steps(message, history, llm, *, store=None, use_reranker=None):
         yield step("privacy", "checking")
         return finish({**default_route(message), "intent": "personal"}, "privacy", privacy.reply_for(message))
 
-    # 2. Condense + route
+    # 2. Repeat first-turn questions come from the answer cache
+    # (only against an index that is already loaded: loading one here would delay every first chat)
+    cache_store = store if store is not None else rag_index.loaded_store()
+    if not history and cache_store is not None:
+        key = answer_cache_key(message, cache_store)
+        cached = cache.get(key)
+        if cached:
+            yield step(cached["meta"]["agent"], "writing")
+            result = copy.deepcopy(cached)
+            result["meta"].update(cached_answer=True, latency_ms={"total_ms": _elapsed_ms(started)})
+            return result
+        result = yield from _route_and_answer(message, history, llm, store, reranked, timings, finish)
+        if result["reply"] and result["meta"]["agent"] in CACHED_AGENTS and not result["meta"].get("output_guard"):
+            cache.set(key, result, ANSWER_CACHE_SECONDS)
+        return result
+    return (yield from _route_and_answer(message, history, llm, store, reranked, timings, finish))
+
+
+def answer_cache_key(message, store):
+    """Same question (case, spacing and end punctuation aside) against the same index version."""
+    normalized = " ".join(message.lower().split()).strip(" ?!.")
+    digest = hashlib.sha1(f"{getattr(store, 'version', id(store))}|{normalized}".encode("utf-8")).hexdigest()
+    return f"vera-answer:{digest}"
+
+
+def _route_and_answer(message, history, llm, store, reranked, timings, finish):
+    """Router call, then the agent it picks. A generator like run_steps; returns the result dict."""
     yield step("router", "routing")
     t = time.perf_counter()
     route, condense_provider = condense_and_route(message, history, llm)
@@ -244,7 +289,7 @@ def run_steps(message, history, llm, *, store=None, use_reranker=None):
     # 3. Portfolio agent: retrieve by intent; fall back without generating if nothing scores well enough
     yield step("portfolio", "searching")
     t = time.perf_counter()
-    results, top_score, fallback = retrieve(route, store, use_reranker=reranked, timings=timings)
+    results, top_score, fallback = retrieve(route, store, use_reranker=reranked, timings=timings, message=message)
     timings["retrieve_ms"] = _elapsed_ms(t)
     if fallback:
         return finish(route, agent, FALLBACK_MESSAGE, results=results, condense_provider=condense_provider,

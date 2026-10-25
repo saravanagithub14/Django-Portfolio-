@@ -88,3 +88,15 @@ def test_confident_match_rescues_a_misrouted_question(kb_chunks):
     results, top_score, fallback = pipeline.retrieve(route, store, use_reranker=True)
     assert len(results) == 5 and not fallback
     assert route["intent"] == "lookup" and route["rerouted_from"] == "out_of_scope"
+
+
+def test_reranker_sees_at_most_the_candidate_cap_with_long_passages_cut(kb_chunks):
+    from chatbot.rag import retrieve as retrieve_module
+    seen = []
+    store = make_fake_store(kb_chunks, rerank_fn=lambda q, texts: seen.extend(texts) or [0.0] * len(texts))
+    hybrid_search(store, "rag projects", use_reranker=True)
+    assert len(seen) == retrieve_module.RERANK_CANDIDATES
+    assert all(len(t.split()) <= retrieve_module.RERANK_MAX_WORDS for t in seen)
+    seen.clear()
+    hybrid_search(store, "rag projects", use_reranker=True, rerank_candidates=3)
+    assert len(seen) == 3
