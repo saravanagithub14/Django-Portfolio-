@@ -346,3 +346,9 @@ def test_router_calls_try_groq_first_when_it_has_a_key(monkeypatch):
     monkeypatch.delenv("ROUTER_PROVIDER")
     monkeypatch.delenv("GROQ_API_KEY")
     assert llm_module.provider_order(None, fast=True)[0] == "openai", "no Groq key: the normal chain"
+
+
+def test_concept_without_a_topic_is_a_lookup():
+    route = pipeline.parse_route(route_json("concept", "How did Saravana transition from biology to AI?", None),
+                                 "how'd u go from bio to AI")
+    assert route["intent"] == "lookup" and route["concept_term"] is None

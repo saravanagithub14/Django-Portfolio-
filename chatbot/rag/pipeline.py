@@ -52,7 +52,9 @@ DEFAULT_THRESHOLD_DENSE = 0.70
 # Misrouted in-scope questions scored 5.5-10.9; true off-topic questions scored <= 1.45.
 ROUTE_RESCUE_SCORE = 5.0
 
-CONDENSE_MAX_TOKENS = 300
+# Room for the reasoning tokens of a reasoning router model (Groq gpt-oss used up to ~240 before writing the
+# JSON; at 300 it sometimes ran out and returned nothing). Unused room costs nothing.
+CONDENSE_MAX_TOKENS = 600
 
 # First-turn answers are cached per index version (the suggestion chips are the most common questions), so a
 # repeat costs no LLM call or rerank. Follow-ups aren't cached: their answer depends on the history.
@@ -90,12 +92,19 @@ def parse_route(raw, message):
         year = int(year) if year not in (None, "", "null") else None
     except (TypeError, ValueError):
         year = None
+    term = term.strip() if isinstance(term, str) and term.strip() else None
+    intent = intent if intent in INTENTS else "lookup"
+    if intent == "concept" and not term:
+        # A teaching request always names its topic. Without one it is a question about Saravana that the
+        # router mislabelled (Groq called "how'd u go from bio to AI" a concept), and the tutor would then
+        # answer about his career from general knowledge, in the first person.
+        intent = "lookup"
     return {
         "standalone_question": question.strip() if isinstance(question, str) and question.strip() else message,
-        "intent": intent if intent in INTENTS else "lookup",
+        "intent": intent,
         "type_filter": type_filter if type_filter in TYPE_FILTERS else None,
         "year": year if year is not None and 1950 <= year <= 2100 else None,
-        "concept_term": term.strip() if isinstance(term, str) and term.strip() else None,
+        "concept_term": term,
     }
 
 
