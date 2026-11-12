@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from portfolio.models import UserProfile
 
 
@@ -9,6 +11,7 @@ def portfolio_context(request):
         'config': {},
         'bio': {},
         'active_page': '',
+        'site_url': settings.SITE_URL,
     }
 
     # Determine current active page based on path

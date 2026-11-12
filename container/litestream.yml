@@ -1,0 +1,11 @@
+dbs:
+  - path: ${SQLITE_PATH}
+    replica:
+      type: s3
+      bucket: ${R2_BUCKET}
+      path: db
+      endpoint: ${R2_ENDPOINT}
+      region: auto
+      force-path-style: true
+      access-key-id: ${R2_ACCESS_KEY_ID}
+      secret-access-key: ${R2_SECRET_ACCESS_KEY}
