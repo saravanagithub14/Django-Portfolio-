@@ -11,3 +11,4 @@ rank_bm25
 psutil
 gunicorn
 whitenoise
+mcp>=2.3,<3

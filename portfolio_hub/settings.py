@@ -48,7 +48,7 @@ if BEHIND_CLOUDFLARE:
 EDGE_CACHE_SECONDS = env.int('EDGE_CACHE_SECONDS', default=0)
 
 # The site's public address, for canonical and social-sharing links
-SITE_URL = env('SITE_URL', default='https://saravanaperumal.vercel.app').rstrip('/')
+SITE_URL = env('SITE_URL', default='https://www.saravanar.in').rstrip('/')
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:

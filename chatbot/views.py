@@ -30,11 +30,11 @@ def client_ip(request):
     return x_forwarded_for.split(',')[0].strip() if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
 
-def is_rate_limited(ip_address):
-    """Simple minute-level cache rate limiting (max 10 requests per minute)"""
-    cache_key = f"rate_limit_{ip_address}"
+def is_rate_limited(ip_address, *, prefix="rate_limit", limit=10):
+    """Simple minute-level cache rate limiting (max `limit` requests per minute per prefix)"""
+    cache_key = f"{prefix}_{ip_address}"
     requests_count = cache.get(cache_key, 0)
-    if requests_count >= 10:
+    if requests_count >= limit:
         return True
     cache.set(cache_key, requests_count + 1, timeout=60)
     return False
