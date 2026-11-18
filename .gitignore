@@ -33,6 +33,11 @@ chatbot/eval/reports/
 # Local secrets (Render uses its own environment variables)
 .env
 
+# Cloudflare Worker tooling
+node_modules/
+.wrangler/
+.dev.vars
+
 # Tool output
 .deepeval/
 .pytest_cache/

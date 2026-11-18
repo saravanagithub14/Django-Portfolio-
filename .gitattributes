@@ -1,0 +1,2 @@
+# These run inside a Linux container, even when the image is built on Windows
+container/* text eol=lf

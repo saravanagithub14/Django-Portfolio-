@@ -2,6 +2,7 @@ import json
 import logging
 import os
 
+from django.conf import settings
 from django.core.cache import cache
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -18,11 +19,22 @@ logger = logging.getLogger(__name__)
 HISTORY_LIMIT = 6  # previous messages sent to the LLM as conversational memory
 
 
-def is_rate_limited(ip_address):
-    """Simple minute-level cache rate limiting (max 10 requests per minute)"""
-    cache_key = f"rate_limit_{ip_address}"
+def client_ip(request):
+    """
+    The visitor's address. Cloudflare appends to X-Forwarded-For, so its first entry is whatever the visitor
+    sent; reading it there would let anyone dodge the rate limit by changing the header.
+    """
+    if settings.BEHIND_CLOUDFLARE and request.META.get('HTTP_CF_CONNECTING_IP'):
+        return request.META['HTTP_CF_CONNECTING_IP']
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    return x_forwarded_for.split(',')[0].strip() if x_forwarded_for else request.META.get('REMOTE_ADDR')
+
+
+def is_rate_limited(ip_address, *, prefix="rate_limit", limit=10):
+    """Simple minute-level cache rate limiting (max `limit` requests per minute per prefix)"""
+    cache_key = f"{prefix}_{ip_address}"
     requests_count = cache.get(cache_key, 0)
-    if requests_count >= 10:
+    if requests_count >= limit:
         return True
     cache.set(cache_key, requests_count + 1, timeout=60)
     return False
@@ -75,7 +87,7 @@ def get_active_bot():
     if bot:
         return bot
     try:
-        provider = 'openai' if os.getenv('OPENAI_API_KEY') else 'groq'
+        provider = 'openai'
         cfg, _ = AIModelConfig.objects.get_or_create(
             name=f"{provider.title()} Default",
             defaults={
@@ -110,8 +122,7 @@ def chat_api_endpoint(request):
         return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
 
     # 1. Check Rate Limiting
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    ip = x_forwarded_for.split(',')[0].strip() if x_forwarded_for else request.META.get('REMOTE_ADDR')
+    ip = client_ip(request)
 
     if is_rate_limited(ip):
         return JsonResponse({"error": "Rate limit exceeded. Please try again later."}, status=429)
@@ -204,7 +215,7 @@ def stream_answer(steps, user_message, profile):
         yield json.dumps({"type": "answer", **answer}) + "\n"
 
     response = StreamingHttpResponse(lines(), content_type="application/x-ndjson")
-    response["Cache-Control"] = "no-cache"
+    response["Cache-Control"] = "no-cache, no-transform"  # no-transform: Cloudflare must not compress the stream
     response["X-Accel-Buffering"] = "no"  # nginx (EC2) would otherwise hold the events until the end
     return response
 

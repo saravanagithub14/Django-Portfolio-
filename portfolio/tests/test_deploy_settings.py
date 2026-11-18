@@ -16,7 +16,8 @@ def settings_with_env(**env):
     """Import the settings module in a fresh process with the given environment."""
     code = (
         "import json, portfolio_hub.settings as s;"
-        "print(json.dumps({'db': str(s.DATABASES['default']['NAME']), 'csrf': s.CSRF_TRUSTED_ORIGINS}))"
+        "print(json.dumps({'db': str(s.DATABASES['default']['NAME']), 'csrf': s.CSRF_TRUSTED_ORIGINS,"
+        " 'secure_cookies': getattr(s, 'SESSION_COOKIE_SECURE', False) and getattr(s, 'CSRF_COOKIE_SECURE', False)}))"
     )
     result = subprocess.run([sys.executable, "-c", code], cwd=REPO_ROOT, capture_output=True, text=True,
                             env={**os.environ, **env}, check=True)
@@ -35,6 +36,12 @@ def test_defaults_without_env():
     values = settings_with_env(SQLITE_PATH="", CSRF_TRUSTED_ORIGINS="")
     assert values["db"].endswith("db.sqlite3")
     assert "https://*.onrender.com" in values["csrf"]
+
+
+def test_secure_cookies_only_behind_cloudflare():
+    """The EC2 site still runs on plain HTTP, where a secure cookie would stop the admin login working."""
+    assert settings_with_env(BEHIND_CLOUDFLARE="False")["secure_cookies"] is False
+    assert settings_with_env(BEHIND_CLOUDFLARE="True")["secure_cookies"] is True
 
 
 @pytest.mark.django_db

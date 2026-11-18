@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-worker",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "wrangler": "4.157.0"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "0.3.7"
+  }
+}

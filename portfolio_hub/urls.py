@@ -8,6 +8,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from chatbot import views as chatbot_views
+from chatbot.mcp_http import mcp_endpoint
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,6 +17,9 @@ urlpatterns = [
     path('chatbot/', include('chatbot.urls')),
     path('health', chatbot_views.health_view, name='health'),
     path('update_context', chatbot_views.update_context_view, name='update_context'),
+    # MCP server for Claude (claude.ai custom connector); see mcp.md
+    path('mcp', mcp_endpoint, name='mcp'),
+    path('mcp/', mcp_endpoint),
     path('', include('portfolio.urls')),
 ]
 

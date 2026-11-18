@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from chatbot import views
 from chatbot.fallback import CONCEPT_ANSWERS
-from chatbot.models import ChatMessage
+from chatbot.models import ChatMessage, ChatSession
 
 pytestmark = pytest.mark.django_db
 
@@ -70,6 +70,21 @@ def test_rate_limit_is_ten_per_minute(client, fake_generate):
     assert codes[10] == 429
 
 
+def test_rate_limit_behind_cloudflare_ignores_a_forged_forwarded_header(client, fake_generate, settings):
+    settings.BEHIND_CLOUDFLARE = True
+    codes = [post(client, {"message": f"hi {i}"}, HTTP_CF_CONNECTING_IP="203.0.113.7",
+                  HTTP_X_FORWARDED_FOR=f"10.1.1.{i}, 203.0.113.7").status_code for i in range(11)]
+    assert codes[:10] == [200] * 10
+    assert codes[10] == 429
+    assert ChatSession.objects.get().user_ip == "203.0.113.7"
+
+
+def test_cloudflare_header_is_ignored_unless_turned_on(client, fake_generate):
+    """Without Cloudflare in front, anyone could send CF-Connecting-IP straight to the server."""
+    post(client, {"message": "hi"}, HTTP_CF_CONNECTING_IP="203.0.113.7", REMOTE_ADDR="10.0.0.9")
+    assert ChatSession.objects.get().user_ip == "10.0.0.9"
+
+
 def test_keyword_fallback_when_llm_chain_fails(client, monkeypatch):
     monkeypatch.setattr(views, "generate_llm_response", lambda *a: (None, {"fallback": False}, []))
     response = post(client, {"message": "what is machine learning"})
@@ -119,6 +134,7 @@ def test_widget_gets_agent_steps_then_the_answer_as_ndjson(client, monkeypatch):
     monkeypatch.setattr(views, "llm_response_steps", steps)
     response = post(client, {"message": "how does photosynthesis work"}, HTTP_ACCEPT="application/x-ndjson")
     assert response["Content-Type"] == "application/x-ndjson" and response["X-Accel-Buffering"] == "no"
+    assert "no-transform" in response["Cache-Control"]
     events = [json.loads(line) for line in b"".join(response.streaming_content).decode().splitlines()]
     assert events == [
         {"type": "step", "agent": "router", "stage": "routing"},

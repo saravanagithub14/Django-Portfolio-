@@ -10,21 +10,21 @@
     <!-- SEO & Meta Tags -->
     <meta name="description" content="{% block description %}{{ config.site_description }}{% endblock %}">
     <meta name="keywords" content="AI engineer, data scientist, generative AI, RAG, LangChain, Kerala, India">
-    <link rel="canonical" href="https://saravanaperumal.vercel.app/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
+    <link rel="canonical" href="{{ site_url }}/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://saravanaperumal.vercel.app/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
+    <meta property="og:url" content="{{ site_url }}/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
     <meta property="og:title" content="{% block og_title %}{{ config.site_title }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ config.site_description }}{% endblock %}">
-    <meta property="og:image" content="https://saravanaperumal.vercel.app/{% static 'images/profile.jpg' %}">
+    <meta property="og:image" content="{{ site_url }}{% static 'images/profile.jpg' %}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://saravanaperumal.vercel.app/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
+    <meta property="twitter:url" content="{{ site_url }}/{% if active_page and active_page != 'home' %}{{ active_page }}{% endif %}">
     <meta property="twitter:title" content="{% block twitter_title %}{{ config.site_title }}{% endblock %}">
     <meta property="twitter:description" content="{% block twitter_description %}{{ config.site_description }}{% endblock %}">
-    <meta property="twitter:image" content="https://saravanaperumal.vercel.app/{% static 'images/profile.jpg' %}">
+    <meta property="twitter:image" content="{{ site_url }}{% static 'images/profile.jpg' %}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,18 +43,14 @@
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     {% block jsonld %}
 <script type="application/ld+json">
-{% verbatim %}
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://saravanaperumal.vercel.app/"},
-    {% if active_page and active_page != 'home' %}
-    {"@type": "ListItem", "position": 2, "name": active_page|capitalize, "item": "https://saravanaperumal.vercel.app/{{ active_page }}.html"}
-    {% endif %}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/"}{% if active_page and active_page != 'home' %},
+    {"@type": "ListItem", "position": 2, "name": "{{ active_page|capfirst }}", "item": "{{ site_url }}/{{ active_page }}.html"}{% endif %}
   ]
 }
-{% endverbatim %}
 </script>
 {% endblock %}
     {% block extra_css %}{% endblock %}

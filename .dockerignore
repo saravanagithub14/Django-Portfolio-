@@ -1,0 +1,33 @@
+# Secrets reach the container as Worker secrets, never through the image
+.env
+.git
+.gitignore
+.dockerignore
+Dockerfile
+
+# Rebuilt inside the image
+staticfiles/
+
+# Cloudflare Worker tooling
+node_modules/
+.wrangler/
+worker/
+package.json
+package-lock.json
+wrangler.jsonc
+
+# Not needed at runtime
+__pycache__/
+*.pyc
+.pytest_cache/
+.deepeval/
+.vscode/
+.claude/
+chatbot/eval/
+chatbot/tests/
+portfolio/tests/
+conftest.py
+pytest.ini
+requirements-dev.txt
+*.md
+!knowledge_base/*.md

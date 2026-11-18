@@ -36,6 +36,8 @@
     };
     // Fixed-line agents answer instantly; keep the picked agent on screen long enough to read
     const MIN_STEP_MS = 650;
+    // Longer than the slowest real reply (a cold start on Render plus a provider fallback), short enough to recover
+    const REQUEST_TIMEOUT_MS = 75000;
     const SUGGESTIONS = ["What does he do right now?", "His best projects", "Can he run a workshop?", "Biology to AI, how?"];
     const VISITED_KEY = "vera.visited";
 
@@ -195,22 +197,30 @@
         const loader = addLoader();
         setState("thinking");
 
+        // Gives up after REQUEST_TIMEOUT_MS so a hung request can't leave the loader spinning forever
         const send = async (accept) => {
+            const abort = new AbortController();
+            const timer = setTimeout(() => abort.abort(), REQUEST_TIMEOUT_MS);
             try {
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Accept": accept },
                     body: JSON.stringify({ message: text }),
+                    signal: abort.signal,
                 });
                 return await readAnswer(response, (agent, stage) => loader.step(agent, stage));
             } catch (e) {
                 console.error("V.E.R.A. connection error:", e);
-                return null;
+                return e.name === "AbortError" ? { timedOut: true } : null;
+            } finally {
+                clearTimeout(timer);
             }
         };
-        // A stream cut off before its answer (a restarted worker, a proxy) gets one plain JSON retry
+        // A stream cut off before its answer (a restarted worker, a proxy) gets one plain JSON retry;
+        // a timed-out one doesn't, since the server is evidently stuck
         let data = await send("application/x-ndjson, application/json");
         if (!data) data = await send("application/json");
+        if (data && data.timedOut) data = null;
         await loader.settle();
         loader.el.remove();
 

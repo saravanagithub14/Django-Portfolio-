@@ -37,6 +37,19 @@ CSRF_TRUSTED_ORIGINS = [
 # is reachable through the proxy alone (EC2: bound to 127.0.0.1).
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Cloudflare in front of the app (cloudflare.md). Turn on only once the server can't be reached except
+# through Cloudflare: the chat rate limit then trusts CF-Connecting-IP, which anyone could send directly.
+BEHIND_CLOUDFLARE = env.bool('BEHIND_CLOUDFLARE', default=False)
+if BEHIND_CLOUDFLARE:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# Seconds Cloudflare may serve a public page without asking Django (portfolio/middleware.py). 0 is off.
+EDGE_CACHE_SECONDS = env.int('EDGE_CACHE_SECONDS', default=0)
+
+# The site's public address, for canonical and social-sharing links
+SITE_URL = env('SITE_URL', default='https://www.saravanar.in').rstrip('/')
+
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
@@ -58,6 +71,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'portfolio.middleware.EdgeCacheMiddleware',  # outside the middleware below, so it sees their cookies
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
